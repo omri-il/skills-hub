@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadSkills, closure } from '../lib/skills.js';
+import { loadSkills, closure, parseFrontmatter } from '../lib/skills.js';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -55,7 +55,9 @@ test('name must be lowercase with hyphens', () => {
 test('description missing or over 1024 characters fails', () => {
   assert.ok(loadSkills(fixture({ 'a-skill': { description: null } })).errors.some((e) => e.includes('"description" is missing')));
   assert.ok(loadSkills(fixture({ 'a-skill': { description: 'א'.repeat(1025) } })).errors.some((e) => e.includes('the limit is 1024')));
-  assert.deepEqual(loadSkills(fixture({ 'a-skill': { description: 'א'.repeat(1024) } })).errors, []);
+  // The zip adds ' (גרסה 1.0.0)' (13 characters) to the description, so 1011 is the most a SKILL.md can have.
+  assert.deepEqual(loadSkills(fixture({ 'a-skill': { description: 'א'.repeat(1011) } })).errors, []);
+  assert.ok(loadSkills(fixture({ 'a-skill': { description: 'א'.repeat(1012) } })).errors.some((e) => e.includes('plus "(גרסה 1.0.0)"')));
 });
 
 test('a required skill that does not exist fails', () => {
@@ -84,4 +86,16 @@ test('automatic bundle holds the skill and everything it needs, at any depth', (
   assert.deepEqual(autoBundles.get('top').skills, ['top', 'mid', 'base']);
   assert.deepEqual(closure('base', byName), ['base']);
   assert.equal(autoBundles.has('base'), false);
+});
+
+test('the zipped SKILL.md carries the version in the description and in a line under the frontmatter', () => {
+  const { errors, skills } = loadSkills(ROOT);
+  assert.deepEqual(errors, []);
+  for (const s of skills) {
+    const fm = parseFrontmatter(s.packaged);
+    assert.equal(fm.name, s.name);
+    assert.ok(fm.description.endsWith(`(גרסה ${s.version})`), `${s.name}: description has no version`);
+    assert.ok(fm.description.startsWith(s.description.trim()), `${s.name}: description text changed`);
+    assert.ok(s.packaged.includes(`> גרסה ${s.version} · עודכנה ${s.updated}`), `${s.name}: no version line`);
+  }
 });

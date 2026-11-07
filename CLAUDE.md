@@ -41,7 +41,10 @@ The build stops with every problem listed if:
 - `name` in SKILL.md is not the folder name, or not lowercase letters, digits and hyphens;
 - `description` is missing or longer than 1024 characters;
 - a skill in `requires` or in `bundles.yaml` does not exist;
-- a required meta.yaml field is missing, or `role` is not main/shared.
+- a required meta.yaml field is missing, or `role` is not main/shared;
+- the description plus its version tag (` (גרסה X.Y.Z)`) is longer than 1024 characters.
+
+**Every skill always shows its version once installed** (Omri, 2026-11-07), so he can tell whether he has the newest one. The build adds `meta.yaml`'s `version` to the SKILL.md that goes into the zip (and the site viewer): ` (גרסה X.Y.Z)` at the end of the description (Gemini's skill list shows it) and a line `> גרסה X.Y.Z · עודכנה YYYY-MM-DD · הגרסה העדכנית: <page>` under the frontmatter. Don't write the version into `skills/*/SKILL.md` by hand; bump `version` and `updated` in `meta.yaml` on every change to a skill.
 
 Every zip holds one folder per skill, named exactly like the skill, with only `SKILL.md` in it (no hidden files, a fixed date, so the bytes only change when the skill does). That is the layout Gemini expects.
 

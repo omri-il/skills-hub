@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { zipSync } from 'fflate';
+import { zipSync, strToU8 } from 'fflate';
 import QRCode from 'qrcode';
 import { loadSkills } from './lib/skills.js';
 
@@ -48,7 +48,7 @@ function makeZip(id, names) {
   for (const n of names) {
     // One folder named exactly like the skill, with SKILL.md inside. That is what Gemini expects.
     tree[`${n}/`] = [new Uint8Array(0), { mtime: ZIP_TIME }];
-    tree[`${n}/SKILL.md`] = [new Uint8Array(byName.get(n).raw), { mtime: ZIP_TIME, level: 9 }];
+    tree[`${n}/SKILL.md`] = [strToU8(byName.get(n).packaged), { mtime: ZIP_TIME, level: 9 }];
   }
   write(`downloads/${id}.zip`, zipSync(tree));
 }
@@ -331,7 +331,7 @@ function skillPage(s) {
             <button type="button" class="btn btn-ghost btn-sm" data-copy="src-${s.name}">העתקה</button>
             <span class="copy-status" role="status" aria-live="polite"></span>
           </div>
-          <pre class="source-pre" id="src-${s.name}" tabindex="0">${esc(s.text)}</pre>
+          <pre class="source-pre" id="src-${s.name}" tabindex="0">${esc(s.packaged)}</pre>
         </details>
       </section>
     </div>
