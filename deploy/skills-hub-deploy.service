@@ -1,0 +1,9 @@
+[Unit]
+Description=skills-hub: build and publish skills.omri-iram.co.il when main on GitHub moves
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /root/Projects/skills-hub/deploy/update.sh
+Nice=10

@@ -1,0 +1,19 @@
+{
+  "name": "skills-hub",
+  "private": true,
+  "type": "module",
+  "description": "skills.omri-iram.co.il: Omri Iram's skills for teachers, with a zip download for each",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node --test test/*.test.js",
+    "serve": "node test/serve.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "fflate": "^0.8.2",
+    "qrcode": "^1.5.4",
+    "yaml": "^2.6.1"
+  }
+}

@@ -1,0 +1,10 @@
+[Unit]
+Description=Check github.com/omri-il/skills-hub for a new main every 5 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=skills-hub-deploy.service
+
+[Install]
+WantedBy=timers.target
