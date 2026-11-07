@@ -1,0 +1,9 @@
+# חבילות: הורדה אחת לכמה סקילים שעובדים יחד
+- id: math-chem-worksheets
+  title: חבילת דפי עבודה למתמטיקה וכימיה
+  description: ארבעת הסקילים יחד. מספיק להעלות את כולם לג'מיני ולבקש דף עבודה.
+  skills:
+    - create-math-practice
+    - create-chemistry-practice
+    - format-equations-for-hebrew-worksheets
+    - verify-solutions
