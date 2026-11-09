@@ -1,12 +1,17 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 skills-hub is the site at https://skills.omri-iram.co.il: Omri's skills for teachers, a page and a zip for each. Static, no server code, free download for everyone (Omri, 2026-11-07). Repo `omri-il/skills-hub`, public. `BRIEF.md` is the original brief.
+
+On the laptop this clone is `C:\Users\omrii\Projects\Gemini-Skills` (since 2026-11-09): the one place to manage the site and develop Gemini skills. The repo, `package.json` and the VPS dir are still named `skills-hub`.
 
 ## Commands
 
 ```bash
 npm ci
 npm test              # node --test: checks the real skills and the rules below
+node --test --test-name-pattern="name must match" test/skills.test.js   # one test
 npm run build         # dist/: index.html, skills/<name>/index.html, downloads/*.zip, 404, sitemap
 npm run serve         # serves dist/ on http://localhost:4321
 ```
@@ -25,6 +30,28 @@ deploy/                   nginx site, VPS update script, systemd timer
 ```
 
 Adding a skill = a new folder in `skills/` and a push. Never touch `build.js` for that.
+
+## How the build works
+
+- `skills/*/SKILL.md` is the source. `packageSkill` in `lib/skills.js` adds the version only to the copy that goes into the zip and the site viewer, so the source file and what a teacher downloads are not identical.
+- `dist/` is deleted and rebuilt on every run: never fix anything there.
+- `test/serve.js` is the local preview server, not a test (`npm test` only runs `test/*.test.js`).
+
+## Limits when writing a skill
+
+- Only `SKILL.md` goes into the zip (`makeZip` in `build.js`). Any other file in the skill's folder (a script, an example) is dropped with no warning, so a skill has to be one self-contained file.
+- Nothing checks that `version` went up after a change. Bump it by hand.
+- `tested: []` passes the checks. A skill not tested yet says so in words, like `weekly-digest` ("עוד לא נבדק").
+
+## Developing a skill
+
+1. Draft or change the SKILL.md and show it to Omri.
+2. Claude can't run a skill in Omri's Gemini account: write a ready-to-paste test request, and Omri runs it and reports what happened.
+3. Record what really happened, with the date, in `tested` and `limitations`. `Gemini` goes under `platforms.tested` only after a real run.
+4. Bump `version` and `updated` in `meta.yaml`.
+5. `npm test && npm run build`, commit, and push to `main` only after Omri says so.
+
+Known Gemini behaviour (2026-11-07, Flash and Pro, recorded in those skills' `tested`): a request for a presentation made Gemini build its own Canvas deck and skip `create-lesson-slides` and `fix-slides-rtl`, even when the request named the skill.
 
 ## meta.yaml
 
