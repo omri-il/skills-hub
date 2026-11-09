@@ -146,6 +146,8 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .bundle p { margin: 0 0 10px; }
 .bundle-list { margin: 0; padding-inline-start: 1.2em; columns: 2; column-gap: 32px; }
 .bundle-cta { display: flex; flex-direction: column; align-items: center; }
+.dl-status { display: block; font-size: .9rem; font-weight: 600; color: var(--accent); margin-block-start: 8px; }
+.dl-status:empty { display: none; }
 .eyebrow { font-size: .85rem; font-weight: 600; color: var(--accent); margin: 0 0 6px; }
 @media (max-width: 720px) { .bundle { grid-template-columns: 1fr; } .bundle-list { columns: 1; } .bundle-cta { align-items: stretch; } }
 

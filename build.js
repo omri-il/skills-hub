@@ -1,5 +1,5 @@
-// Builds the whole site into dist/: the home page, one page per skill, a zip per skill
-// and per bundle. Fails with a clear list of problems if a skill does not pass the checks.
+// Builds the whole site into dist/: the home page, one page per skill, a zip per skill.
+// A bundle is not a file: it downloads its skills' zips one by one, so nobody has to extract anything. Fails with a clear list of problems if a skill does not pass the checks.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,24 +33,31 @@ const firstSentence = (s) => {
 };
 const platformsOf = (s) => [...new Set([...s.tested_on, ...s.compatible])];
 const zipHref = (id) => `/downloads/${id}.zip`;
-const sizeOf = (id) => {
-  const kb = fs.statSync(path.join(DIST, 'downloads', `${id}.zip`)).size / 1024;
-  return `${Math.max(1, Math.round(kb))}KB`;
+const sizeOf = (ids) => {
+  const bytes = [ids].flat().reduce((sum, id) => sum + fs.statSync(path.join(DIST, 'downloads', `${id}.zip`)).size, 0);
+  return `${Math.max(1, Math.round(bytes / 1024))}KB`;
 };
+const filesCount = (n) => (n === 2 ? 'שני קבצים נפרדים' : `${n} קבצים נפרדים`);
+// With several files, app.js downloads them one after the other (data-files).
+// Without JavaScript the link gets the first file, and each page also lists a link per file.
+function dlLink(files, label, cls, attrs = '') {
+  const multi = files.length > 1 ? ` data-files="${files.join('|')}"` : '';
+  return `<a class="${cls}" href="${zipHref(files[0])}" download${multi}${attrs}>${label}</a>`;
+}
+const dlStatus = '<span class="dl-status" role="status" aria-live="polite"></span>';
 const write = (rel, content) => {
   const p = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
   fs.writeFileSync(p, content);
 };
 
-function makeZip(id, names) {
-  const tree = {};
-  for (const n of names) {
-    // One folder named exactly like the skill, with SKILL.md inside. That is what Gemini expects.
-    tree[`${n}/`] = [new Uint8Array(0), { mtime: ZIP_TIME }];
-    tree[`${n}/SKILL.md`] = [strToU8(byName.get(n).packaged), { mtime: ZIP_TIME, level: 9 }];
-  }
-  write(`downloads/${id}.zip`, zipSync(tree));
+function makeZip(n) {
+  // One folder named exactly like the skill, with SKILL.md inside. That is what Gemini expects.
+  const tree = {
+    [`${n}/`]: [new Uint8Array(0), { mtime: ZIP_TIME }],
+    [`${n}/SKILL.md`]: [strToU8(byName.get(n).packaged), { mtime: ZIP_TIME, level: 9 }],
+  };
+  write(`downloads/${n}.zip`, zipSync(tree));
 }
 
 // ---------- clean and copy assets ----------
@@ -59,9 +66,7 @@ fs.mkdirSync(DIST, { recursive: true });
 fs.cpSync(path.join(ROOT, 'assets'), path.join(DIST, 'assets'), { recursive: true });
 
 // ---------- zips ----------
-for (const s of skills) makeZip(s.name, [s.name]);
-for (const b of bundles) makeZip(b.id, b.skills);
-for (const b of autoBundles.values()) makeZip(b.id, b.skills);
+for (const s of skills) makeZip(s.name);
 
 // ---------- QR (drawn here, at build time, no outside service) ----------
 const qrSvg = await QRCode.toString(`${SITE}/`, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#1d2421', light: '#ffffff' } });
@@ -118,12 +123,12 @@ function downloadFor(s) {
   if (auto) {
     const extra = auto.skills.length - 1;
     return {
-      href: zipHref(auto.id), id: auto.id,
+      files: auto.skills,
       label: 'הורדה',
-      note: `כולל ${extra === 1 ? 'סקיל עזר אחד' : extra === 2 ? 'שני סקילי עזר' : `${extra} סקילי עזר`} שהוא צריך`,
+      note: `${filesCount(auto.skills.length)}: הסקיל ו${extra === 1 ? 'סקיל עזר אחד' : extra === 2 ? 'שני סקילי עזר' : `${extra} סקילי עזר`}`,
     };
   }
-  return { href: zipHref(s.name), id: s.name, label: 'הורדה', note: 'קובץ zip אחד' };
+  return { files: [s.name], label: 'הורדה', note: 'קובץ zip אחד' };
 }
 
 // ---------- home ----------
@@ -134,25 +139,28 @@ function card(s) {
   <p class="card-problem">${esc(firstSentence(s.problem))}</p>
   <div class="tags">${s.subjects.map((x) => tag(x, 'tag-subject')).join('')}${platformTags(s)}</div>
   <div class="card-actions">
-    <a class="btn btn-primary" href="${d.href}" download aria-label="הורדת ${esc(s.title)} (${esc(d.note)})">${d.label}</a>
+    ${dlLink(d.files, d.label, 'btn btn-primary', ` aria-label="הורדת ${esc(s.title)} (${esc(d.note)})"`)}
     <a class="btn btn-ghost" href="/skills/${s.name}/">מה בדיוק הוא עושה</a>
   </div>
-  <p class="card-note">${esc(d.note)} · ${sizeOf(d.id)}</p>
+  <p class="card-note">${esc(d.note)} · ${sizeOf(d.files)}</p>
+  ${dlStatus}
 </li>`;
 }
 
 function bundleCard(b) {
-  const items = b.skills.map((n) => `<li><a href="/skills/${n}/">${esc(byName.get(n).title)}</a></li>`).join('');
+  const items = b.skills.map((n) => `<li><a href="/skills/${n}/">${esc(byName.get(n).title)}</a> · <a href="${zipHref(n)}" download aria-label="הורדת ${esc(byName.get(n).title)} בלבד">הורדה</a></li>`).join('');
   return `<article class="bundle">
   <div class="bundle-text">
-    <p class="eyebrow">חבילה · ${b.skills.length} סקילים בהורדה אחת</p>
+    <p class="eyebrow">חבילה · ${b.skills.length} סקילים, קובץ נפרד לכל אחד</p>
     <h3>${esc(b.title)}</h3>
     <p>${esc(b.description)}</p>
     <ul class="bundle-list">${items}</ul>
   </div>
   <div class="bundle-cta">
-    <a class="btn btn-primary btn-lg" href="${zipHref(b.id)}" download>הורדת החבילה</a>
-    <span class="card-note">${sizeOf(b.id)} · zip</span>
+    ${dlLink(b.skills, 'הורדת החבילה', 'btn btn-primary btn-lg')}
+    <span class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)}</span>
+    <span class="card-note">לא צריך לחלץ כלום</span>
+    ${dlStatus}
   </div>
 </article>`;
 }
@@ -206,7 +214,7 @@ const homeBody = `
 ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
   <div class="section-head">
     <h2 id="h-bundles">חבילות</h2>
-    <p class="muted">סקילים שעובדים יחד, בהורדה אחת.</p>
+    <p class="muted">סקילים שעובדים יחד, בלחיצה אחת. כל סקיל יורד כקובץ משלו, ומעלים אותו לג'מיני כמו שהוא.</p>
   </div>
   ${bundles.map(bundleCard).join('\n')}
 </section>` : ''}
@@ -224,16 +232,16 @@ const usedBy = (name) => skills.filter((s) => s.requires.includes(name));
 const skillLink = (n) => `<a href="/skills/${n}/">${esc(byName.get(n).title)}</a>`;
 
 function installSteps(s, d) {
-  const isBundle = d.id !== s.name;
+  const isBundle = d.files.length > 1;
   return `<section class="block" aria-labelledby="h-install">
   <h2 id="h-install">איך מתקינים</h2>
   <h3 class="install-title">בג'מיני</h3>
   <ol class="install">
     ${isBundle
-      ? `<li>מורידים את הקובץ מהכפתור הראשי בדף הזה. יש בו ${d.count} סקילים, כל אחד בתיקייה משלו.</li>
-    <li>מחלצים את הקובץ במחשב (קליק ימני, <b>חילוץ הכל</b>). בכל תיקייה יש קובץ <bdi dir="ltr">SKILL.md</bdi> אחד.</li>
+      ? `<li>לוחצים על הכפתור הראשי בדף הזה ויורדים ${filesCount(d.files.length)}. <b>לא פותחים אותם</b>. אם הדפדפן שואל, מאשרים הורדה של כמה קבצים.</li>
     <li>בג'מיני פותחים את <b>הגדרות</b>, ונכנסים ל-<b>סקילים (כישורים)</b>.</li>
-    <li>בוחרים <b>העלאת סקיל</b> ומעלים את <bdi dir="ltr">SKILL.md</bdi> מהתיקייה הראשונה. חוזרים על זה לכל תיקייה. ${d.others.map((n) => `<a href="${zipHref(n)}" download>${esc(byName.get(n).title)}</a>`).join(', ')}: אפשר גם להוריד כל אחד מהם כ-zip נפרד ולהעלות אותו כמו שהוא.</li>`
+    <li>בוחרים <b>העלאת סקיל</b> ובוחרים קובץ אחד. חוזרים על זה לכל קובץ.</li>
+    <li>חסר קובץ? אפשר להוריד כל אחד בנפרד: ${d.files.map((n) => `<a href="${zipHref(n)}" download>${esc(byName.get(n).title)}</a>`).join(', ')}.</li>`
       : `<li>מורידים את קובץ ה-zip מהכפתור בדף הזה. <b>לא פותחים אותו</b>.</li>
     <li>בג'מיני פותחים את <b>הגדרות</b>, ונכנסים ל-<b>סקילים (כישורים)</b>.</li>
     <li>בוחרים <b>העלאת סקיל</b> ובוחרים את הקובץ שהורדתם.</li>`}
@@ -243,7 +251,7 @@ function installSteps(s, d) {
   <div class="install-other">
     <div>
       <h3 class="install-title">ב-Claude</h3>
-      <p>אותו קובץ zip בדיוק. ב-claude.ai: <b>הגדרות</b>, <b>יכולות</b>, ובאזור הסקילים מעלים את הקובץ.</p>
+      <p>${isBundle ? 'אותם קבצים בדיוק' : 'אותו קובץ zip בדיוק'}. ב-claude.ai: <b>הגדרות</b>, <b>יכולות</b>, ובאזור הסקילים מעלים ${isBundle ? 'כל קובץ' : 'את הקובץ'}.</p>
     </div>
     <div>
       <h3 class="install-title">ב-ChatGPT</h3>
@@ -263,18 +271,17 @@ function exampleAsk(s) {
 function skillPage(s) {
   const d = downloadFor(s);
   const auto = autoBundles.get(s.name);
-  d.count = auto ? auto.skills.length : 1;
-  d.others = auto ? [s.name, ...auto.skills.slice(1)] : [];
   const callers = usedBy(s.name);
   const dl = auto
     ? `<div class="dl-box">
-    <a class="btn btn-primary btn-lg" href="${d.href}" download>הורדת הסקיל עם מה שהוא צריך</a>
-    <p class="card-note">${d.count} סקילים בקובץ אחד · ${sizeOf(d.id)} · זה מה שרוב המורים צריכים</p>
+    ${dlLink(d.files, 'הורדת הסקיל עם מה שהוא צריך', 'btn btn-primary btn-lg')}
+    <p class="card-note">${filesCount(d.files.length)} · ${sizeOf(d.files)} · זה מה שרוב המורים צריכים</p>
+    ${dlStatus}
     <p class="dl-alt">יש לכם כבר את סקילי העזר? <a href="${zipHref(s.name)}" download>הורדת הסקיל הזה בלבד</a> (${sizeOf(s.name)})</p>
   </div>`
     : `<div class="dl-box">
-    <a class="btn btn-primary btn-lg" href="${d.href}" download>הורדת הסקיל</a>
-    <p class="card-note">קובץ zip · ${sizeOf(d.id)}</p>
+    ${dlLink(d.files, 'הורדת הסקיל', 'btn btn-primary btn-lg')}
+    <p class="card-note">קובץ zip · ${sizeOf(d.files)}</p>
   </div>`;
 
   const body = `
@@ -349,7 +356,8 @@ function skillPage(s) {
       ${bundles.filter((b) => b.skills.includes(s.name)).map((b) => `<section class="side-box">
         <h2>נמצא בחבילה</h2>
         <p><b>${esc(b.title)}</b></p>
-        <a class="btn btn-ghost btn-sm" href="${zipHref(b.id)}" download>הורדת החבילה (${b.skills.length} סקילים)</a>
+        ${dlLink(b.skills, `הורדת החבילה (${filesCount(b.skills.length)})`, 'btn btn-ghost btn-sm')}
+        ${dlStatus}
       </section>`).join('')}
     </aside>
   </div>

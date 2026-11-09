@@ -47,6 +47,36 @@
     });
   });
 
+  // A bundle button downloads each skill's zip separately, so nobody has to extract anything.
+  document.querySelectorAll('[data-files]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (btn.dataset.busy) return;
+      btn.dataset.busy = '1';
+      var files = btn.dataset.files.split('|');
+      var box = btn.closest('.card, .bundle-cta, .dl-box, .side-box');
+      var status = box ? box.querySelector('.dl-status') : null;
+      var say = function (text) { if (status) status.textContent = text; };
+      var i = 0;
+      (function next() {
+        var a = document.createElement('a');
+        a.href = '/downloads/' + files[i] + '.zip';
+        a.download = '';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        i++;
+        if (i < files.length) {
+          say('מוריד קובץ ' + i + ' מתוך ' + files.length + '. אם הדפדפן שואל, מאשרים הורדה של כמה קבצים.');
+          setTimeout(next, 900);
+        } else {
+          say('ירדו ' + files.length + ' קבצים. לא פותחים אותם: מעלים כל אחד לג\'מיני כמו שהוא.');
+          delete btn.dataset.busy;
+        }
+      })();
+    });
+  });
+
   function fallback(text) {
     var t = document.createElement('textarea');
     t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
