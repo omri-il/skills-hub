@@ -1,18 +1,18 @@
 ---
 name: create-choice-board
-description: יוצר לוח בחירה (choice board) בעברית לכל מקצוע וכיתה, כטבלת משבצות אמיתית (ברירת מחדל 3 על 3, "שלוש בשורה") ב-Canvas, עם מדריך למורה ובו יעד, שלבים, תמיכה והרחבה לכל משבצת. השתמש כאשר מורה מבקש לוח בחירה, לוח בחירות, choice board, טיק-טק-טו למידה, בינגו משימות, תפריט משימות, משימות לבחירה, או דרכים שונות לתלמידים להראות שהבינו נושא, בתרגול או בפרויקט.
+description: יוצר לוח בחירה (choice board) בעברית לכל מקצוע וכיתה, כקובץ Word עם טבלת משבצות צבעונית אמיתית (ברירת מחדל 3 על 3, "שלוש בשורה") בעמוד אחד לרוחב, ומדריך למורה עם מטרה, שלבים, תמיכה והרחבה לכל משבצת. השתמש כאשר מורה מבקש לוח בחירה, לוח בחירות, choice board, טיק-טק-טו למידה, בינגו משימות, תפריט משימות, משימות לבחירה, או דרכים שונות לתלמידים להראות שהבינו נושא, בתרגול או בפרויקט.
 ---
 
 # יצירת לוח בחירה
 
 לוח בחירה הוא **טבלה של משבצות**, לא רשימה של כרטיסים. התלמיד רואה את כל האפשרויות במבט אחד ובוחר לפי כלל ברור (למשל שלוש בשורה). כל הכללים כאן נועדו לשמור על זה.
 
-## חובה: התוצר הוא דף Canvas אחד
+## חובה: התוצר הוא קובץ Word
 
-- **צור את הלוח ב-Canvas, כדף HTML אחד** לפי "תבנית הדף" למטה. גם אם המורה לא ביקש Canvas.
-- **אל תכתוב את הלוח בתשובה בצ'אט**, ואל תיצור Google Docs. בצ'אט כתוב רק שורה אחת: מה נוצר ואיך מדפיסים ("להדפסה: Ctrl+P, הדף מודפס לרוחב").
-- בדף שתי לשוניות: **לוח לתלמיד** ו**מדריך למורה**. בהדפסה יוצאת רק הלשונית הפתוחה.
-- אם אין Canvas (למשל ב-Claude או ב-ChatGPT), צור את אותו דף HTML כקובץ או כ-artifact.
+- **צור קובץ Word ‏(‎.docx) להורדה**, בהרצת קוד אחת, עם פונקציית `build` שבסוף הסקיל. גם אם המורה לא ביקש קובץ.
+- **אל תכתוב את הלוח בתשובה בצ'אט, ואל תשתמש ב-Canvas.** בצ'אט כתוב רק את הקובץ ואת שתי שורות ההודעה למורה (בסוף הסקיל).
+- `build` משתמשת רק ב-Python רגיל, בלי ספריות. היא רצה בסביבת הקוד שלך כרגיל. העתק אותה כמו שהיא ואל תשנה אותה.
+- **אל תבנה את הקובץ בדרך אחרת** (python-docx, pandoc, HTML). רק `build`.
 
 ## לפני שמתחילים
 
@@ -24,14 +24,14 @@ description: יוצר לוח בחירה (choice board) בעברית לכל מק�
 
 ## גודל הלוח וכלל הבחירה
 
-| הלוח | כלל הבחירה | משבצות למילוי |
+| הלוח | כלל הבחירה | משבצות |
 |---|---|---|
 | 3×3 (ברירת מחדל) | שלוש בשורה: שורה, טור או אלכסון | 8 משימות + "בחירה חופשית" באמצע |
 | 2×3 | בחרו 2 משימות, אחת מכל שורה | 6 |
-| 3×3 לכיתות א'–ג' | בחרו 2 משימות (בלי שלוש בשורה) | 9, או 6 בלוח 2×3 |
+| כיתות א'–ג' | בחרו 2 משימות (בלי שלוש בשורה) | 6 בלוח 2×3, או 9 בלוח 3×3 |
 | 4×4 | ארבע בשורה (בינגו) | 16, או 15 + "בחירה חופשית" |
 
-המורה יכול לבקש כל גודל וכל כלל אחר. כתוב את הכלל **מעל הלוח**, במשפט אחד בגדול.
+המורה יכול לבקש כל גודל וכל כלל אחר. הכלל נכתב **מעל הלוח**, במשפט אחד.
 
 ## זמן: מתחלקים בין המשבצות
 
@@ -45,166 +45,212 @@ description: יוצר לוח בחירה (choice board) בעברית לכל מק�
 ## תוכן המשבצות
 
 - **כל משימה מעבדת את החומר**: משווה, מסבירה, מיישמת, ממיינת, מנתחת או יוצרת. לא "קראו" ולא "העתיקו".
-- **מגוון סוגים** (מודליות). השתמש בארבע משפחות:
+- **מגוון סוגים.** ארבע משפחות:
   - **כ**: כתיבה (יומן, מכתב, הגדרה במילים שלך, שאלות ותשובות)
   - **ח**: חזותי (ציור עם הסברים, תרשים, קומיקס, מפת מושגים)
   - **ד**: דיבור והצגה (הקלטה, ראיון, הסבר לחבר, פודקאסט קצר)
-  - **י**: ידיים ותנועה (בנייה, דגם, משחק, מיון כרטיסים, תנועה)
-  - משימה דיגיטלית (מצגת קצרה, טופס, Canva) נכנסת לאחת המשפחות. לכיתות ד' ומעלה, שתיים-שלוש משבצות דיגיטליות לכל היותר.
-- **סידור 3×3 שבו כל שורה של שלוש מעורבת.** הצב את המשפחות כך (★ = בחירה חופשית):
+  - **י**: ידיים ותנועה (בנייה, דגם, משחק, מיון, תנועה)
+  - משימה דיגיטלית נכנסת לאחת המשפחות. לכיתות ד' ומעלה, שתיים-שלוש משבצות דיגיטליות לכל היותר.
+- **סידור 3×3 שבו כל שורה של שלוש מעורבת** (המשבצות ממוספרות מימין לשמאל, ★ = בחירה חופשית):
 
   ```
-  כ  ח  ד
-  ד  ★  י
-  י  כ  ח
+  1:כ  2:ח  3:ד
+  4:ד  5:★  6:י
+  7:י  8:כ  9:ח
   ```
 
   בסידור הזה אין שורה, טור או אלכסון עם שתי משבצות מאותה משפחה. בלוח בגודל אחר: כל שורה מכילה לפחות שני סוגים שונים.
 - **"בחירה חופשית"**: התלמיד מציע משימה משלו לאותה מטרה, ומאשר אותה עם המורה לפני שמתחיל.
-- **חומרים**: רק מה שיש בכל כיתה או בית (דף, צבעים, טלפון, פלסטלינה), או מה שהמורה צירף. לא "דף עבודה מצורף" שלא קיים. אם המשימה צריכה פריטים (מושגים למיון, שאלות), כתוב אותם בתוך המשבצת.
-- **כיתות א'–ג'**: 1–3 חומרים פשוטים, משפטים קצרים במילים מוכרות, ומשימות שאפשר לעשות לבד בלי מבוגר.
+- **חומרים**: רק מה שיש בכל כיתה או בית (דף, צבעים, טלפון, פלסטלינה), או מה שהמורה צירף. לא "דף עבודה מצורף" שלא קיים. אם המשימה צריכה פריטים (מושגים למיון, שאלות), כתוב אותם בתוך המשימה.
+- **כיתות א'–ג'**: 1–3 חומרים פשוטים, משפטים קצרים במילים מוכרות, משימות שאפשר לעשות לבד בלי מבוגר, ו-`"young": True`.
+- **דוגמאות חד-משמעיות.** במשימות מיון וזיהוי, כל פריט שייך בבירור לאחת הקטגוריות שהמורה ביקש. לא מכניסים פריט שלא שייך לאף אחת מהן (למשל התאמה פיזיולוגית כשהמורה ביקש מבנית והתנהגותית), ולא כותבים "מבנית/פיזיולוגית".
+- לשון רבים פונה לתלמידים ("ציירו", "כתבו"), מונחים כפי שמלמדים בישראל.
+- **בלי אימוג'י ובלי סימנים מיוחדים** (✔ ⏱ ⭐) בשום טקסט בקובץ. בתצוגה של Google הם יוצאים כריבועים ריקים.
 
-## משבצת אחת בלוח התלמיד
+## הנתונים ל-build
 
-קצר, כי כל הלוח צריך להיכנס בעמוד אחד:
-
-1. מספר + אימוג'י אחד + **כותרת** קצרה ומושכת
-2. המשימה: משפט אחד-שניים, פועל בלשון רבים בהתחלה ("ציירו", "הקליטו", "בנו"). עד 35 מילים.
-3. **תוצר:** מה מגישים, בכמה מילים.
-4. שורה תחתונה: ⏱ זמן · צריך: חומרים.
-
-לכיתות א'–ג': עד 15 מילים במשימה, אותיות גדולות יותר (ה-CSS בתבנית, מחלקה `young`).
-
-## המדריך למורה
-
-1. **בראש**: רשימה קצרה של הנתונים (כיתה, נושא, מטרות, משך, גודל וכלל), וכל ברירת מחדל שקבעת.
-2. **טבלה, שורה לכל משבצת**, עם העמודות: מס' · משימה וסוג · מטרה שהיא בודקת · שלבים ותוצר · תמיכה · הרחבה · חומרים · זמן.
-   - **שלבים**: שלושה, בחלוקת זמן של כ-20% תכנון, 60% ביצוע, 20% סיום ובדיקה, עם דקות בסוגריים.
-   - **תמיכה**: משהו מוחשי (פתיח משפט, בנק מילים, דוגמה). לא "עזרה מהמורה".
-   - **הרחבה**: שאלה או דרישה שמעמיקה את אותה משימה, לא משימה נוספת.
-3. **בסוף**: שתיים-שלוש שורות על איך לבדוק את התוצרים (מה מראה שהתלמיד הבין את המטרה).
-
-## תבנית הדף
-
-השתמש בתבנית הזאת כמו שהיא. החלף רק את התוכן, את מספר המשבצות ואת `--cols` (מספר הטורים). כל משבצת מקבלת צבע אחר מ-`c1` עד `c9` (בלוח גדול חוזרים על הצבעים).
-
-```html
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>לוח בחירה: [נושא]</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Heebo,Arial,sans-serif;color:#1f2933;background:#eef0f3}
-.tabs{display:flex;gap:8px;justify-content:center;padding:14px}
-.tabs button{font:inherit;font-weight:700;padding:8px 20px;border:1px solid #c5cad3;border-radius:999px;background:#fff;cursor:pointer}
-.tabs button[aria-selected="true"]{background:#1f2933;color:#fff;border-color:#1f2933}
-section{max-width:1150px;margin:0 auto 28px;background:#fff;padding:24px 28px;border-radius:14px}
-section[hidden]{display:none}
-h1{margin:0;font-size:30px;font-weight:800}
-.fill{display:flex;gap:32px;margin:10px 0 6px;font-size:15px}
-.rule{margin:6px 0 16px;font-size:19px;font-weight:700;background:#1f2933;color:#fff;padding:8px 14px;border-radius:8px}
-.board{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:10px}
-.cell{border:2px solid rgba(0,0,0,.14);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-height:170px}
-.cell .top{display:flex;gap:8px;align-items:baseline}
-.cell .num{font-weight:800;font-size:15px;opacity:.6}
-.cell h2{margin:0;font-size:18px;font-weight:800;line-height:1.25}
-.cell p{margin:0;font-size:14.5px;line-height:1.45}
-.cell .meta{margin-top:auto;font-size:13px;border-top:1px dashed rgba(0,0,0,.2);padding-top:6px}
-.cell.free{border-style:dashed;border-width:3px;justify-content:center;text-align:center}
-.young .cell h2{font-size:22px}.young .cell p{font-size:18px}
-.c1{background:#dbeafe}.c2{background:#dcfce7}.c3{background:#fef9c3}.c4{background:#fce7f3}.c5{background:#ede9fe}
-.c6{background:#ffedd5}.c7{background:#ccfbf1}.c8{background:#fee2e2}.c9{background:#e0f2fe}
-.guide ul{margin:8px 0 18px}
-.guide table{width:100%;border-collapse:collapse;font-size:13.5px}
-.guide th,.guide td{border:1px solid #c5cad3;padding:7px 8px;vertical-align:top;text-align:start}
-.guide th{background:#1f2933;color:#fff}
-.guide td ol{margin:0;padding-inline-start:18px}
-@media print{
-  @page{size:A4 landscape;margin:9mm}
-  body{background:#fff}
-  .tabs{display:none}
-  section{max-width:none;margin:0;padding:0;border-radius:0}
-  .cell,.guide tr{break-inside:avoid}
-  .cell,.guide th,.rule{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .cell{min-height:0}
+```python
+board = {
+    "title": "התאמות של בעלי חיים למדבר",
+    "rule": "בחרו שלוש משימות בשורה: לאורך, לרוחב או באלכסון. סמנו V על כל משימה שסיימתם.",
+    "cols": 3,
+    "young": False,
+    "cells": [  # לפי הסדר, מימין לשמאל ומלמעלה למטה
+        {"title": "יומן הישרדות",
+         "task": "כתבו יומן של גמל ל-24 שעות במדבר. שלבו 2 התאמות מבניות ו-1 התנהגותית.",
+         "product": "קטע יומן של 8-10 שורות", "time": "15 דקות", "materials": "דף ועט"},
+        # ...
+        {"title": "בחירה חופשית", "free": True, "time": "15 דקות",
+         "task": "הציעו משימה משלכם שמראה [המטרה]. אשרו אותה עם המורה לפני שמתחילים."},
+        # ...
+    ],
+    "guide": {
+        "info": ["כיתה: ח'", "מטרות: ...", "משך: 45 דקות · לוח 3×3, שלוש בשורה · 15 דקות למשבצת"],
+        "rows": [  # שורה לכל משבצת חוץ מבחירה חופשית
+            {"n": 1, "title": "יומן הישרדות", "type": "כתיבה",
+             "goal": "המטרה שהמשבצת בודקת",
+             "steps": ["תכננו: ... (3 דק')", "כתבו: ... (9 דק')", "בדקו: ... (3 דק')"],
+             "product": "קטע יומן", "support": "פתיח משפט, בנק מילים או דוגמה",
+             "extension": "דרישה שמעמיקה את אותה משימה", "materials": "דף ועט", "time": "15 דקות"},
+        ],
+        "assess": "שתיים-שלוש שורות: מה בתוצר מראה שהתלמיד הבין את המטרה.",
+    },
 }
-</style>
-</head>
-<body>
-<nav class="tabs" role="tablist">
-  <button role="tab" aria-selected="true" data-tab="student">לוח לתלמיד</button>
-  <button role="tab" aria-selected="false" data-tab="teacher">מדריך למורה</button>
-</nav>
+```
 
-<section id="student">
-  <h1>[כותרת הלוח: הנושא]</h1>
-  <div class="fill"><span>שם: ____________</span><span>כיתה: ______</span><span>תאריך: ______</span></div>
-  <p class="rule">[הכלל, למשל: בחרו שלוש משימות בשורה: לאורך, לרוחב או באלכסון. סמנו ✔ על כל משימה שסיימתם.]</p>
-  <div class="board" style="--cols:3">
-    <div class="cell c1">
-      <div class="top"><span class="num">1</span><h2>🌵 [כותרת]</h2></div>
-      <p>[המשימה, משפט אחד-שניים]</p>
-      <p><b>תוצר:</b> [מה מגישים]</p>
-      <div class="meta">⏱ [15 דקות] · <b>צריך:</b> [חומרים]</div>
-    </div>
-    <!-- ... משבצות 2-4 ... -->
-    <div class="cell c5 free">
-      <div class="top" style="justify-content:center"><span class="num">5</span><h2>⭐ בחירה חופשית</h2></div>
-      <p>הציעו משימה משלכם שמראה [המטרה]. אשרו אותה עם המורה לפני שמתחילים.</p>
-      <div class="meta">⏱ [15 דקות]</div>
-    </div>
-    <!-- ... משבצות 6-9 ... -->
-  </div>
-</section>
+- **משבצת בלוח**: כותרת קצרה ומושכת, משימה של משפט אחד-שניים (עד 35 מילים, לכיתות א'–ג' עד 15), תוצר בכמה מילים, זמן וחומרים.
+- **שלבים במדריך**: שלושה, בחלוקה של כ-20% תכנון, 60% ביצוע, 20% סיום ובדיקה, עם דקות בסוגריים.
+- **תמיכה**: משהו מוחשי (פתיח משפט, בנק מילים, דוגמה). לא "עזרה מהמורה".
+- **הרחבה**: שאלה או דרישה שמעמיקה את אותה משימה, לא משימה נוספת.
 
-<section id="teacher" class="guide" hidden>
-  <h1>מדריך למורה: [נושא]</h1>
-  <ul>
-    <li><b>כיתה:</b> [ ]</li>
-    <li><b>מטרות:</b> [ ]</li>
-    <li><b>משך:</b> [ ] · <b>לוח:</b> [3×3, שלוש בשורה] · <b>זמן למשבצת:</b> [ ]</li>
-  </ul>
-  <table>
-    <thead><tr><th>מס'</th><th>משימה וסוג</th><th>מטרה</th><th>שלבים ותוצר</th><th>תמיכה</th><th>הרחבה</th><th>חומרים</th><th>זמן</th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td>[כותרת] (כתיבה)</td><td>[ ]</td><td><ol><li>[תכננו (3 דק')]</li><li>[בצעו (9 דק')]</li><li>[סיימו ובדקו (3 דק')]</li></ol><b>תוצר:</b> [ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
-    </tbody>
-  </table>
-  <p><b>איך בודקים:</b> [שתיים-שלוש שורות]</p>
-</section>
+## שלבי העבודה
 
-<script>
-document.querySelectorAll('.tabs button').forEach(function(b){
-  b.addEventListener('click',function(){
-    document.querySelectorAll('.tabs button').forEach(function(x){x.setAttribute('aria-selected',x===b)});
-    document.querySelectorAll('section').forEach(function(s){s.hidden=s.id!==b.dataset.tab});
-  });
-});
-</script>
-</body>
-</html>
+1. תכנן את המשבצות לפי הכללים למעלה, ובדוק את הרשימה ב"לפני מסירה".
+2. **בהרצת קוד אחת**: הגדר את `build`, את `board`, וקרא ל-`build(board, "<שם-באנגלית>.docx")`.
+3. אם הודפסו בעיות, תקן את `board` והרץ שוב. אל תמסור קובץ עם בעיות.
+4. מסור את הקובץ, ואחריו את שתי שורות ההודעה למורה.
+
+```python
+import re, zipfile
+
+HEB = re.compile(r"[֐-׿]")
+COLORS = ["DBEAFE", "DCFCE7", "FEF9C3", "FCE7F3", "EDE9FE", "FFEDD5", "CCFBF1", "FEE2E2", "E0F2FE"]
+
+def build(board, out):
+    problems = []
+    esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    def run(text, size=11, bold=False, color=None):
+        rtl = "<w:rtl/>" if HEB.search(str(text)) else ""
+        b = "<w:b/><w:bCs/>" if bold else ""
+        c = f'<w:color w:val="{color}"/>' if color else ""
+        return (f'<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>{b}{c}'
+                f'<w:sz w:val="{size*2}"/><w:szCs w:val="{size*2}"/>{rtl}</w:rPr>'
+                f'<w:t xml:space="preserve">{esc(text)}</w:t></w:r>')
+    def para(runs, center=False, after=60, fill=None, newpage=False):
+        pb = "<w:pageBreakBefore/>" if newpage else ""
+        shd = f'<w:shd w:val="clear" w:color="auto" w:fill="{fill}"/>' if fill else ""
+        jc = '<w:jc w:val="center"/>' if center else ""
+        return f'<w:p><w:pPr>{pb}{shd}<w:bidi/><w:spacing w:before="0" w:after="{after}"/>{jc}</w:pPr>{"".join(runs)}</w:p>'
+    def cell(paras, width, fill=None, border="FFFFFF"):
+        shd = f'<w:shd w:val="clear" w:color="auto" w:fill="{fill}"/>' if fill else ""
+        return f'<w:tc><w:tcPr><w:tcW w:w="{width}" w:type="dxa"/>{shd}</w:tcPr>{"".join(paras) or para([])}</w:tc>'
+    def table(widths, rows, border, bsize, height=None, header=False):
+        b = "".join(f'<w:{s} w:val="single" w:sz="{bsize}" w:space="0" w:color="{border}"/>'
+                    for s in ["top", "left", "bottom", "right", "insideH", "insideV"])
+        grid = "".join(f'<w:gridCol w:w="{w}"/>' for w in widths)
+        trs = ""
+        for i, r in enumerate(rows):
+            pr = "<w:cantSplit/>" + (f'<w:trHeight w:val="{height}" w:hRule="atLeast"/>' if height else "")
+            pr += "<w:tblHeader/>" if header and i == 0 else ""
+            trs += f"<w:tr><w:trPr>{pr}</w:trPr>{''.join(r)}</w:tr>"
+        return (f'<w:tbl><w:tblPr><w:bidiVisual/><w:tblW w:w="{sum(widths)}" w:type="dxa"/>'
+                f'<w:tblBorders>{b}</w:tblBorders><w:tblLayout w:type="fixed"/>'
+                f'<w:tblCellMar><w:top w:w="100" w:type="dxa"/><w:left w:w="140" w:type="dxa"/>'
+                f'<w:bottom w:w="100" w:type="dxa"/><w:right w:w="140" w:type="dxa"/></w:tblCellMar></w:tblPr>'
+                f'<w:tblGrid>{grid}</w:tblGrid>{trs}</w:tbl>')
+
+    W = 15704  # A4 landscape, 1 cm margins
+    young = board.get("young", False)
+    cols, cells = board["cols"], board["cells"]
+    if len(cells) % cols:
+        problems.append(f"{len(cells)} משבצות לא מתחלקות ל-{cols} טורים")
+    nrows = -(-len(cells) // cols)
+    body = para([run(board["title"], 22, True)], after=40)
+    body += para([run("שם: ________________     כיתה: ________     תאריך: ________", 11)], after=80)
+    body += para([run(board["rule"], 14, True, "FFFFFF")], after=120, fill="1F2933")
+    cw = W // cols
+    grid_rows = []
+    for r in range(nrows):
+        row = []
+        for k in range(cols):
+            i = r * cols + k
+            if i >= len(cells):
+                row.append(cell([], cw)); continue
+            c = cells[i]
+            ts, bs = (16, 14) if young else (13, 11)
+            if len(str(c.get("task", "")).split()) > (15 if young else 35):
+                problems.append(f"משבצת {i+1}: המשימה ארוכה מדי")
+            ps = [para([run(f"{i+1}.", ts, True, "6B7280"), run("  " + c["title"], ts, True)], center=c.get("free", False), after=80),
+                  para([run(c.get("task", ""), bs)], center=c.get("free", False), after=80)]
+            if c.get("product"):
+                ps.append(para([run("תוצר: ", bs, True), run(c["product"], bs)], after=80))
+            meta = [run("זמן: ", bs - 1, True), run(c.get("time", ""), bs - 1)]
+            if c.get("materials"):
+                meta += [run("  ·  צריך: ", bs - 1, True), run(c["materials"], bs - 1)]
+            ps.append(para(meta, center=c.get("free", False), after=0))
+            row.append(cell(ps, cw, COLORS[i % len(COLORS)]))
+        grid_rows.append(row)
+    body += table([cw] * cols, grid_rows, "FFFFFF", 36, height=7600 // nrows)
+
+    g = board["guide"]
+    body += para([run("מדריך למורה: " + board["title"], 18, True)], after=80, newpage=True)
+    for line in g["info"]:
+        body += para([run("• " + line, 11)], after=30)
+    body += para([], after=60)
+    heads = ["משבצת", "מטרה", "שלבים ותוצר", "תמיכה", "הרחבה", "חומרים וזמן"]
+    ws = [2000, 2600, 4000, 2600, 2600, 1904]
+    rows = [[cell([para([run(h, 11, True, "FFFFFF")], after=0)], w, "1F2933") for h, w in zip(heads, ws)]]
+    for r in g["rows"]:
+        steps = [para([run(f"{j+1}. {s}", 10)], after=30) for j, s in enumerate(r.get("steps", []))]
+        steps.append(para([run("תוצר: ", 10, True), run(r.get("product", ""), 10)], after=0))
+        rows.append([cell([para([run(f'{r["n"]}. {r["title"]}', 10, True)], after=30), para([run(r.get("type", ""), 9, color="6B7280")], after=0)], ws[0]),
+                     cell([para([run(r.get("goal", ""), 10)], after=0)], ws[1]),
+                     cell(steps, ws[2]),
+                     cell([para([run(r.get("support", ""), 10)], after=0)], ws[3]),
+                     cell([para([run(r.get("extension", ""), 10)], after=0)], ws[4]),
+                     cell([para([run(r.get("materials", ""), 10)], after=30), para([run("זמן: ", 10, True), run(r.get("time", ""), 10)], after=0)], ws[5])])
+    body += table(ws, rows, "C5CAD3", 4, header=True)
+    if g.get("assess"):
+        body += para([], after=60) + para([run("איך בודקים: ", 11, True), run(g["assess"], 11)], after=0)
+    if len(g["rows"]) != sum(1 for c in cells if not c.get("free")):
+        problems.append("במדריך למורה חסרה שורה למשבצת")
+
+    sect = ('<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/>'
+            '<w:pgMar w:top="567" w:right="567" w:bottom="567" w:left="567" w:header="0" w:footer="0" w:gutter="0"/><w:bidi/></w:sectPr>')
+    ns = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"'
+    doc = f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document {ns}><w:body>{body}{sect}</w:body></w:document>'
+    styles = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles {ns}><w:docDefaults><w:rPrDefault><w:rPr>'
+              '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/><w:lang w:val="he-IL" w:bidi="he-IL"/>'
+              '</w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:bidi/><w:spacing w:after="0" w:line="252" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults></w:styles>')
+    ct = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+          '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+          '<Default Extension="xml" ContentType="application/xml"/>'
+          '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
+          '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>')
+    rel = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+    rels = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            f'<Relationship Id="rId1" Type="{rel}/officeDocument" Target="word/document.xml"/></Relationships>')
+    drels = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+             f'<Relationship Id="rId1" Type="{rel}/styles" Target="styles.xml"/></Relationships>')
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", ct); z.writestr("_rels/.rels", rels)
+        z.writestr("word/document.xml", doc); z.writestr("word/styles.xml", styles)
+        z.writestr("word/_rels/document.xml.rels", drels)
+    print("בעיות:", problems or "אין")
+    return problems
 ```
 
 ## לפני מסירה, בדוק
 
-- [ ] הלוח הוא **טבלת משבצות** (`.board` עם `--cols`), לא רשימה של כרטיסים זה מתחת לזה.
-- [ ] מספר המשבצות מתאים לגודל, וכל משבצת בצבע אחר.
-- [ ] הכלל כתוב מעל הלוח.
+- [ ] מספר המשבצות מתחלק בדיוק במספר הטורים.
+- [ ] הכלל מתאים לגודל הלוח.
 - [ ] בלוח 3×3: אין שורה, טור או אלכסון עם שתי משבצות מאותה משפחה.
-- [ ] כל משבצת עד 35 מילים במשימה, ויש בה תוצר אחד, זמן וחומרים.
 - [ ] הזמן בכל משבצת = משך כולל ÷ מספר המשבצות שמשלימים, והמשימה באמת נגמרת בו.
-- [ ] כל חומר זמין בכל כיתה, או כתוב בתוך המשבצת.
-- [ ] במדריך למורה יש שורה לכל משבצת, עם תמיכה והרחבה ממשיות.
-- [ ] לשון רבים פונה לתלמידים ("ציירו", "כתבו"), עברית תקינה, מונחים כפי שמלמדים בישראל.
+- [ ] אין אימוג'י או סימנים מיוחדים בשום טקסט.
+- [ ] בכל משבצת תוצר אחד, וכל חומר זמין בכל כיתה או כתוב בתוך המשימה.
+- [ ] במדריך שורה לכל משבצת (חוץ מבחירה חופשית), עם תמיכה והרחבה ממשיות.
+
+## הודעה למורה אחרי הקובץ
+
+כתוב בדיוק את שתי השורות האלה:
+
+1. העמוד הראשון הוא הלוח לתלמידים (מודפס לרוחב), ואחריו המדריך למורה. להדפסת הלוח בלבד: הדפסת עמוד 1.
+2. ל-Classroom או ל-Google Docs: מעלים את הקובץ ל-Drive, פותחים אותו, ובוחרים קובץ ← שמירה כ-Google Docs.
 
 ## טעויות נפוצות
 
 - **רשימה של כרטיסים במקום טבלה.** זו בדיוק הבעיה שהסקיל הזה פותר.
+- לוח שנכתב בצ'אט או ב-Canvas במקום כקובץ.
 - כל משבצת לוקחת את כל זמן השיעור, למרות שהתלמיד משלים שלוש.
 - משימת ציור או הקלטה שמסתיימת ב"וכתבו הסבר של פסקה".
 - "דף העבודה המצורף" או "הכרטיסים שהמורה יחלק" כשאין כאלה.
-- הלוח ארוך מדי ולא נכנס בעמוד אחד בהדפסה: קצר את המשימות, אל תקטין את האותיות.
