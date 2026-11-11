@@ -289,6 +289,7 @@ function installSteps(s, d) {
 }
 
 function exampleAsk(s) {
+  if (s.example) return s.example;
   if (s.subjects.includes('כימיה') && s.name.includes('chem')) return "דף עבודה באיזון ניסוחים לכיתה י', כקובץ Word";
   if (s.name.includes('math')) return "דף תרגול בסדרות הנדסיות ל-4 יחידות, כקובץ Word";
   if (s.name.includes('verify')) return 'תבדוק את מפתח התשובות של דף העבודה שהעליתי';

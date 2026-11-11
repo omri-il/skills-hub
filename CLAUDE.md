@@ -56,7 +56,7 @@ Known Gemini behaviour (2026-11-07, Flash and Pro, recorded in those skills' `te
 ## meta.yaml
 
 Required: `name` (= folder), `title` (Hebrew), `version`, `updated` (YYYY-MM-DD), `subjects` (list), `platforms` (`tested:` list and/or `compatible:` list), `audience`, `problem`, `what_it_does`, `output`, `role` (`main`, a skill the teacher uses; `shared`, a helper other skills call), `tested` (list), `limitations` (list).
-Optional: `requires` (list of skill names).
+Optional: `requires` (list of skill names), `example` (the request shown in "איך מתקינים"; without it the site guesses one from the name).
 
 - `main` skills come first on the home page; `shared` ones under "סקילי עזר".
 - `tested` and `limitations` are the site's credibility: write them as plain observations from a real run, never marketing. Ask Omri; don't invent them.
