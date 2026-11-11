@@ -31,7 +31,10 @@ const firstSentence = (s) => {
   const m = String(s).match(/^[\s\S]*?[.!?](?=\s|$)/);
   return (m ? m[0] : String(s)).trim();
 };
-const platformsOf = (s) => [...new Set([...s.tested_on, ...s.compatible])];
+// The site shows Gemini only for now (Omri, 2026-11-11). meta.yaml keeps the other platforms; add them back here to show them.
+const SHOWN_PLATFORMS = ['Gemini'];
+const shown = (list) => list.filter((p) => SHOWN_PLATFORMS.includes(p));
+const platformsOf = (s) => shown([...new Set([...s.tested_on, ...s.compatible])]);
 const zipHref = (id) => `/downloads/${id}.zip`;
 const sizeOf = (ids) => {
   const bytes = [ids].flat().reduce((sum, id) => sum + fs.statSync(path.join(DIST, 'downloads', `${id}.zip`)).size, 0);
@@ -113,8 +116,8 @@ ${body}
 const tag = (text, cls = '') => `<span class="tag ${cls}">${esc(text)}</span>`;
 function platformTags(s) {
   return [
-    ...s.tested_on.map((p) => tag(`נבדק ב-${p}`, 'tag-tested')),
-    ...s.compatible.filter((p) => !s.tested_on.includes(p)).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')),
+    ...shown(s.tested_on).map((p) => tag(`נבדק ב-${p}`, 'tag-tested')),
+    ...shown(s.compatible).filter((p) => !s.tested_on.includes(p)).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')),
   ].join('');
 }
 
@@ -179,7 +182,7 @@ const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
     <h1>מלמדים את ג'מיני פעם אחת.<br class="br-wide"> מקבלים דף עבודה נכון בכל פעם.</h1>
-    <p class="lead">סקיל הוא קובץ הוראות קטן שמעלים לג'מיני (או ל-Claude ול-ChatGPT). מאותו רגע, כשמבקשים כרגיל "דף עבודה בסדרות לכיתה י'", הוא כבר יודע איך עושים את זה טוב: שאלות מדורגות, משוואות שלא נשברות בעברית, ומפתח תשובות שנבדק לפני שהוא מגיע אליכם.</p>
+    <p class="lead">סקיל הוא קובץ הוראות קטן שמעלים לג'מיני. מאותו רגע, כשמבקשים כרגיל "דף עבודה בסדרות לכיתה י'", הוא כבר יודע איך עושים את זה טוב: שאלות מדורגות, משוואות שלא נשברות בעברית, ומפתח תשובות שנבדק לפני שהוא מגיע אליכם.</p>
     <ol class="steps">
       <li><span><b>מורידים</b> סקיל או חבילה מהדף הזה</span></li>
       <li><span><b>מעלים</b> אותו לג'מיני, פעם אחת</span></li>
@@ -199,7 +202,7 @@ const homeBody = `
   </div>
   <div class="filters">
     ${chips('subject', allSubjects)}
-    ${chips('platform', allPlatforms)}
+    ${allPlatforms.length > 1 ? chips('platform', allPlatforms) : ''}
   </div>
   <ul class="grid" id="grid-main">
     ${mains.map(card).join('\n')}
@@ -222,7 +225,7 @@ ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
 
 write('index.html', page({
   title: 'סקילים למורים | עומרי אירם',
-  description: 'סקילים לג\'מיני, Claude ו-ChatGPT שיוצרים דפי עבודה בעברית במתמטיקה ובמדעים, עם משוואות תקינות ומפתח תשובות שנבדק. הורדה חופשית.',
+  description: 'סקילים לג\'מיני שיוצרים דפי עבודה בעברית במתמטיקה ובמדעים, עם משוואות תקינות ומפתח תשובות שנבדק. הורדה חופשית.',
   canonical: '/',
   body: homeBody,
 }));
@@ -248,16 +251,6 @@ function installSteps(s, d) {
     <li>פותחים צ'אט חדש ומבקשים כרגיל, למשל: <q>${esc(exampleAsk(s))}</q>. אין צורך לקרוא לסקיל בשם.</li>
     <li>יצאה גרסה חדשה של הסקיל? מורידים שוב, ובהגדרות בוחרים <b>החלפת סקיל</b>. העדכון לא מגיע לבד.</li>
   </ol>
-  <div class="install-other">
-    <div>
-      <h3 class="install-title">ב-Claude</h3>
-      <p>${isBundle ? 'אותם קבצים בדיוק' : 'אותו קובץ zip בדיוק'}. ב-claude.ai: <b>הגדרות</b>, <b>יכולות</b>, ובאזור הסקילים מעלים ${isBundle ? 'כל קובץ' : 'את הקובץ'}.</p>
-    </div>
-    <div>
-      <h3 class="install-title">ב-ChatGPT</h3>
-      <p>אותו פורמט <bdi dir="ltr">SKILL.md</bdi>. אם אין אצלכם עדיין העלאת סקילים, מדביקים את התוכן של <bdi dir="ltr">SKILL.md</bdi> (בתחתית הדף) בהוראות של פרויקט או של GPT מותאם.</p>
-    </div>
-  </div>
 </section>`;
 }
 
@@ -317,7 +310,7 @@ function skillPage(s) {
         <p class="muted">בדקתי כל סקיל בשימוש אמיתי לפני שהעליתי אותו. זה מה שראיתי, כולל מה שעוד לא עובד מושלם.</p>
         <div class="trust-cols">
           <div class="trust-ok">
-            <h3><span class="ico" aria-hidden="true">✓</span> נבדק ועבד${s.tested_on.length ? ` (${esc(s.tested_on.join(', '))})` : ''}</h3>
+            <h3><span class="ico" aria-hidden="true">✓</span> נבדק ועבד${shown(s.tested_on).length ? ` (${esc(shown(s.tested_on).join(', '))})` : ''}</h3>
             <ul>${s.tested.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
           </div>
           <div class="trust-warn">
@@ -325,7 +318,7 @@ function skillPage(s) {
             <ul>${s.limitations.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
           </div>
         </div>
-        ${s.compatible.filter((p) => !s.tested_on.includes(p)).length ? `<p class="muted small">${s.compatible.filter((p) => !s.tested_on.includes(p)).map((p) => `ב-<bdi>${esc(p)}</bdi>`).join(' ו')} זה אותו פורמט ואמור לעבוד, אבל עוד לא בדקתי שם.</p>` : ''}
+        ${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).length ? `<p class="muted small">${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).map((p) => `ב-<bdi>${esc(p)}</bdi>`).join(' ו')} זה אותו פורמט ואמור לעבוד, אבל עוד לא בדקתי שם.</p>` : ''}
       </section>
 
       ${installSteps(s, d)}

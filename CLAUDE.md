@@ -91,3 +91,4 @@ Every zip holds one skill: one folder named exactly like the skill, with only `S
 - The QR (drawn in `build.js`, hidden under 560px) holds only `https://skills.omri-iram.co.il/`.
 - The favicon comes from claude-config's `scripts/favicon/make_favicons.py` (row `skills`, glyph `layers`, #BEC81E). Change it there and re-run, not by hand.
 - No sign-up, no email capture, no analytics: downloads are free for everyone.
+- The site shows Gemini only for now (Omri, 2026-11-11): `SHOWN_PLATFORMS` in `build.js` hides Claude and ChatGPT tags, filters and install steps. meta.yaml still lists them.
