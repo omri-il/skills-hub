@@ -1,10 +1,11 @@
 name: format-equations-for-hebrew-worksheets
 title: עיצוב משוואות לדפי עבודה בעברית
-version: 2.1.0
-updated: 2026-11-07
+version: 2.2.0
+updated: 2026-11-10
 subjects:
 - מתמטיקה
 - כימיה
+- פיזיקה
 - ביולוגיה
 platforms:
   tested:
