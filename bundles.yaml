@@ -7,3 +7,26 @@
     - create-chemistry-practice
     - format-equations-for-hebrew-worksheets
     - verify-solutions
+
+- id: assessment-pack
+  title: חבילת הערכה ומשוב
+  description: מבחן, מחוון, בדיקת עבודות וניתוח מבחן כיתה. כל מה שקורה סביב מבחן, מהבנייה ועד ההחלטה מה ללמד שוב.
+  skills:
+    - create-test-with-rubric
+    - build-rubric
+    - write-graded-questions
+    - grade-student-work
+    - analyze-class-test
+    - verify-solutions
+    - hebrew-docs-rtl
+    - format-equations-for-hebrew-worksheets
+
+- id: classroom-pack
+  title: חבילת השיעור
+  description: מערך שיעור, הסבר למושג שנתקעים בו, וחדר בריחה לחזרה. להעלות פעם אחת ולעבוד איתם כל השבוע.
+  skills:
+    - create-lesson-plan
+    - explain-three-ways
+    - build-escape-room
+    - write-graded-questions
+    - hebrew-docs-rtl
