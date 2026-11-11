@@ -172,6 +172,38 @@ const mains = skills.filter((s) => s.role === 'main');
 const shared = skills.filter((s) => s.role === 'shared');
 const allSubjects = [...new Set(skills.flatMap((s) => s.subjects))];
 const allPlatforms = [...new Set(skills.flatMap(platformsOf))];
+
+// Sign-up (since 2026-11-11, Omri): the weekly skills email (Listmonk business list 106) and
+// beta testers (list 107). nginx sends POST /signup to listmonk-selfservice, which forwards to
+// Listmonk's own /subscription/form; the Altcha captcha and its script are served by Listmonk
+// through the same nginx (deploy/skills.omri-iram.co.il.conf). No list is written here.
+const signupSection = `<section class="wrap section" id="signup" aria-labelledby="h-signup">
+  <div class="signup">
+    <div class="signup-text">
+      <h2 id="h-signup">סקילים חדשים, פעם בשבוע</h2>
+      <p>פעם בשבוע אשלח מייל קצר עם הסקילים שעלו לאתר. ומי שרוצה לנסות סקילים לפני שהם עולים ולספר לי מה עבד, יכול להירשם כבודק בטא.</p>
+    </div>
+    <form class="signup-form" id="signupForm" novalidate>
+      <div id="signupFields">
+        <label class="field"><span>שם</span><input type="text" name="name" autocomplete="name" required maxlength="120"></label>
+        <label class="field"><span>מייל</span><input type="email" name="email" autocomplete="email" dir="ltr" required maxlength="254"></label>
+        <label class="field"><span>מה אתם מלמדים? <span class="muted">(לא חובה)</span></span><input type="text" name="subject" maxlength="120" placeholder="למשל: מתמטיקה בחטיבת ביניים"></label>
+        <fieldset class="boxes">
+          <legend>מה תרצו לקבל?</legend>
+          <label class="box"><input type="checkbox" name="weekly" value="1" checked> מייל שבועי עם הסקילים החדשים</label>
+          <label class="box"><input type="checkbox" name="beta" value="1"> להיות בודק בטא: לנסות סקילים לפני כולם</label>
+        </fieldset>
+        <div class="hp" aria-hidden="true"><label for="nonce">אל תמלאו שדה זה</label><input type="text" id="nonce" name="nonce" tabindex="-1" autocomplete="off"></div>
+        <altcha-widget id="altcha" auto="onload" hidefooter challengeurl="/api/public/captcha/altcha" strings='{"label":"בודקים שאתם לא רובוט","verifying":"בודקים…","verified":"אומת","waitAlert":"רגע, עוד בודקים…","error":"הבדיקה נכשלה. נסו לרענן את הדף.","expired":"הבדיקה פגה. רעננו את הדף."}'></altcha-widget>
+        <button type="submit" class="btn btn-send btn-lg" id="signupBtn">הרשמה</button>
+        <p class="signup-err" id="signupErr" role="alert" hidden></p>
+        <p class="muted small">אפשר להסיר את עצמכם בכל רגע, בקישור שבתחתית כל מייל.</p>
+      </div>
+      <p class="signup-done" id="signupDone" role="status" hidden>נרשמתם. תודה!</p>
+    </form>
+  </div>
+  <script type="module" src="/public/static/altcha.umd.js" async></script>
+</section>`;
 const chips = (group, values) => `<div class="chips" role="group" aria-labelledby="f-${group}">
   <span class="chips-label" id="f-${group}">${group === 'subject' ? 'מקצוע' : 'פלטפורמה'}</span>
   <button type="button" class="chip" data-filter="${group}" data-value="" aria-pressed="true">הכל</button>
@@ -221,6 +253,8 @@ ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
   </div>
   ${bundles.map(bundleCard).join('\n')}
 </section>` : ''}
+
+${signupSection}
 `;
 
 write('index.html', page({
@@ -323,6 +357,8 @@ function skillPage(s) {
 
       ${installSteps(s, d)}
 
+      <p class="signup-link"><a href="/#signup">רוצים מייל שבועי עם הסקילים החדשים, או לנסות סקילים לפני כולם? להרשמה</a></p>
+
       <section class="block" aria-labelledby="h-source">
         <h2 id="h-source">מה כתוב בסקיל</h2>
         <details class="source">
@@ -372,7 +408,14 @@ write('404.html', page({
   canonical: '/',
   body: `<div class="wrap section"><h1>הדף הזה לא קיים</h1><p><a href="/">חזרה לכל הסקילים</a></p></div>`,
 }));
-write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
+// skills.json: read every Thursday by Listmonk's scripts/skills_weekly_draft.py (the weekly email).
+write('skills.json', JSON.stringify({
+  skills: skills.map((s) => ({
+    name: s.name, title: s.title, version: s.version, updated: s.updated,
+    role: s.role, problem: firstSentence(s.problem),
+  })),
+}, null, 1));
+write('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>${SITE}/</loc></url>

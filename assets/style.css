@@ -214,3 +214,24 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .meta-line code { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
 @media (max-width: 559px) { .br-wide { display: none; } }
 .steps li { border-radius: 22px; }
+
+/* Sign-up (home page) */
+.signup { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px 40px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; }
+.signup h2 { font-size: 1.6rem; margin: 0 0 8px; }
+.signup-form .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; font-weight: 600; }
+.signup-form input[type="text"], .signup-form input[type="email"] { font: inherit; font-weight: 400; padding: 10px 12px; min-height: 44px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); }
+.signup-form input[type="email"] { text-align: end; }
+.signup-form input:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.signup-form .boxes { border: 0; padding: 0; margin: 4px 0 12px; }
+.signup-form legend { font-weight: 600; margin-bottom: 6px; }
+.signup-form .box { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+.signup-form .box input { width: 20px; height: 20px; accent-color: var(--accent); }
+.signup-form altcha-widget { display: block; margin-bottom: 12px; }
+.btn-send { background: var(--accent); color: var(--accent-ink); }
+.btn-send:hover { filter: brightness(1.08); }
+.btn-send:disabled { opacity: .7; cursor: default; }
+.signup-err { color: var(--warn); background: var(--warn-soft); border-radius: 10px; padding: 8px 12px; margin: 10px 0 0; }
+.signup-done { font-size: 1.15rem; font-weight: 600; color: var(--ok); background: var(--ok-soft); border-radius: 10px; padding: 14px 16px; margin: 0; }
+.signup-link { margin-top: 20px; }
+.hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 760px) { .signup { grid-template-columns: 1fr; padding: 20px 16px; } }

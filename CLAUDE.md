@@ -90,5 +90,6 @@ Every zip holds one skill: one folder named exactly like the skill, with only `S
 - The page loads nothing from another site (CSP in the nginx file): fonts, favicon and the QR are local files.
 - The QR (drawn in `build.js`, hidden under 560px) holds only `https://skills.omri-iram.co.il/`.
 - The favicon comes from claude-config's `scripts/favicon/make_favicons.py` (row `skills`, glyph `layers`, #BEC81E). Change it there and re-run, not by hand.
-- No sign-up, no email capture, no analytics: downloads are free for everyone.
+- Downloads are free for everyone, with no sign-up and no analytics. The one form is the optional sign-up at `/#signup` (Omri, 2026-11-11): a weekly skills email (business Listmonk list 106) and beta testers (list 107). `POST /signup` → listmonk-selfservice `/skills/signup` → Listmonk's own `/subscription/form`, single opt-in behind Altcha; both lists are tagged `no-digest`, so these people never get the business weekly through them. The form's nginx routes and CSP are in `deploy/skills.omri-iram.co.il.conf`. Detail: the Listmonk repo, `selfservice/skills_signup.py`.
+- `dist/skills.json` is read every Thursday 09:00 by Listmonk's `scripts/skills_weekly_draft.py`, which makes a draft for list 106 of the `main` skills whose `updated` is in the last 7 days. So a skill's `updated` date is what puts it in the weekly email.
 - The site shows Gemini only for now (Omri, 2026-11-11): `SHOWN_PLATFORMS` in `build.js` hides Claude and ChatGPT tags, filters and install steps. meta.yaml still lists them.

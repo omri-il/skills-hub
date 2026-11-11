@@ -85,3 +85,55 @@
     document.body.removeChild(t);
   }
 })();
+
+// Sign-up form (home page): POST /signup, which nginx sends to listmonk-selfservice.
+(function () {
+  var form = document.getElementById('signupForm');
+  if (!form || !window.fetch) return;
+  var btn = document.getElementById('signupBtn');
+  var err = document.getElementById('signupErr');
+  var altcha = document.getElementById('altcha');
+  // Read the captcha's answer when sending, never earlier: it is single-use and expires.
+  function solved() {
+    var el = altcha && altcha.querySelector('input[name="altcha"]');
+    return el && el.value ? el.value : '';
+  }
+  function fail(text) {
+    err.textContent = text;
+    err.hidden = false;
+    btn.disabled = false;
+    btn.textContent = 'הרשמה';
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.hidden = true;
+    var f = form.elements;
+    var email = f.email.value.trim();
+    if (!f.name.value.trim()) return fail('נא למלא שם.');
+    if (email.indexOf('@') < 1 || email.indexOf('.', email.indexOf('@')) < 0) return fail('כתובת המייל לא נראית תקינה. נא לבדוק אותה.');
+    if (!f.weekly.checked && !f.beta.checked) return fail('נא לסמן לפחות אחת משתי האפשרויות.');
+    var answer = solved();
+    if (!answer) return fail('רגע, עוד מסתיימת בדיקת אבטחה קצרה. נסו שוב בעוד שנייה.');
+    var body = new URLSearchParams();
+    body.append('name', f.name.value.trim());
+    body.append('email', email);
+    body.append('subject', f.subject.value.trim());
+    if (f.weekly.checked) body.append('weekly', '1');
+    if (f.beta.checked) body.append('beta', '1');
+    body.append('nonce', f.nonce.value);
+    body.append('altcha', answer);
+    btn.disabled = true;
+    btn.textContent = 'רגע…';
+    fetch('/signup', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() })
+      .then(function (res) { return res.json().catch(function () { return {}; }); })
+      .then(function (data) {
+        if (data.ok) {
+          document.getElementById('signupFields').hidden = true;
+          document.getElementById('signupDone').hidden = false;
+        } else {
+          fail(data.error || 'משהו השתבש בהרשמה. אפשר לנסות שוב, ואם זה חוזר, לכתוב לי ל-hello@omri-iram.co.il');
+        }
+      })
+      .catch(function () { fail('משהו השתבש בהרשמה. אפשר לנסות שוב, ואם זה חוזר, לכתוב לי ל-hello@omri-iram.co.il'); });
+  });
+})();
