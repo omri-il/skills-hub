@@ -1,20 +1,52 @@
-// Filters on the home page, and the copy button on skill pages. The page works without it.
+// Filters and search on the home page, and the copy button on skill pages. The page works without it.
 (function () {
-  var state = { subject: '', platform: '' };
+  var state = { who: '', subject: '', platform: '', q: [] };
   var chips = document.querySelectorAll('.chip[data-filter]');
   var cards = document.querySelectorAll('.card');
   var empty = document.getElementById('empty');
+  var count = document.getElementById('count');
+  var input = document.getElementById('q');
+  var filters = document.querySelector('.filters');
+  var anySubject = filters ? (filters.dataset.anySubject || '').split('|') : [];
+
+  // Hebrew search: no niqqud, no quotes or geresh, final letters as regular ones, lower case.
+  function norm(t) {
+    return (t || '').toLowerCase()
+      .replace(/[֑-ׇ]/g, '')
+      .replace(/["'`׳״“”‘’]/g, '')
+      .replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ')
+      .replace(/[^\wא-ת]+/g, ' ');
+  }
+  cards.forEach(function (c) { c._text = ' ' + norm(c.dataset.search || c.textContent) + ' '; });
+
+  // A word matches as it is, without one Hebrew prefix letter (ה, ו, ב, ל, מ, ש, כ: "להורים" finds "הורים"),
+  // or without a plural or feminine ending (ים, ות, ה, ת: "חומצה" finds "חומצות", "מצגות" finds "מצגת").
+  function stem(w) { return w.length > 4 ? w.replace(/(ים|ות|ה|ת)$/, '') : w; }
+  function has(text, word) {
+    var forms = [word, stem(word)];
+    if (word.length > 3 && 'הובלמשכ'.indexOf(word.charAt(0)) !== -1) forms.push(word.slice(1), stem(word.slice(1)));
+    return forms.some(function (f) { return f.length > 1 && text.indexOf(f) !== -1; });
+  }
 
   function apply() {
     var shown = 0;
     cards.forEach(function (c) {
       var subs = (c.dataset.subjects || '').split('|');
+      var who = (c.dataset.who || '').split('|');
       var plats = (c.dataset.platforms || '').split('|');
-      var ok = (!state.subject || subs.indexOf(state.subject) !== -1) &&
-               (!state.platform || plats.indexOf(state.platform) !== -1);
+      var exact = state.subject && subs.indexOf(state.subject) !== -1;
+      var general = subs.some(function (s) { return anySubject.indexOf(s) !== -1; });
+      var ok = (!state.subject || exact || general) &&
+               (!state.who || who.indexOf(state.who) !== -1) &&
+               (!state.platform || plats.indexOf(state.platform) !== -1) &&
+               state.q.every(function (w) { return has(c._text, w); });
       c.hidden = !ok;
+      // Skills made for the chosen subject come first, the ones for every subject after them.
+      c.style.order = state.subject && !exact ? '1' : '';
       if (ok) shown++;
     });
+    var filtered = state.who || state.subject || state.platform || state.q.length;
+    if (count) count.textContent = filtered && shown ? (shown === 1 ? 'נמצא סקיל אחד' : 'נמצאו ' + shown + ' סקילים') : '';
     document.querySelectorAll('.grid').forEach(function (g) {
       var any = g.querySelector('.card:not([hidden])');
       g.hidden = !any;
@@ -34,6 +66,24 @@
       apply();
     });
   });
+
+  if (input) {
+    input.addEventListener('input', function () {
+      state.q = norm(input.value).split(' ').filter(Boolean);
+      apply();
+    });
+  }
+
+  var reset = document.getElementById('reset');
+  if (reset) {
+    reset.addEventListener('click', function () {
+      state.who = state.subject = state.platform = '';
+      state.q = [];
+      if (input) input.value = '';
+      chips.forEach(function (c) { c.setAttribute('aria-pressed', c.dataset.value === '' ? 'true' : 'false'); });
+      apply();
+    });
+  }
 
   document.querySelectorAll('[data-copy]').forEach(function (btn) {
     btn.addEventListener('click', function () {

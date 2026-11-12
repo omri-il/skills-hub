@@ -106,7 +106,16 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 /* filters */
 .filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
 .chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.chips-label { font-weight: 600; min-width: 5.5em; color: var(--ink-2); }
+.chips-label { font-weight: 600; min-width: 8.5em; color: var(--ink-2); }
+.search { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.search-input { font: inherit; flex: 1 1 260px; max-width: 520px; min-height: 44px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); }
+.search-input:focus { outline: 2px solid var(--focus); outline-offset: 1px; border-color: var(--accent); }
+.filter-count { margin: 0; min-height: 1.2em; }
+.empty .btn { margin-top: 6px; }
+@media (max-width: 560px) {
+  .chips-label { min-width: 0; flex-basis: 100%; }
+  .search-input { flex-basis: 100%; max-width: none; }
+}
 .chip { font: inherit; font-size: .95rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; min-height: 40px; }
 .chip:hover { border-color: var(--accent); }
 .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadSkills, closure, parseFrontmatter } from '../lib/skills.js';
+import { loadSkills, closure, parseFrontmatter, WHO } from '../lib/skills.js';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -68,6 +68,14 @@ test('a required skill that does not exist fails', () => {
 test('a missing meta.yaml field fails', () => {
   const { errors } = loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace(/^problem:.*\n/m, '') } }));
   assert.ok(errors.some((e) => e.includes('required field "problem"')));
+});
+
+test('who: a value outside the list fails, and no who means everyone', () => {
+  const bad = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', 'who: [תלמידים]') } }));
+  assert.ok(bad.errors.some((e) => e.includes('who "תלמידים"')));
+  const none = loadSkills(fixture({ 'a-skill': {} }));
+  assert.deepEqual(none.errors, []);
+  assert.deepEqual(none.skills[0].who, WHO);
 });
 
 test('a bundle naming a missing skill fails', () => {

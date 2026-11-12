@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { zipSync, strToU8 } from 'fflate';
 import QRCode from 'qrcode';
-import { loadSkills } from './lib/skills.js';
+import { loadSkills, WHO, ANY_SUBJECT } from './lib/skills.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, 'dist');
@@ -137,7 +137,9 @@ function downloadFor(s) {
 // ---------- home ----------
 function card(s) {
   const d = downloadFor(s);
-  return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}">
+  // data-search: what the search box looks in (assets/app.js normalises it the same way as the query).
+  const search = [s.title, s.problem, s.what_it_does, s.output, s.audience, ...s.subjects, s.name].join(' ').replace(/\s+/g, ' ');
+  return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-who="${esc(s.who.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}" data-search="${esc(search)}">
   <h3 class="card-title"><a href="/skills/${s.name}/">${esc(s.title)}</a></h3>
   <p class="card-problem">${esc(firstSentence(s.problem))}</p>
   <div class="tags">${s.subjects.map((x) => tag(x, 'tag-subject')).join('')}${platformTags(s)}</div>
@@ -170,7 +172,9 @@ function bundleCard(b) {
 
 const mains = skills.filter((s) => s.role === 'main');
 const shared = skills.filter((s) => s.role === 'shared');
-const allSubjects = [...new Set(skills.flatMap((s) => s.subjects))];
+// Subject buttons: only real subjects. A skill for any subject shows under every one of them.
+const allSubjects = [...new Set(skills.flatMap((s) => s.subjects))].filter((x) => !ANY_SUBJECT.includes(x));
+const allWho = WHO.filter((w) => skills.some((s) => s.who.includes(w)));
 const allPlatforms = [...new Set(skills.flatMap(platformsOf))];
 
 // Sign-up (since 2026-11-11, Omri): the weekly skills email (Listmonk business list 106) and
@@ -204,8 +208,9 @@ const signupSection = `<section class="wrap section" id="signup" aria-labelledby
   </div>
   <script type="module" src="/public/static/altcha.umd.js" async></script>
 </section>`;
+const CHIP_LABELS = { who: 'מי אתם?', subject: 'מה אתם מלמדים?', platform: 'פלטפורמה' };
 const chips = (group, values) => `<div class="chips" role="group" aria-labelledby="f-${group}">
-  <span class="chips-label" id="f-${group}">${group === 'subject' ? 'מקצוע' : 'פלטפורמה'}</span>
+  <span class="chips-label" id="f-${group}">${CHIP_LABELS[group]}</span>
   <button type="button" class="chip" data-filter="${group}" data-value="" aria-pressed="true">הכל</button>
   ${values.map((v) => `<button type="button" class="chip" data-filter="${group}" data-value="${esc(v)}" aria-pressed="false">${esc(v)}</button>`).join('\n  ')}
 </div>`;
@@ -232,9 +237,15 @@ const homeBody = `
     <h2 id="h-skills">הסקילים</h2>
     <p class="muted">כל סקיל מגיע עם רשימה כנה של מה נבדק ומה עוד לא.</p>
   </div>
-  <div class="filters">
+  <div class="filters" data-any-subject="${esc(ANY_SUBJECT.join('|'))}">
+    <div class="search" role="search">
+      <label class="chips-label" for="q">חיפוש</label>
+      <input type="search" id="q" class="search-input" placeholder="למשל: מכתב להורים, מצגת, חומצות" autocomplete="off" enterkeyhint="search">
+    </div>
+    ${chips('who', allWho)}
     ${chips('subject', allSubjects)}
     ${allPlatforms.length > 1 ? chips('platform', allPlatforms) : ''}
+    <p class="filter-count muted small" id="count" aria-live="polite"></p>
   </div>
   <ul class="grid" id="grid-main">
     ${mains.map(card).join('\n')}
@@ -243,7 +254,10 @@ const homeBody = `
   <ul class="grid" id="grid-shared">
     ${shared.map(card).join('\n')}
   </ul>` : ''}
-  <p class="empty" id="empty" hidden>אין סקיל שמתאים לשני הסינונים יחד. נסו "הכל" באחד מהם.</p>
+  <div class="empty" id="empty" hidden>
+    <p>אין סקיל שמתאים לחיפוש הזה. אפשר לנסות מילה אחרת, או להציג שוב את כל הסקילים.</p>
+    <button type="button" class="btn btn-ghost" id="reset">הצגת כל הסקילים</button>
+  </div>
 </section>
 
 ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
