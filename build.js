@@ -224,7 +224,7 @@ const homeBody = `
     <ol class="steps">
       <li><span><b>מורידים</b> סקיל או חבילה מהדף הזה</span></li>
       <li><span><b>מעלים</b> אותו לג'מיני, פעם אחת</span></li>
-      <li><span><b>מבקשים כרגיל</b>, והסקיל נכנס לפעולה לבד</span></li>
+      <li><span><b>מבקשים כרגיל</b>. הסקיל לא נכנס לפעולה? כותבים <code dir="ltr">@</code> ואת השם שלו</span></li>
     </ol>
   </div>
   <figure class="qr">
