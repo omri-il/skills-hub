@@ -17,6 +17,7 @@ platforms:
   tested: [Gemini]
 audience: מורים
 problem: בעיה.
+benefit: חוסך.
 what_it_does: עושה.
 output: קובץ
 role: main

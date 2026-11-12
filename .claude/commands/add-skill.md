@@ -18,6 +18,7 @@ Speak to Omri in Hebrew. Read `CLAUDE.md` (meta.yaml fields and build checks) fi
 
 4. **Ask Omri, in one message, for what only he knows**, and offer your draft for each:
    - `problem`: the problem it solves, in a teacher's words;
+   - `benefit`: one sentence, what it saves or fixes for the teacher (time, rework, questions from students and parents). Write a time number only when a real run measured it;
    - `tested`: what he actually ran and saw work, and on which platform;
    - `limitations`: what failed, what isn't tested yet;
    - anything else you were not sure about (`role`, `subjects`, `requires`).

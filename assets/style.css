@@ -128,7 +128,11 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .card-title { font-size: 1.25rem; margin-bottom: .4em; }
 .card-title a { color: var(--ink); text-decoration: none; }
 .card-title a:hover { color: var(--accent); text-decoration: underline; }
-.card-problem { margin: 0 0 14px; color: var(--ink-2); flex: 1; }
+.card-problem { margin: 0 0 10px; color: var(--ink-2); }
+.card-benefit { margin: 0 0 14px; flex: 1; color: var(--ink); }
+.card-benefit-label { font-weight: 700; color: var(--accent); }
+.block.benefit { background: var(--accent-soft); border-radius: var(--radius); padding: 16px 20px; }
+.block.benefit h2 { color: var(--accent); }
 .card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .card-note { font-size: .85rem; color: var(--ink-2); margin: 8px 0 0; }
 .empty { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); padding: 20px; text-align: center; }

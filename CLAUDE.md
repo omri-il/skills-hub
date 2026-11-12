@@ -55,7 +55,7 @@ Known Gemini behaviour (2026-11-07, Flash and Pro, recorded in those skills' `te
 
 ## meta.yaml
 
-Required: `name` (= folder), `title` (Hebrew), `version`, `updated` (YYYY-MM-DD), `subjects` (list), `platforms` (`tested:` list and/or `compatible:` list), `audience`, `problem`, `what_it_does`, `output`, `role` (`main`, a skill the teacher uses; `shared`, a helper other skills call), `tested` (list), `limitations` (list).
+Required: `name` (= folder), `title` (Hebrew), `version`, `updated` (YYYY-MM-DD), `subjects` (list), `platforms` (`tested:` list and/or `compatible:` list), `audience`, `problem`, `benefit` (one sentence: what it saves or fixes for the teacher; a time number only when a real run measured it; shown on the card and the page as "מה זה חוסך לך"), `what_it_does`, `output`, `role` (`main`, a skill the teacher uses; `shared`, a helper other skills call), `tested` (list), `limitations` (list).
 Optional: `requires` (list of skill names); `who` (list, for the home page's "מי אתם?" buttons, only values from `WHO` in `lib/skills.js`: מורים, מחנכים, רכזים, יועצים, מנהלים; no `who` = all of them).
 
 Home page filters (Omri, 2026-11-12): a search box, "מי אתם?" (`who`) and "מה אתם מלמדים?" (`subjects`). A skill whose subject is in `ANY_SUBJECT` (כל המקצועות, ניהול וארגון) gets no button of its own and shows under every subject, after the skills made for that subject. The search (`assets/app.js`) looks in each card's `data-search` (title, problem, what it does, output, audience, subjects) and accepts a word with a Hebrew prefix letter or a plural ending.

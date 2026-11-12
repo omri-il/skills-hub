@@ -138,10 +138,11 @@ function downloadFor(s) {
 function card(s) {
   const d = downloadFor(s);
   // data-search: what the search box looks in (assets/app.js normalises it the same way as the query).
-  const search = [s.title, s.problem, s.what_it_does, s.output, s.audience, ...s.subjects, s.name].join(' ').replace(/\s+/g, ' ');
+  const search = [s.title, s.problem, s.benefit, s.what_it_does, s.output, s.audience, ...s.subjects, s.name].join(' ').replace(/\s+/g, ' ');
   return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-who="${esc(s.who.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}" data-search="${esc(search)}">
   <h3 class="card-title"><a href="/skills/${s.name}/">${esc(s.title)}</a></h3>
   <p class="card-problem">${esc(firstSentence(s.problem))}</p>
+  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לך:</span> ${esc(s.benefit)}</p>
   <div class="tags">${s.subjects.map((x) => tag(x, 'tag-subject')).join('')}${platformTags(s)}</div>
   <div class="card-actions">
     ${dlLink(d.files, d.label, 'btn btn-primary', ` aria-label="הורדת ${esc(s.title)} (${esc(d.note)})"`)}
@@ -345,6 +346,10 @@ function skillPage(s) {
         <h2 id="h-problem">הבעיה שהוא פותר</h2>
         <p>${esc(s.problem)}</p>
       </section>
+      <section class="block benefit" aria-labelledby="h-benefit">
+        <h2 id="h-benefit">מה זה חוסך לך</h2>
+        <p>${esc(s.benefit)}</p>
+      </section>
       <section class="block" aria-labelledby="h-what">
         <h2 id="h-what">מה הוא עושה</h2>
         <p>${esc(s.what_it_does)}</p>
@@ -427,7 +432,7 @@ write('404.html', page({
 write('skills.json', JSON.stringify({
   skills: skills.map((s) => ({
     name: s.name, title: s.title, version: s.version, updated: s.updated,
-    role: s.role, problem: firstSentence(s.problem),
+    role: s.role, problem: firstSentence(s.problem), benefit: s.benefit,
   })),
 }, null, 1));
 write('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
