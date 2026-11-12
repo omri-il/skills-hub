@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { zipSync, strToU8 } from 'fflate';
 import QRCode from 'qrcode';
-import { loadSkills, WHO, ANY_SUBJECT } from './lib/skills.js';
+import { loadSkills, WHO, SUBJECTS, ANY_SUBJECT } from './lib/skills.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, 'dist');
@@ -174,7 +174,7 @@ function bundleCard(b) {
 const mains = skills.filter((s) => s.role === 'main');
 const shared = skills.filter((s) => s.role === 'shared');
 // Subject buttons: only real subjects. A button shows only the skills made for that subject.
-const allSubjects = [...new Set(skills.flatMap((s) => s.subjects))].filter((x) => !ANY_SUBJECT.includes(x));
+const allSubjects = [...new Set([...SUBJECTS, ...skills.flatMap((s) => s.subjects)])].filter((x) => !ANY_SUBJECT.includes(x));
 const allWho = WHO.filter((w) => skills.some((s) => s.who.includes(w)));
 const allPlatforms = [...new Set(skills.flatMap(platformsOf))];
 
@@ -256,7 +256,8 @@ const homeBody = `
     ${shared.map(card).join('\n')}
   </ul>` : ''}
   <div class="empty" id="empty" hidden>
-    <p>אין סקיל שמתאים לחיפוש הזה. אפשר לנסות מילה אחרת, או להציג שוב את כל הסקילים.</p>
+    <p id="empty-text">אין סקיל שמתאים לחיפוש הזה. אפשר לנסות מילה אחרת, או להציג שוב את כל הסקילים.</p>
+    <p id="empty-subject" hidden>עוד אין סקיל מיוחד ל<span id="empty-subject-name"></span>. הסקילים הכלליים, כמו מצגת לשיעור ולוח בחירה, מתאימים גם לכם. רוצים סקיל ל<span id="empty-subject-name2"></span>? <a href="#signup">ספרו לי בהרשמה</a>, ואני אבנה אותו.</p>
     <button type="button" class="btn btn-ghost" id="reset">הצגת כל הסקילים</button>
   </div>
 </section>

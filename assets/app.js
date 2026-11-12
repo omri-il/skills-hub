@@ -49,6 +49,20 @@
       if (head && head.classList.contains('sub-head')) head.hidden = !any;
     });
     if (empty) empty.hidden = shown !== 0;
+    // A subject button with no skill of its own yet (ספרות, אנגלית): say so, and point to the general skills.
+    var noSkillYet = state.subject && ![].some.call(cards, function (c) {
+      return (c.dataset.subjects || '').split('|').indexOf(state.subject) !== -1;
+    });
+    var et = document.getElementById('empty-text');
+    var es = document.getElementById('empty-subject');
+    if (et && es) {
+      et.hidden = !!noSkillYet;
+      es.hidden = !noSkillYet;
+      if (noSkillYet) {
+        document.getElementById('empty-subject-name').textContent = state.subject;
+        document.getElementById('empty-subject-name2').textContent = state.subject;
+      }
+    }
   }
 
   chips.forEach(function (chip) {
