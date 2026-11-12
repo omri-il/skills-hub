@@ -6,8 +6,6 @@
   var empty = document.getElementById('empty');
   var count = document.getElementById('count');
   var input = document.getElementById('q');
-  var filters = document.querySelector('.filters');
-  var anySubject = filters ? (filters.dataset.anySubject || '').split('|') : [];
 
   // Hebrew search: no niqqud, no quotes or geresh, final letters as regular ones, lower case.
   function norm(t) {
@@ -34,15 +32,12 @@
       var subs = (c.dataset.subjects || '').split('|');
       var who = (c.dataset.who || '').split('|');
       var plats = (c.dataset.platforms || '').split('|');
-      var exact = state.subject && subs.indexOf(state.subject) !== -1;
-      var general = subs.some(function (s) { return anySubject.indexOf(s) !== -1; });
-      var ok = (!state.subject || exact || general) &&
+      // A subject button shows only the skills made for that subject (Omri, 2026-11-12).
+      var ok = (!state.subject || subs.indexOf(state.subject) !== -1) &&
                (!state.who || who.indexOf(state.who) !== -1) &&
                (!state.platform || plats.indexOf(state.platform) !== -1) &&
                state.q.every(function (w) { return has(c._text, w); });
       c.hidden = !ok;
-      // Skills made for the chosen subject come first, the ones for every subject after them.
-      c.style.order = state.subject && !exact ? '1' : '';
       if (ok) shown++;
     });
     var filtered = state.who || state.subject || state.platform || state.q.length;

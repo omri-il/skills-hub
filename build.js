@@ -173,7 +173,7 @@ function bundleCard(b) {
 
 const mains = skills.filter((s) => s.role === 'main');
 const shared = skills.filter((s) => s.role === 'shared');
-// Subject buttons: only real subjects. A skill for any subject shows under every one of them.
+// Subject buttons: only real subjects. A button shows only the skills made for that subject.
 const allSubjects = [...new Set(skills.flatMap((s) => s.subjects))].filter((x) => !ANY_SUBJECT.includes(x));
 const allWho = WHO.filter((w) => skills.some((s) => s.who.includes(w)));
 const allPlatforms = [...new Set(skills.flatMap(platformsOf))];
@@ -238,7 +238,7 @@ const homeBody = `
     <h2 id="h-skills">הסקילים</h2>
     <p class="muted">כל סקיל מגיע עם רשימה כנה של מה נבדק ומה עוד לא.</p>
   </div>
-  <div class="filters" data-any-subject="${esc(ANY_SUBJECT.join('|'))}">
+  <div class="filters">
     <div class="search" role="search">
       <label class="chips-label" for="q">חיפוש</label>
       <input type="search" id="q" class="search-input" placeholder="למשל: מכתב להורים, מצגת, חומצות" autocomplete="off" enterkeyhint="search">
