@@ -14,7 +14,7 @@ Speak to Omri in Hebrew. Read `CLAUDE.md` (meta.yaml fields and build checks) fi
 
 2. **Make the folder** `skills/<name>/` (name = the SKILL.md `name`) and copy SKILL.md into it. Only SKILL.md goes in, no other files.
 
-3. **Write `meta.yaml`.** Copy the shape of an existing one. Fill what you can from the SKILL.md: `name`, a Hebrew `title`, `version` (1.0.0 for a new skill), `updated` (today), `subjects`, `audience`, `who` (only when the skill is not for everyone: מורים, מחנכים, רכזים, יועצים, מנהלים), `what_it_does`, `output`, `role`, `requires` (skills it says it calls, only ones in `skills/`), `platforms`.
+3. **Write `meta.yaml`.** Copy the shape of an existing one. Fill what you can from the SKILL.md: `name`, a Hebrew `title`, `version` (1.0.0 for a new skill), `updated` (today), `subjects`, `audience`, `who` (only when the skill is not for everyone: מורים, מחנכים, רכזים, יועצים, מנהלים), `fits` (only for a skill for every subject that suits a group: ריאליים or רב-מלל), `what_it_does`, `output`, `role`, `requires` (skills it says it calls, only ones in `skills/`), `platforms`.
 
 4. **Ask Omri, in one message, for what only he knows**, and offer your draft for each:
    - `problem`: the problem it solves, in a teacher's words;

@@ -79,6 +79,17 @@ test('who: a value outside the list fails, and no who means everyone', () => {
   assert.deepEqual(none.skills[0].who, WHO);
 });
 
+test('subject groups: a subject in no group fails, fits adds a group, own groups come from subjects', () => {
+  assert.ok(loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace('[מתמטיקה]', '[אומנות]') } }))
+    .errors.some((e) => e.includes('subject "אומנות" is in no group')));
+  assert.ok(loadSkills(fixture({ 'a-skill': { meta: META('a-skill', 'fits: [ספורט]') } }))
+    .errors.some((e) => e.includes('fits "ספורט"')));
+  const { errors, skills } = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', 'fits: [רב-מלל]') } }));
+  assert.deepEqual(errors, []);
+  assert.deepEqual(skills[0].groups, ['ריאליים']);
+  assert.deepEqual(skills[0].fits, ['רב-מלל']);
+});
+
 test('a bundle naming a missing skill fails', () => {
   const { errors } = loadSkills(fixture({ 'a-skill': {} }, '- id: b\n  title: t\n  description: d\n  skills: [a-skill, nope]\n'));
   assert.ok(errors.some((e) => e.includes('skill "nope" does not exist')));

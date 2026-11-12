@@ -29,15 +29,19 @@
   function apply() {
     var shown = 0;
     cards.forEach(function (c) {
-      var subs = (c.dataset.subjects || '').split('|');
+      var own = (c.dataset.groups || '').split('|');
+      var fits = (c.dataset.fits || '').split('|');
       var who = (c.dataset.who || '').split('|');
       var plats = (c.dataset.platforms || '').split('|');
-      // A subject button shows only the skills made for that subject (Omri, 2026-11-12).
-      var ok = (!state.subject || subs.indexOf(state.subject) !== -1) &&
+      // A group button (ריאליים, רב-מלל) shows the skills made for its subjects, then general skills
+      // marked as fitting it (`fits` in meta.yaml).
+      var isOwn = state.subject && own.indexOf(state.subject) !== -1;
+      var ok = (!state.subject || isOwn || fits.indexOf(state.subject) !== -1) &&
                (!state.who || who.indexOf(state.who) !== -1) &&
                (!state.platform || plats.indexOf(state.platform) !== -1) &&
                state.q.every(function (w) { return has(c._text, w); });
       c.hidden = !ok;
+      c.style.order = state.subject && !isOwn ? '1' : '';
       if (ok) shown++;
     });
     var filtered = state.who || state.subject || state.platform || state.q.length;
@@ -49,9 +53,9 @@
       if (head && head.classList.contains('sub-head')) head.hidden = !any;
     });
     if (empty) empty.hidden = shown !== 0;
-    // A subject button with no skill of its own yet (ספרות, אנגלית): say so, and point to the general skills.
+    // A group button with no skill at all yet: say so, and point to the sign-up.
     var noSkillYet = state.subject && ![].some.call(cards, function (c) {
-      return (c.dataset.subjects || '').split('|').indexOf(state.subject) !== -1;
+      return ((c.dataset.groups || '') + '|' + (c.dataset.fits || '')).split('|').indexOf(state.subject) !== -1;
     });
     var et = document.getElementById('empty-text');
     var es = document.getElementById('empty-subject');

@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { zipSync, strToU8 } from 'fflate';
 import QRCode from 'qrcode';
-import { loadSkills, WHO, SUBJECTS, ANY_SUBJECT } from './lib/skills.js';
+import { loadSkills, WHO, GROUPS } from './lib/skills.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, 'dist');
@@ -139,7 +139,7 @@ function card(s) {
   const d = downloadFor(s);
   // data-search: what the search box looks in (assets/app.js normalises it the same way as the query).
   const search = [s.title, s.problem, s.benefit, s.what_it_does, s.output, s.audience, ...s.subjects, s.name].join(' ').replace(/\s+/g, ' ');
-  return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-who="${esc(s.who.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}" data-search="${esc(search)}">
+  return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-groups="${esc(s.groups.join('|'))}" data-fits="${esc(s.fits.join('|'))}" data-who="${esc(s.who.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}" data-search="${esc(search)}">
   <h3 class="card-title"><a href="/skills/${s.name}/">${esc(s.title)}</a></h3>
   <p class="card-problem">${esc(firstSentence(s.problem))}</p>
   <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לך:</span> ${esc(s.benefit)}</p>
@@ -174,7 +174,7 @@ function bundleCard(b) {
 const mains = skills.filter((s) => s.role === 'main');
 const shared = skills.filter((s) => s.role === 'shared');
 // Subject buttons: only real subjects. A button shows only the skills made for that subject.
-const allSubjects = [...new Set([...SUBJECTS, ...skills.flatMap((s) => s.subjects)])].filter((x) => !ANY_SUBJECT.includes(x));
+const allSubjects = GROUPS;
 const allWho = WHO.filter((w) => skills.some((s) => s.who.includes(w)));
 const allPlatforms = [...new Set(skills.flatMap(platformsOf))];
 
