@@ -219,7 +219,7 @@ const chips = (group, values) => `<div class="chips" role="group" aria-labelledb
 const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
-    <h1>מלמדים את ג'מיני פעם אחת.<br class="br-wide"> מקבלים דף עבודה נכון בכל פעם.</h1>
+    <h1>מלמדים את ג'מיני פעם אחת.<br class="br-wide"> מקבלים תוצר מוכן לכיתה, בלי לתקן.</h1>
     <p class="lead">סקיל הוא קובץ הוראות קטן שמעלים לג'מיני. מאותו רגע, כשמבקשים כרגיל "דף עבודה בסדרות לכיתה י'", הוא כבר יודע איך עושים את זה טוב: שאלות מדורגות, משוואות שלא נשברות בעברית, ומפתח תשובות שנבדק לפני שהוא מגיע אליכם.</p>
     <ol class="steps">
       <li><span><b>מורידים</b> סקיל או חבילה מהדף הזה</span></li>
