@@ -248,3 +248,15 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .signup-link { margin-top: 20px; }
 .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 760px) { .signup { grid-template-columns: 1fr; padding: 20px 16px; } }
+
+/* The install tutorial video (video.yaml, 2026-11-13) */
+.video { background: #000; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); aspect-ratio: 16 / 9; }
+.video video { display: block; width: 100%; height: 100%; }
+.video-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+.hero-video { margin: 20px 0 0; }
+/* a play mark instead of the primary button's download arrow; it points left, the way Hebrew reads */
+.btn-video::before { -webkit-mask: none; mask: none; background: none; content: "◀"; width: auto; height: auto; font-size: .8em; line-height: 1; }
+.video-fold { background: var(--accent-soft); border-radius: var(--radius); padding: 12px 16px; margin: 0 0 16px; }
+.video-fold summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+.video-fold[open] summary { margin-bottom: 12px; }
+.video-sm { max-width: 720px; }
