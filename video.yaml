@@ -1,0 +1,10 @@
+# The install tutorial video (Omri, 2026-11-13): on the home page under the hero, and folded
+# into every skill page's "איך מתקינים". The MP4 and its poster are NOT in git (the repo is public
+# and a video is large): they live on the VPS in /var/www/skills-media, served as /media/ by nginx
+# (deploy/skills.omri-iram.co.il.conf). Delete this file, or leave `file` empty, and the site shows no video.
+title: איך מתקינים סקיל בג'מיני
+file: /media/install-tutorial.mp4
+poster: /media/install-tutorial.jpg
+minutes: 4
+# The same video on YouTube (the בינה בהוראה channel). Empty = no YouTube link.
+youtube: "https://www.youtube.com/watch?v=xSGV2hDMWDk"

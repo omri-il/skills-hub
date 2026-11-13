@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { zipSync, strToU8 } from 'fflate';
 import QRCode from 'qrcode';
+import YAML from 'yaml';
 import { loadSkills, WHO, GROUPS } from './lib/skills.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -31,6 +32,34 @@ const firstSentence = (s) => {
   const m = String(s).match(/^[\s\S]*?[.!?](?=\s|$)/);
   return (m ? m[0] : String(s)).trim();
 };
+// ---------- the install tutorial video (video.yaml; the MP4 itself is on the VPS, not in git) ----------
+const VIDEO = (() => {
+  const f = path.join(ROOT, 'video.yaml');
+  if (!fs.existsSync(f)) return null;
+  const v = YAML.parse(fs.readFileSync(f, 'utf8')) || {};
+  return v.file ? v : null;
+})();
+const videoPlayer = (v, cls = '') => `<div class="video ${cls}">
+    <video controls preload="none" playsinline${v.poster ? ` poster="${esc(v.poster)}"` : ''} width="1920" height="1080">
+      <source src="${esc(v.file)}" type="video/mp4">
+    </video>
+  </div>
+  <p class="video-links">
+    <a class="btn btn-ghost btn-sm" href="${esc(v.file)}" download>הורדת הסרטון (MP4)</a>
+    ${v.youtube ? `<a class="btn btn-ghost btn-sm" href="${esc(v.youtube)}" target="_blank" rel="noopener">צפייה ביוטיוב</a>` : ''}
+  </p>`;
+const videoHome = (v) => `<section class="wrap section" id="video" aria-labelledby="h-video">
+  <div class="section-head">
+    <h2 id="h-video">${esc(v.title)}</h2>
+    <p class="muted">סרטון של ${esc(v.minutes)} דקות: מהורדה מהאתר ועד סקיל שעובד בג'מיני.</p>
+  </div>
+  ${videoPlayer(v)}
+</section>`;
+const videoSkill = (v) => `<details class="video-fold">
+    <summary>מעדיפים לראות? סרטון התקנה של ${esc(v.minutes)} דקות</summary>
+    ${videoPlayer(v, 'video-sm')}
+  </details>`;
+
 // The site shows Gemini only for now (Omri, 2026-11-11). meta.yaml keeps the other platforms; add them back here to show them.
 const SHOWN_PLATFORMS = ['Gemini'];
 const shown = (list) => list.filter((p) => SHOWN_PLATFORMS.includes(p));
@@ -226,12 +255,15 @@ const homeBody = `
       <li><span><b>מעלים</b> אותו לג'מיני, פעם אחת</span></li>
       <li><span><b>מבקשים כרגיל</b>. הסקיל לא נכנס לפעולה? כותבים <code dir="ltr">@</code> ואת השם שלו</span></li>
     </ol>
+    ${VIDEO ? `<p class="hero-video"><a class="btn btn-primary btn-video" href="#video">צפו בסרטון ההתקנה (${esc(VIDEO.minutes)} דקות)</a></p>` : ''}
   </div>
   <figure class="qr">
     <img src="/assets/qr.svg" width="140" height="140" alt="קוד QR לכתובת skills.omri-iram.co.il">
     <figcaption>סורקים ופותחים בטלפון</figcaption>
   </figure>
 </div></section>
+
+${VIDEO ? videoHome(VIDEO) : ''}
 
 <section class="wrap section" aria-labelledby="h-skills">
   <div class="section-head">
@@ -288,6 +320,7 @@ function installSteps(s, d) {
   const isBundle = d.files.length > 1;
   return `<section class="block" aria-labelledby="h-install">
   <h2 id="h-install">איך מתקינים</h2>
+  ${VIDEO ? videoSkill(VIDEO) : ''}
   <h3 class="install-title">בג'מיני</h3>
   <ol class="install">
     ${isBundle
