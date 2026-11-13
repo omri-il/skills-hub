@@ -3,8 +3,10 @@
 # and a video is large): they live on the VPS in /var/www/skills-media, served as /media/ by nginx
 # (deploy/skills.omri-iram.co.il.conf). Delete this file, or leave `file` empty, and the site shows no video.
 title: איך מתקינים סקיל בג'מיני
-file: /media/install-tutorial.mp4
+# A new version gets a new file name: /media/ is cached for a day, so the same name would keep
+# showing the old video. v2 (2026-11-13): the recap with stills at 1:18 instead of the 2:03 drawing.
+file: /media/install-tutorial-v2.mp4
 poster: /media/install-tutorial.jpg
 minutes: 4
 # The same video on YouTube (the בינה בהוראה channel). Empty = no YouTube link.
-youtube: "https://www.youtube.com/watch?v=xSGV2hDMWDk"
+youtube: "https://www.youtube.com/watch?v=zlPYbO52BVk"
