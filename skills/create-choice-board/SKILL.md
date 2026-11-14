@@ -11,8 +11,27 @@ description: יוצר לוח בחירה (choice board) בעברית לכל מק�
 
 - **צור קובץ Word ‏(‎.docx) להורדה**, בהרצת קוד אחת, עם פונקציית `build` שבסוף הסקיל. גם אם המורה לא ביקש קובץ.
 - **אל תכתוב את הלוח בתשובה בצ'אט, ואל תשתמש ב-Canvas.** בצ'אט כתוב רק את הקובץ ואת שתי שורות ההודעה למורה (בסוף הסקיל).
-- `build` משתמשת רק ב-Python רגיל, בלי ספריות. היא רצה בסביבת הקוד שלך כרגיל. העתק אותה כמו שהיא ואל תשנה אותה.
-- **אל תבנה את הקובץ בדרך אחרת** (python-docx, pandoc, HTML). רק `build`.
+- `build` לוקחת מ-python-docx ‏(מותקן בסביבת הקוד שלך) רק קובץ Word ריק, וכותבת לתוכו את הלוח. כך כל החלקים הטכניים של הקובץ נכונים תמיד.
+- **העתק את `build` תו בתו, בלי שום שינוי.** אל תתקן, אל תקצר ואל תשפר אותה, גם אם משהו בה נראה לך שגוי. שינוי קטן יכול ליצור קובץ ש-Word לא פותח.
+- **אל תבנה את הקובץ בדרך אחרת** (טבלה של python-docx, pandoc, HTML). רק `build`.
+
+## אם אין לך הרצת קוד
+
+- הרצת קוד היא כלי: אתה שולח לו את הקוד, ומקבל בחזרה פלט (למשל "בעיות: אין") וקובץ להורדה.
+- **קוד שכתוב בתוך טקסט התשובה, בבלוק ```python, לא רץ אף פעם.** המורה רואה רק קוד ולא מקבל קובץ. לכן אף פעם לא כותבים את `build` או את `board` בטקסט התשובה.
+- אם אין לך כלי להרצת קוד, אם `import docx` נכשל, או אם אתה לא בטוח שהקוד באמת רץ, **אל תכתוב קוד בכלל**. בנה את הלוח כטבלה בצ'אט:
+
+- כתוב את הלוח בצ'אט כטבלת Markdown: שורה בטבלה לכל שורה בלוח, ובכל משבצת: מספר וכותרת מודגשת, המשימה, תוצר, זמן וחומרים. מעל הטבלה: הכותרת והכלל.
+- אחרי הטבלה: "מדריך למורה", כטבלה עם אותם טורים כמו במדריך שבקובץ (משבצת, מטרה, שלבים ותוצר, תמיכה, הרחבה, חומרים וזמן), ואחריה "איך בודקים".
+- כל שאר הכללים (שאלות, גודל, זמן, משפחות, תוכן) נשארים בדיוק אותו דבר.
+- בלי Canvas, בלי HTML, ובלי `board` או `build` בתשובה.
+- בסוף כתוב בדיוק את השורה: "להדפסה: לוחצים מתחת לתשובה על שיתוף וייצוא, בוחרים ייצוא ל-Docs, ומדפיסים משם לרוחב."
+
+## בקשות המשך
+
+- **התשובה תמיד בעברית**, גם כשבקשת ההמשך באנגלית (למשל הצעה שג'מיני הציג כפתור, כמו "Yes, please help me add...").
+- שינוי בלוח (להוסיף טקסטים לקריאה, להחליף משבצת, לשנות גודל): בונים את כל הקובץ מחדש, באותה דרך, עם `build` שמועתקת שוב תו בתו. טקסט קצר לקריאה נכנס לתוך המשימה או לחומרים, ומקור ארוך נכנס למדריך למורה.
+- אם המורה כותב שהקובץ לא נפתח או לא מתאים להדפסה: בונים אותו שוב עם `build`. בלי הרצת קוד: מסבירים שוב את הייצוא ל-Docs. לא עוברים ל-Canvas או ל-HTML.
 
 ## לפני שמתחילים
 
@@ -121,12 +140,13 @@ board = {
 
 0. אם חסרים פרטים, שאל את הודעת השאלות מ"לפני שמתחילים", וחכה לתשובה.
 1. תכנן את המשבצות לפי הכללים למעלה, ובדוק את הרשימה ב"לפני מסירה".
-2. **בהרצת קוד אחת**: הגדר את `build`, את `board`, וקרא ל-`build(board, "<שם-באנגלית>.docx")`.
-3. אם הודפסו בעיות, תקן את `board` והרץ שוב. אל תמסור קובץ עם בעיות.
+2. **בהרצת קוד אחת**: הגדר את `build` (מועתקת תו בתו), את `board`, וקרא ל-`build(board, "<שם-באנגלית>.docx")`. בלי הרצת קוד: עבור ל"אם אין לך הרצת קוד".
+3. אם הודפסו בעיות, תקן את `board` והרץ שוב. אם הבעיה היא ש-`build` שונתה, העתק אותה שוב מהסקיל, תו בתו. אל תמסור קובץ עם בעיות.
 4. מסור את הקובץ, ואחריו את שתי שורות ההודעה למורה.
 
 ```python
-import re, zipfile
+import re, io, zipfile, docx
+from xml.dom import minidom
 
 HEB = re.compile(r"[֐-׿]")
 COLORS = ["DBEAFE", "DCFCE7", "FEF9C3", "FCE7F3", "EDE9FE", "FFEDD5", "CCFBF1", "FEE2E2", "E0F2FE"]
@@ -164,7 +184,7 @@ def build(board, out):
                 f'<w:bottom w:w="100" w:type="dxa"/><w:right w:w="140" w:type="dxa"/></w:tblCellMar></w:tblPr>'
                 f'<w:tblGrid>{grid}</w:tblGrid>{trs}</w:tbl>')
 
-    W = 15704  # A4 landscape, 1 cm margins
+    W = 15704
     young = board.get("young", False)
     cols, cells = board["cols"], board["cells"]
     if len(cells) % cols:
@@ -222,25 +242,19 @@ def build(board, out):
 
     sect = ('<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/>'
             '<w:pgMar w:top="567" w:right="567" w:bottom="567" w:left="567" w:header="0" w:footer="0" w:gutter="0"/><w:bidi/></w:sectPr>')
-    ns = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"'
+    base = io.BytesIO()
+    docx.Document().save(base)
+    ns = re.search(r'xmlns:w="[^"]+"', zipfile.ZipFile(base).read("word/document.xml").decode()).group(0)
     doc = f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document {ns}><w:body>{body}{sect}</w:body></w:document>'
-    styles = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles {ns}><w:docDefaults><w:rPrDefault><w:rPr>'
-              '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/><w:lang w:val="he-IL" w:bidi="he-IL"/>'
-              '</w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:bidi/><w:spacing w:after="0" w:line="252" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults></w:styles>')
-    ct = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
-          '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
-          '<Default Extension="xml" ContentType="application/xml"/>'
-          '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
-          '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>')
-    rel = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
-    rels = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-            f'<Relationship Id="rId1" Type="{rel}/officeDocument" Target="word/document.xml"/></Relationships>')
-    drels = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-             f'<Relationship Id="rId1" Type="{rel}/styles" Target="styles.xml"/></Relationships>')
-    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("[Content_Types].xml", ct); z.writestr("_rels/.rels", rels)
-        z.writestr("word/document.xml", doc); z.writestr("word/styles.xml", styles)
-        z.writestr("word/_rels/document.xml.rels", drels)
+    try:
+        minidom.parseString(doc)
+    except Exception as e:
+        problems.append(f"ה-XML של המסמך שבור, ולכן הקובץ לא נוצר: {e}")
+        print("בעיות:", problems)
+        return problems
+    with zipfile.ZipFile(base) as src, zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for item in src.infolist():
+            z.writestr(item, doc if item.filename == "word/document.xml" else src.read(item.filename))
     print("בעיות:", problems or "אין")
     return problems
 ```
@@ -265,7 +279,10 @@ def build(board, out):
 ## טעויות נפוצות
 
 - **רשימה של כרטיסים במקום טבלה.** זו בדיוק הבעיה שהסקיל הזה פותר.
-- לוח שנכתב בצ'אט או ב-Canvas במקום כקובץ.
+- לוח שנכתב בצ'אט או ב-Canvas במקום כקובץ (כשיש הרצת קוד).
+- קוד Python שמוצג למורה כטקסט, במקום קובץ או טבלה.
+- `build` "מתוקנת" או מקוצרת. כל שינוי בה שובר את הקובץ.
+- תשובה באנגלית אחרי בקשת המשך באנגלית.
 - שאלות בכמה הודעות, אחת אחרי השנייה, או שאלה נוספת אחרי שהמורה כבר ענה.
 - כל משבצת לוקחת את כל זמן השיעור, למרות שהתלמיד משלים שלוש.
 - משימת ציור או הקלטה שמסתיימת ב"וכתבו הסבר של פסקה".
