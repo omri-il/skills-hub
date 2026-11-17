@@ -21,4 +21,9 @@ npm run build --silent
 mkdir -p "$WEB" "$(dirname "$STAMP")"
 rsync -a --delete --exclude '.well-known/' dist/ "$WEB/"
 echo "$NEW" > "$STAMP"
+# The admin screen runs from this clone: restart it only when its own code changed (an admin action
+# itself changes only skills/ and bundles.yaml, so it never restarts the service under its own request).
+if [[ -n "$OLD" ]] && ! git diff --quiet "$OLD" "$NEW" -- admin lib package.json package-lock.json; then
+  systemctl try-restart skills-hub-admin || true
+fi
 echo "skills-hub: deployed $(git log -1 --format='%h %s')"

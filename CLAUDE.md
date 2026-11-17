@@ -86,6 +86,15 @@ Every zip holds one skill: one folder named exactly like the skill, with only `S
 - A change in `deploy/*.conf`, `.service` or `.timer` is not picked up by the timer: copy it into place by hand, then `nginx -t && systemctl reload nginx` or `systemctl daemon-reload`.
 - GitHub Actions (`.github/workflows/check.yml`) runs the same test and build on every push, so a broken skill shows a red check on GitHub too.
 
+## Admin screen (Omri, 2026-11-17)
+
+- https://skills.omri-iram.co.il/admin, one password (`ADMIN_PASSWORD` in `deploy/skills-hub-admin.env` on the VPS, gitignored; a copy in `~/.claude/secrets/skills-admin.env`). No QR: private.
+- Each skill: "להסתיר מהאתר" / "להחזיר לאתר" (adds or removes `hidden: true` in its meta.yaml) and "למחוק לגמרי…" (a confirm page, then deletes the folder and removes it from `bundles.yaml`).
+- `hidden: true`: `loadSkills` still checks the skill, but returns it in `hidden`, not `skills`: no page, zip, card or skills.json entry, and it leaves every bundle. A shown skill may not require a hidden one (the build stops), so the screen refuses to hide a skill another shown skill needs.
+- `admin/server.js` (node, no new deps), `skills-hub-admin.service` on 127.0.0.1:5047. It works in its own clone `/root/Projects/skills-hub-admin` (reset to origin/main before every action), commits `admin: hide <name>` to main, pushes, then runs `systemctl start skills-hub-deploy`. So pull before working on the laptop: the admin may have pushed.
+- Local test: `ADMIN_PASSWORD=x ADMIN_SECRET=y DRY_RUN=1 ADMIN_REPO=<a git copy of skills/ + bundles.yaml> node admin/server.js` (no fetch, push or deploy).
+- `deploy/update.sh` restarts the admin service only when `admin/`, `lib/` or the package files changed.
+
 ## Rules
 
 - Hebrew, right to left, logical CSS only (`margin-inline-start`, not `margin-left`). Code, file names and skill names are LTR islands (`<code dir="ltr">`, `<bdi>`). The SKILL.md viewer uses `unicode-bidi: plaintext` so each line picks its own direction.
