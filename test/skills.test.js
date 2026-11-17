@@ -119,3 +119,23 @@ test('the zipped SKILL.md carries the version in the description and in a line u
     assert.ok(s.packaged.includes(`> גרסה ${s.version} · עודכנה ${s.updated}`), `${s.name}: no version line`);
   }
 });
+
+test('a hidden skill is checked but not shown, and leaves its bundles', () => {
+  const dir = fixture({
+    'a-skill': {},
+    'b-skill': { meta: META('b-skill', 'hidden: true') },
+  }, '- id: two\n  title: ב\n  description: ג\n  skills: [a-skill, b-skill]\n- id: only-b\n  title: ב\n  description: ג\n  skills: [b-skill]\n');
+  const { errors, skills, hidden, bundles } = loadSkills(dir);
+  assert.deepEqual(errors, []);
+  assert.deepEqual(skills.map((s) => s.name), ['a-skill']);
+  assert.deepEqual(hidden.map((s) => s.name), ['b-skill']);
+  assert.deepEqual(bundles.map((b) => [b.id, b.skills]), [['two', ['a-skill']]]);
+});
+
+test('a shown skill cannot require a hidden one', () => {
+  const { errors } = loadSkills(fixture({
+    'a-skill': { meta: META('a-skill', 'requires: [b-skill]') },
+    'b-skill': { meta: META('b-skill', 'hidden: true') },
+  }));
+  assert.ok(errors.some((e) => e.includes('which is hidden')));
+});
