@@ -7,3 +7,23 @@
     - create-chemistry-practice
     - format-equations-for-hebrew-worksheets
     - verify-solutions
+- id: assessment-with-ai
+  title: חבילת הערכה בעידן ה-AI
+  description: 9 סקילים להערכה, מתכנון ועד משוב. כל אחד עובד לבד, ומפעילים אותו עם @ ושם הסקיל.
+  skills:
+    - assessment-plan
+    - create-rubric
+    - feedback-by-rubric
+    - class-results-analysis
+    - misconceptions-from-answers
+    - oral-check
+    - create-test
+    - notebook-for-assessment
+    - ai-resistant-task
+- id: apps-script-for-teachers
+  title: חבילת Apps Script למורים
+  description: לומדה ששומרת תשובות בגיליון, לוח סיכום בלחיצה, ותיקון של קוד שלא עובד.
+  skills:
+    - apps-script-lomda
+    - apps-script-dashboard
+    - apps-script-fix
