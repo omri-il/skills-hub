@@ -1,7 +1,7 @@
 // The admin screen of skills.omri-iram.co.il: https://skills.omri-iram.co.il/admin (Omri, 2026-11-17).
 // One password. Each skill can be hidden from the site, shown again, or deleted.
 // Every action is a commit to main on GitHub, made in a clone of its own (ADMIN_REPO), then the
-// normal deploy (skills-hub-deploy.service) runs at once, so the site changes in about 30 seconds.
+// normal deploy (skills-hub-deploy.service) runs at once, so the site changes in about 10 seconds.
 //
 // Env (deploy/skills-hub-admin.env on the VPS, never in git):
 //   ADMIN_PASSWORD   the one password
@@ -231,7 +231,7 @@ function listPage(note) {
   const warn = errors.length ? `<p class="note bad">יש בעיה בקבצים של האתר, והוא לא מתעדכן: ${esc(errors.join(' '))}</p>` : '';
   const msg = note ? `<p class="note${note.ok ? '' : ' bad'}" role="status">${esc(note.text)}</p>` : '';
   return page('ניהול הסקילים', `${msg}${warn}
-<p>הסתרה מורידה סקיל מהאתר, ואפשר להחזיר אותו בלחיצה. מחיקה מוחקת אותו מהתיקייה. כל שינוי מופיע באתר תוך כ-30 שניות.</p>
+<p>הסתרה מורידה סקיל מהאתר, ואפשר להחזיר אותו בלחיצה. מחיקה מוחקת אותו מהתיקייה. כל שינוי מופיע באתר תוך כ-10 שניות.</p>
 <h2>מופיעים באתר (${shown.length})</h2>${shown.map((s) => row(s, requiredBy)).join('') || '<p>אין.</p>'}
 <h2>מוסתרים (${hidden.length})</h2>${hidden.map((s) => row(s, requiredBy)).join('') || '<p>אין סקילים מוסתרים.</p>'}`);
 }
