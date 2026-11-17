@@ -7,6 +7,8 @@ Wants=network-online.target
 # ADMIN_PASSWORD, ADMIN_SECRET; never in git.
 EnvironmentFile=/root/Projects/skills-hub/deploy/skills-hub-admin.env
 Environment=PORT=5047
+# gh (the git login helper of the admin clone) finds its login in $HOME/.config/gh.
+Environment=HOME=/root
 Environment=ADMIN_REPO=/root/Projects/skills-hub-admin
 WorkingDirectory=/root/Projects/skills-hub
 ExecStart=/usr/bin/node /root/Projects/skills-hub/admin/server.js
