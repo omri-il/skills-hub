@@ -9,7 +9,7 @@
     - verify-solutions
 - id: assessment-with-ai
   title: חבילת הערכה בעידן ה-AI
-  description: 9 סקילים להערכה, מתכנון ועד משוב. כל אחד עובד לבד, ומפעילים אותו עם @ ושם הסקיל.
+  description: 8 סקילים להערכה, מתכנון ועד משוב. כל אחד עובד לבד, ומפעילים אותו עם @ ושם הסקיל.
   skills:
     - assessment-plan
     - create-rubric
@@ -18,7 +18,6 @@
     - misconceptions-from-answers
     - oral-check
     - create-test
-    - notebook-for-assessment
     - ai-resistant-task
 - id: apps-script-for-teachers
   title: חבילת Apps Script למורים
