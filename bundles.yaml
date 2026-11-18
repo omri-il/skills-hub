@@ -1,4 +1,15 @@
 # חבילות: הורדה אחת לכמה סקילים שעובדים יחד
+- id: workshop-b058
+  title: חבילת הסדנה "Gemini שעובד בשבילכם"
+  description: 5 הסקילים מהסדנה של 18.11, ועוד 2 סקילי עזר שדף התרגול במתמטיקה צריך. מעלים לג'מיני כל קובץ בנפרד, ומפעילים עם @ ושם הסקיל.
+  skills:
+    - create-choice-board
+    - create-math-practice
+    - simple-language
+    - ai-resistant-task
+    - red-team
+    - format-equations-for-hebrew-worksheets
+    - verify-solutions
 - id: math-chem-worksheets
   title: חבילת דפי עבודה למתמטיקה וכימיה
   description: ארבעת הסקילים יחד. מספיק להעלות את כולם לג'מיני ולבקש דף עבודה.
