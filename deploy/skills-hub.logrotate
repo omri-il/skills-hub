@@ -1,0 +1,15 @@
+# /etc/logrotate.d/skills-hub: the Skills site's own log, kept 90 days for the admin numbers page.
+# It lives in its own folder, so nginx's own rule (/var/log/nginx/*.log, 14 days) does not touch it.
+/var/log/nginx/skills/access.log {
+	daily
+	missingok
+	rotate 90
+	compress
+	delaycompress
+	notifempty
+	create 0640 www-data adm
+	sharedscripts
+	postrotate
+		invoke-rc.d nginx rotate >/dev/null 2>&1
+	endscript
+}
