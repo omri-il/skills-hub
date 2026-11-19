@@ -179,6 +179,7 @@ ${canonical.startsWith('/skills/') ? `<script src="/assets/video-help.js?v=${ASS
 <a class="skip" href="#main">דילוג לתוכן</a>
 <header class="topbar"><div class="wrap topbar-in">
   <a class="brand" href="/">סקילים למורים</a>
+  <a class="top-link" href="/bundles/">חבילות</a>
   <span class="byline">מאת <a href="https://omri-iram.co.il">עומרי אירם</a></span>
 </div></header>
 <main id="main">
@@ -245,8 +246,8 @@ function bundleCard(b) {
     <p>${esc(b.description)}</p>
   </div>
   <div class="bundle-cta">
-    ${dlLink(b.skills, 'הורדת החבילה', 'btn btn-primary')}
-    <a class="btn btn-ghost" href="${bundleHref(b)}">מה יש בחבילה</a>
+    ${dlLink(b.skills, 'הורדת החבילה', 'btn btn-cta btn-lg')}
+    <a class="btn btn-ghost btn-sm" href="${bundleHref(b)}">מה יש בחבילה</a>
     <span class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)}</span>
     ${dlStatus}
   </div>
@@ -305,12 +306,13 @@ const homeBody = `
     <p class="lead">דף עבודה, מבחן או מחוון מג'מיני, מוכן להדפסה. עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
     <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
-      <li><span><b>מורידים</b> סקיל</span></li>
+      <li><span><b>מורידים</b> חבילה או סקיל</span></li>
       <li><span><b>מעלים</b> לג'מיני, פעם אחת</span></li>
       <li><span><b>מבקשים כרגיל</b>. לא עבד? כותבים <code dir="ltr">@</code> ואת שם הסקיל</span></li>
     </ol>
     <p class="hero-actions">
-      <a class="btn btn-cta btn-lg" href="#skills">לבחירת סקיל</a>
+      ${bundles.length ? `<a class="btn btn-cta btn-lg" href="#bundles">לחבילות</a>
+      <a class="btn btn-ghost btn-lg" href="#skills">לסקיל בודד</a>` : '<a class="btn btn-cta btn-lg" href="#skills">לבחירת סקיל</a>'}
       ${VIDEO ? `<a class="btn btn-ghost btn-video" href="#video">סרטון התקנה (${esc(VIDEO.minutes)} דקות)</a>` : ''}
     </p>
   </div>
@@ -319,6 +321,17 @@ const homeBody = `
     <figcaption>סורקים ופותחים בטלפון</figcaption>
   </figure>
 </div></section>
+
+${bundles.length ? `<section class="wrap section" id="bundles" aria-labelledby="h-bundles">
+  <div class="section-head">
+    <h2 id="h-bundles">חבילות</h2>
+    <p class="muted">כמה סקילים שעובדים יחד, בהורדה אחת.</p>
+  </div>
+  <div class="bundle-grid">
+  ${topicBundles.map(bundleCard).join('\n')}
+  </div>
+  ${workshopBundles.length ? `<p class="workshop-line">הייתם בסדנה שלי? <a href="/bundles/#workshops">לחבילות מהסדנאות</a></p>` : ''}
+</section>` : ''}
 
 <section class="wrap section" id="skills" aria-labelledby="h-skills">
   <div class="section-head">
@@ -350,15 +363,6 @@ const homeBody = `
 </section>
 
 ${VIDEO ? videoHome(VIDEO) : ''}
-
-${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
-  <div class="section-head">
-    <h2 id="h-bundles">חבילות</h2>
-    <p class="muted">כמה סקילים בלחיצה אחת. כל אחד יורד כקובץ נפרד.</p>
-  </div>
-  ${topicBundles.map(bundleCard).join('\n')}
-  ${workshopBundles.length ? `<p class="workshop-line">הייתם בסדנה שלי? <a href="/bundles/#workshops">לחבילות מהסדנאות</a></p>` : ''}
-</section>` : ''}
 
 ${WORKSHOP ? `<div class="wrap section">${workshopBox('home')}</div>` : ''}
 
