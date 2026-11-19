@@ -117,6 +117,10 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .section-head p { margin: 0; }
 .sub-head { font-size: 1.15rem; margin: 36px 0 14px; }
 .sub-head .muted { font-weight: 400; font-size: .95rem; }
+/* a category of main skills (lib/skills.js CATEGORIES): a line above, the short note under the name */
+.cat-head { font-size: 1.3rem; padding-top: 18px; border-top: 1px solid var(--line); }
+.cat-head .muted { display: block; margin-top: 2px; }
+.cat-first, .filters + .cat-head:not([hidden]) { margin-top: 8px; }
 
 /* filters */
 .filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }

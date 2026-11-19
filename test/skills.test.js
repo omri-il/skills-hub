@@ -21,6 +21,7 @@ benefit: חוסך.
 what_it_does: עושה.
 output: קובץ
 role: main
+category: עזרי הוראה
 tested: [נבדק]
 limitations: [מגבלה]
 ${extra}`;
@@ -69,6 +70,15 @@ test('a required skill that does not exist fails', () => {
 test('a missing meta.yaml field fails', () => {
   const { errors } = loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace(/^problem:.*\n/m, '') } }));
   assert.ok(errors.some((e) => e.includes('required field "problem"')));
+});
+
+test('category: a main skill needs one from the list, a shared skill needs none', () => {
+  const missing = loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace(/^category:.*\n/m, '') } }));
+  assert.ok(missing.errors.some((e) => e.includes('category ""')));
+  const bad = loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace(/^category:.*$/m, 'category: משהו אחר') } }));
+  assert.ok(bad.errors.some((e) => e.includes('category "משהו אחר"')));
+  const helper = loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace(/^category:.*\n/m, '').replace('role: main', 'role: shared') } }));
+  assert.deepEqual(helper.errors, []);
 });
 
 test('who: a value outside the list fails, and no who means everyone', () => {

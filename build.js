@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { zipSync, strToU8 } from 'fflate';
 import QRCode from 'qrcode';
 import YAML from 'yaml';
-import { loadSkills, WHO, GROUPS } from './lib/skills.js';
+import { loadSkills, WHO, GROUPS, CATEGORIES } from './lib/skills.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, 'dist');
@@ -216,7 +216,7 @@ function downloadFor(s) {
 function card(s) {
   const d = downloadFor(s);
   // data-search: what the search box looks in (assets/app.js normalises it the same way as the query).
-  const search = [s.title, s.problem, s.benefit, s.what_it_does, s.output, s.audience, ...s.subjects, s.name].join(' ').replace(/\s+/g, ' ');
+  const search = [s.title, s.category, s.problem, s.benefit, s.what_it_does, s.output, s.audience, ...s.subjects, s.name].join(' ').replace(/\s+/g, ' ');
   return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-groups="${esc(s.groups.join('|'))}" data-fits="${esc(s.fits.join('|'))}" data-who="${esc(s.who.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}" data-search="${esc(search)}">
   <h3 class="card-title"><a href="/skills/${s.name}/">${esc(s.title)}</a></h3>
   <p class="card-benefit">${esc(s.benefit)}</p>
@@ -334,9 +334,10 @@ const homeBody = `
     ${allPlatforms.length > 1 ? chips('platform', allPlatforms) : ''}
     <p class="filter-count muted small" id="count" aria-live="polite"></p>
   </div>
-  <ul class="grid" id="grid-main">
-    ${mains.map(card).join('\n')}
-  </ul>
+  ${CATEGORIES.filter((c) => mains.some((s) => s.category === c.name)).map((c, i) => `<h3 class="sub-head cat-head${i ? '' : ' cat-first'}">${esc(c.name)} <span class="muted">${esc(c.note)}</span></h3>
+  <ul class="grid">
+    ${mains.filter((s) => s.category === c.name).map(card).join('\n')}
+  </ul>`).join('\n  ')}
   ${shared.length ? `<h3 class="sub-head">סקילי עזר <span class="muted">(כבר בתוך ההורדה של הסקיל שצריך אותם)</span></h3>
   <ul class="grid" id="grid-shared">
     ${shared.map(card).join('\n')}
@@ -605,7 +606,7 @@ write('404.html', page({
 write('skills.json', JSON.stringify({
   skills: skills.map((s) => ({
     name: s.name, title: s.title, version: s.version, updated: s.updated,
-    role: s.role, problem: firstSentence(s.problem), benefit: s.benefit,
+    role: s.role, category: s.category, problem: firstSentence(s.problem), benefit: s.benefit,
   })),
 }, null, 1));
 write('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);

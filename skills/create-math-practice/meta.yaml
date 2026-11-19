@@ -21,6 +21,7 @@ requires:
 - format-equations-for-hebrew-worksheets
 - verify-solutions
 role: main
+category: עזרי הוראה
 tested:
 - 'ציורים, גרסה 1.3.0 (19.11.2026): 16 בקשות דרך ה-API, כל אחת פעמיים ב-gemini-3.5-flash, ו-12 הרצות ב-gemini-4-hydrogen'
 - 'Claude נתן ציון מ-0 עד 10: ב-Hydrogen ממוצע 8.5, ו-11 מתוך 12 קיבלו 7 ומעלה. ב-Flash: ב-14 מתוך 16 נוצר קובץ, ממוצע 6.6'
