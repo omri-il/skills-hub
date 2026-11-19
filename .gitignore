@@ -4,3 +4,5 @@ dist/
 deploy/*.env
 .claude/worktrees/
 .impeccable/
+video-help/data/
+video-help/run.log

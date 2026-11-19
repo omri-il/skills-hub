@@ -95,6 +95,15 @@ Every zip holds one skill: one folder named exactly like the skill, with only `S
 - Local test: `ADMIN_PASSWORD=x ADMIN_SECRET=y DRY_RUN=1 ADMIN_REPO=<a git copy of skills/ + bundles.yaml> node admin/server.js` (no fetch, push or deploy).
 - `deploy/update.sh` restarts the admin service only when `admin/`, `lib/` or the package files changed.
 
+## Video helper (Omri, 2026-11-19)
+
+Help for recording a video about a skill: 2 demo requests, Gemini's answer without the skill and with it, and 3 things to point at on camera. Only Omri sees it.
+- On the skill page: a side panel (`assets/video-help.js`, loaded only on `/skills/*` pages). Key **H** (KeyH, so also on a Hebrew keyboard) hides it completely and the page stays clean after a reload (localStorage). Other visitors get nothing: the script asks the server only when the `skills_admin_seen` cookie exists (set at login and on every `/admin` visit, no secret in it), and the server answers only with the real login cookie.
+- On a phone: `/admin/video/<name>`, the same content as a page (the admin list has a "🎬 עזרה לסרטון" button per skill).
+- The content is NOT in git (the repo is public): one `<name>.json` per skill in `VIDEO_HELP_DIR` on the VPS, default `/root/Projects/skills-video-help`. Read by `/admin/api/video-help/<name>`.
+- Made by `video-help/make.py` (Python 3.12): Claude (`claude-opus-5-5`) picks the requests and the points, as Omri's rule says; Gemini API (`gemini-3.5-flash`) answers once with no skill and once with the skill and its `requires`. Output in `video-help/data/` (gitignored), then `scp video-help/data/*.json root@100.94.153.60:/root/Projects/skills-video-help/`. About 2 minutes per skill; 6 at a time. A changed skill: `--skills <name> --force`.
+- Local check: `ADMIN_PORT=5047 node test/serve.js` sends `/admin/*` to a local DRY_RUN admin server, so the panel works on one origin.
+
 ## Rules
 
 - Hebrew, right to left, logical CSS only (`margin-inline-start`, not `margin-left`). Code, file names and skill names are LTR islands (`<code dir="ltr">`, `<bdi>`). The SKILL.md viewer uses `unicode-bidi: plaintext` so each line picks its own direction.
