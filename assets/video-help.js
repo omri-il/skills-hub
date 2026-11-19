@@ -42,7 +42,7 @@
       '#vh .vh-open{background:#e6f4ec;border-radius:10px;padding:8px 12px;margin:0 0 12px}',
       '#vh .vh-demo{border:1px solid #dde3ea;border-radius:12px;padding:10px 12px;margin:0 0 12px}',
       '#vh h3{font-size:.98rem;margin:0 0 6px}',
-      '#vh .vh-prompt{background:#f7f8fa;border-inline-start:5px solid #FFC250;border-radius:8px;padding:8px 10px;white-space:pre-wrap;unicode-bidi:plaintext;font-size:.92rem;margin:0 0 6px}',
+      '#vh .vh-prompt{background:#fff8e6;border:1px solid #FFC250;border-radius:8px;padding:8px 10px;white-space:pre-wrap;unicode-bidi:plaintext;font-size:.92rem;margin:0 0 6px}',
       '#vh .vh-copy{font:inherit;font-size:.85rem;border:1px solid #002045;background:#fff;color:#002045;border-radius:8px;padding:4px 10px;cursor:pointer}',
       '#vh .vh-st{font-size:.85rem;color:#146c43;margin-inline-start:8px}',
       '#vh .vh-small{font-size:.85rem;color:#4b5a6b;margin:6px 0}',

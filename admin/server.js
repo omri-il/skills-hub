@@ -275,7 +275,7 @@ function confirmPage(name) {
 const HELP_CSS = `
 .demo{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
 .demo h3{margin:0 0 8px;font-size:1rem}
-.prompt{background:#f7f8fa;border:1px solid var(--line);border-inline-start:5px solid var(--ochre);border-radius:8px;padding:10px 12px;white-space:pre-wrap;unicode-bidi:plaintext;margin:0 0 10px}
+.prompt{background:#fff8e6;border:1px solid var(--ochre);border-radius:8px;padding:10px 12px;white-space:pre-wrap;unicode-bidi:plaintext;margin:0 0 10px}
 .show{margin:0 0 10px;padding-inline-start:20px}
 .show li{margin:0 0 4px}
 details{border:1px solid var(--line);border-radius:8px;margin:0 0 8px;background:#fff}
