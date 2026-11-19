@@ -188,6 +188,7 @@ ${body}
 </main>
 <footer class="foot"><div class="wrap">
   <p>חינם, מאת <a href="https://omri-iram.co.il">עומרי אירם | בינה בהוראה</a>. בעיה בסקיל? <bdi dir="ltr">hello@omri-iram.co.il</bdi></p>
+  <p class="foot-admin"><a href="/admin">כניסה לניהול האתר</a></p>
 </div></footer>
 </body>
 </html>
@@ -304,7 +305,7 @@ const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
     <h1>חוסכים שעות עבודה בכל שבוע,<br class="br-wide"> עם Gemini Skills.</h1>
-    <p class="lead">דף עבודה, מבחן או מחוון מג'מיני, מוכן להדפסה. עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
+    <p class="lead">דף עבודה או לוח בחירה מג'מיני, מוכן להדפסה. עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
     <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
       <li><span><b>מורידים</b> חבילה או סקיל</span></li>
@@ -341,7 +342,7 @@ ${bundles.length ? `<section class="wrap section" id="bundles" aria-labelledby="
   <div class="filters">
     <div class="search" role="search">
       <label class="chips-label" for="q">חיפוש</label>
-      <input type="search" id="q" class="search-input" placeholder="למשל: מכתב להורים, מצגת, חומצות" autocomplete="off" enterkeyhint="search">
+      <input type="search" id="q" class="search-input" placeholder="למשל: מכתב להורים, שברים, ציונים" autocomplete="off" enterkeyhint="search">
     </div>
     ${chips('who', allWho)}
     ${chips('subject', allSubjects)}
@@ -372,7 +373,7 @@ ${signupSection}
 
 write('index.html', page({
   title: 'סקילים למורים | עומרי אירם',
-  description: `${mains.length} סקילים לג'מיני למורים בכל המקצועות: דפי עבודה, מבחנים, מחוונים, מצגות ומכתבים להורים, בעברית שלא מתהפכת. הורדה חינם, בלי הרשמה.`,
+  description: `${mains.length} סקילים לג'מיני למורים בכל המקצועות: דפי עבודה, לוחות בחירה, ניתוח ציונים ומכתבים להורים, בעברית שלא מתהפכת. הורדה חינם, בלי הרשמה.`,
   canonical: '/',
   body: homeBody,
 }));
