@@ -202,6 +202,12 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .bundle-short { padding: 20px 24px; border-width: 1px; }
 .bundle-short .bundle-cta { gap: 8px; }
 .bundle-short .bundle-cta .btn { width: 100%; }
+/* home: the bundles come first, as a grid of tall cards (Omri, 2026-11-19) */
+.bundle-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 14px; }
+@media (max-width: 720px) { .bundle-grid { grid-template-columns: 1fr; } }
+.bundle-grid .bundle { grid-template-columns: 1fr; align-content: space-between; gap: 14px; margin: 0; border-width: 2px; }
+.bundle-grid .bundle-cta { align-items: stretch; }
+.top-link { font-weight: 700; color: var(--accent); margin-inline-start: auto; }
 .workshop-line { margin: 6px 0 0; color: var(--ink-2); }
 .lead-sm { font-size: 1.08rem; color: var(--ink-2); margin: 8px 0 14px; }
 .bundle-rows { list-style: none; padding: 0; margin: 0; }
