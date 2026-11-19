@@ -42,6 +42,7 @@ const VIDEO = (() => {
 const videoPlayer = (v, cls = '') => `<div class="video ${cls}">
     <video controls preload="none" playsinline${v.poster ? ` poster="${esc(v.poster)}"` : ''} width="1920" height="1080">
       <source src="${esc(v.file)}" type="video/mp4">
+      ${v.captions ? `<track kind="captions" src="${esc(v.captions)}" srclang="he" label="עברית" default>` : ''}
     </video>
   </div>
   <p class="video-links">
