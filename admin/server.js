@@ -9,6 +9,12 @@
 //   PORT             default 5047
 //   ADMIN_REPO       default /root/Projects/skills-hub-admin (a clone used only by this service)
 //   DRY_RUN=1        local test: no fetch, no push, no deploy, cookie without Secure
+//   VIDEO_HELP_DIR   default /root/Projects/skills-video-help: one <skill>.json per skill, the video helper
+//
+// Video helper (Omri, 2026-11-19): demo requests for a skill, Gemini's answer without and with the skill, and
+// what to point at on camera. Only Omri sees it: the JSON files are NOT in git (the repo is public), and
+// /admin/api/video-help/<name> sends one only with the login cookie. assets/video-help.js shows it as a side
+// panel on the skill page (key H hides it for a recording); /admin/video/<name> is the same for a phone.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,7 +30,11 @@ const REPO = process.env.ADMIN_REPO || '/root/Projects/skills-hub-admin';
 const DRY = process.env.DRY_RUN === '1';
 const SITE = 'https://skills.omri-iram.co.il';
 const COOKIE = 'skills_admin';
+// A second cookie with no secret in it, readable by the site's script: it only tells assets/video-help.js
+// that it is worth asking /admin/api for the helper, so other visitors' browsers never ask.
+const SEEN = 'skills_admin_seen';
 const DAYS = 30;
+const HELP_DIR = process.env.VIDEO_HELP_DIR || '/root/Projects/skills-video-help';
 
 if (!PASSWORD || !SECRET) {
   console.error('ADMIN_PASSWORD and ADMIN_SECRET must be set.');
@@ -45,6 +55,14 @@ function loginCookie() {
   const exp = String(Date.now() + DAYS * 864e5);
   return `${COOKIE}=${exp}.${sign(exp)}; Path=/admin; HttpOnly; SameSite=Strict; Max-Age=${DAYS * 86400}${DRY ? '' : '; Secure'}`;
 }
+const seenCookie = (on) => `${SEEN}=${on ? '1' : ''}; Path=/; SameSite=Strict; Max-Age=${on ? DAYS * 86400 : 0}${DRY ? '' : '; Secure'}`;
+
+// ---------- video helper ----------
+function readHelp(name) {
+  if (!/^[a-z0-9-]+$/.test(name)) return null;
+  try { return JSON.parse(fs.readFileSync(path.join(HELP_DIR, `${name}.json`), 'utf8')); } catch { return null; }
+}
+const hasHelp = (name) => fs.existsSync(path.join(HELP_DIR, `${name}.json`));
 const fails = new Map(); // ip -> [times]; 5 wrong passwords in 15 minutes = wait
 const recentFails = (ip) => (fails.get(ip) || []).filter((t) => t > Date.now() - 15 * 6e4);
 
@@ -214,7 +232,8 @@ function actionButton(action, name, label, cls = '') {
 function row(s, requiredBy) {
   const users = requiredBy.get(s.name) || [];
   const need = users.length ? `<br><small>הסקילים ${esc(names(users))} צריכים אותו.</small>` : '';
-  const view = s.hidden ? '' : `<a class="btn" href="/skills/${esc(s.name)}/" target="_blank" rel="noopener">לראות באתר</a>`;
+  const view = (s.hidden ? '' : `<a class="btn" href="/skills/${esc(s.name)}/" target="_blank" rel="noopener">לראות באתר</a>`)
+    + (hasHelp(s.name) ? `<a class="btn" href="/admin/video/${esc(s.name)}">🎬 עזרה לסרטון</a>` : '');
   const toggle = s.hidden
     ? actionButton('show', s.name, 'להחזיר לאתר', 'main')
     : actionButton('hide', s.name, 'להסתיר מהאתר');
@@ -232,6 +251,7 @@ function listPage(note) {
   const msg = note ? `<p class="note${note.ok ? '' : ' bad'}" role="status">${esc(note.text)}</p>` : '';
   return page('ניהול הסקילים', `${msg}${warn}
 <p>הסתרה מורידה סקיל מהאתר, ואפשר להחזיר אותו בלחיצה. מחיקה מוחקת אותו מהתיקייה. כל שינוי מופיע באתר תוך כ-10 שניות.</p>
+<p>🎬 עזרה לסרטון: בעמוד של כל סקיל באתר יש חלון צד שרק אתה רואה. המקש H מסתיר אותו ומחזיר אותו, גם לפני הקלטה.</p>
 <h2>מופיעים באתר (${shown.length})</h2>${shown.map((s) => row(s, requiredBy)).join('') || '<p>אין.</p>'}
 <h2>מוסתרים (${hidden.length})</h2>${hidden.map((s) => row(s, requiredBy)).join('') || '<p>אין סקילים מוסתרים.</p>'}`);
 }
@@ -249,6 +269,36 @@ function confirmPage(name) {
 <p>כדי להוריד אותו רק לזמן מה, עדיף ללחוץ "להסתיר מהאתר".</p>
 <div class="acts">${actionButton('delete', s.name, `כן, למחוק את "${esc(s.title)}"`, 'danger')}<a class="btn" href="/admin">לא, לחזור לרשימה</a></div>`;
   return page('למחוק סקיל?', `<div class="box">${body}</div>`);
+}
+
+// The same helper as the panel on the skill page, as a page of its own: to read on a phone while recording.
+const HELP_CSS = `
+.demo{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+.demo h3{margin:0 0 8px;font-size:1rem}
+.prompt{background:#fff8e6;border:1px solid var(--ochre);border-radius:8px;padding:10px 12px;white-space:pre-wrap;unicode-bidi:plaintext;margin:0 0 10px}
+.show{margin:0 0 10px;padding-inline-start:20px}
+.show li{margin:0 0 4px}
+details{border:1px solid var(--line);border-radius:8px;margin:0 0 8px;background:#fff}
+summary{cursor:pointer;padding:8px 12px;font-weight:600}
+.answer{white-space:pre-wrap;unicode-bidi:plaintext;padding:0 12px 12px;font-size:.92rem;max-height:70vh;overflow:auto}
+.opening{font-size:1.05rem;background:var(--ok-soft);border-radius:10px;padding:10px 14px}
+.small{color:var(--ink2);font-size:.88rem}`;
+
+function helpPage(name) {
+  const h = readHelp(name);
+  if (!h) return page('אין עזרה לסרטון', `<p class="note bad">עוד אין עזרה לסרטון לסקיל הזה. אפשר לבקש מ-Claude להכין.</p><a class="btn" href="/admin">לרשימה</a>`);
+  const demos = (h.demos || []).map((d, i) => `<section class="demo"><h3>${i + 1}. ${esc(d.label || 'בקשה לדוגמה')}</h3>
+<div class="prompt">${esc(d.prompt)}</div>
+${d.followup ? `<p class="small">אם Gemini שואל שאלה, לענות: <b>${esc(d.followup)}</b></p>` : ''}
+<b>מה להראות במצלמה</b><ul class="show">${(d.show || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+<details><summary>Gemini בלי הסקיל</summary><div class="answer">${esc(d.without || '')}</div></details>
+<details><summary>Gemini עם הסקיל</summary><div class="answer">${esc(d.with || '')}</div></details></section>`).join('');
+  return page(`🎬 ${h.title || name}`, `<style>${HELP_CSS}</style>
+<p><a href="/admin">‹ לרשימה</a></p>
+<h1 style="font-size:1.25rem;margin:0 0 10px">🎬 ${esc(h.title || name)}</h1>
+${h.opening ? `<p class="opening">${esc(h.opening)}</p>` : ''}
+${demos}
+<p class="small">התשובות הן תצוגה מקדימה מ-Gemini API (<bdi>${esc(h.model || '')}</bdi>, <bdi>${esc(h.made || '')}</bdi>). באפליקציה של Gemini התשובה יכולה להיות קצת אחרת.</p>`);
 }
 
 // ---------- server ----------
@@ -299,10 +349,20 @@ const server = http.createServer(async (req, res) => {
         return send(res, 401, loginPage('הסיסמה לא נכונה.'));
       }
       fails.delete(ip);
-      return go(res, '/admin', { 'Set-Cookie': loginCookie() });
+      return go(res, '/admin', { 'Set-Cookie': [loginCookie(), seenCookie(true)] });
     }
     if (url.pathname === '/admin/logout' && req.method === 'POST') {
-      return go(res, '/admin', { 'Set-Cookie': `${COOKIE}=; Path=/admin; HttpOnly; SameSite=Strict; Max-Age=0` });
+      return go(res, '/admin', { 'Set-Cookie': [`${COOKIE}=; Path=/admin; HttpOnly; SameSite=Strict; Max-Age=0`, seenCookie(false)] });
+    }
+
+    // The skill page's script asks here (assets/video-help.js). JSON, never a redirect to the login page.
+    const api = url.pathname.match(/^\/admin\/api\/video-help\/([a-z0-9-]+)$/);
+    if (api && req.method === 'GET') {
+      const json = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'X-Content-Type-Options': 'nosniff' };
+      if (!loggedIn(req)) { res.writeHead(401, { ...json, 'Set-Cookie': seenCookie(false) }); return res.end('{"error":"login"}'); }
+      const h = readHelp(api[1]);
+      res.writeHead(h ? 200 : 404, json);
+      return res.end(JSON.stringify(h || { error: 'none' }));
     }
 
     if (!loggedIn(req)) {
@@ -311,8 +371,11 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === 'GET' && (url.pathname === '/admin' || url.pathname === '/admin/')) {
-      return send(res, 200, await serial(() => listPage()));
+      // Also for a login made before the helper existed (2026-11-19): it has no SEEN cookie yet.
+      return send(res, 200, await serial(() => listPage()), { 'Set-Cookie': seenCookie(true) });
     }
+    const video = url.pathname.match(/^\/admin\/video\/([a-z0-9-]+)\/?$/);
+    if (req.method === 'GET' && video) return send(res, 200, helpPage(video[1]));
     if (req.method === 'GET' && url.pathname === '/admin/confirm') {
       return send(res, 200, await serial(() => confirmPage(url.searchParams.get('skill') || '')));
     }
