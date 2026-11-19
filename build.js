@@ -301,8 +301,8 @@ const chips = (group, values) => `<div class="chips" role="group" aria-labelledb
 const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
-    <h1>דף עבודה, מבחן או מחוון מג'מיני,<br class="br-wide"> מוכן להדפסה.</h1>
-    <p class="lead">מעלים סקיל לג'מיני פעם אחת. מאז מקבלים עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
+    <h1>חוסכים שעות עבודה בכל שבוע,<br class="br-wide"> עם Gemini Skills.</h1>
+    <p class="lead">דף עבודה, מבחן או מחוון מג'מיני, מוכן להדפסה. עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
     <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
       <li><span><b>מורידים</b> סקיל</span></li>
