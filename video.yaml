@@ -5,8 +5,11 @@
 title: איך מתקינים סקיל בג'מיני
 # A new version gets a new file name: /media/ is cached for a day, so the same name would keep
 # showing the old video. v2 (2026-11-13): the recap with stills at 1:18 instead of the 2:03 drawing.
-file: /media/install-tutorial-v2.mp4
-poster: /media/install-tutorial.jpg
-minutes: 4
+# v3 (2026-11-19): the first "lean video" (סרטון רזה): one action, 1:52, no intro. Replaces the 4-minute v2.
+file: /media/install-lean-v3.mp4
+poster: /media/install-lean-v3.jpg
+# Hebrew captions (WebVTT) on the player, from the same /media/ folder. Empty = no captions.
+captions: /media/install-lean-v3.he.vtt
+minutes: 2
 # The same video on YouTube (the בינה בהוראה channel). Empty = no YouTube link.
-youtube: "https://www.youtube.com/watch?v=zlPYbO52BVk"
+youtube: "https://www.youtube.com/watch?v=L2l_rURFCko"
