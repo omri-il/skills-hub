@@ -266,6 +266,8 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 
 .foot { border-top: 1px solid var(--line); margin-top: 48px; padding-block: 24px; font-size: .95rem; }
 .foot p { margin: 0 0 6px; }
+.foot-admin { font-size: .85rem; }
+.foot-admin a { color: var(--ink-2); }
 
 @media (prefers-reduced-motion: no-preference) {
   .btn, .chip, .card { transition: border-color .15s, filter .15s, background-color .15s; }
