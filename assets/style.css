@@ -306,3 +306,16 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .video-fold summary { cursor: pointer; font-weight: 700; color: var(--accent); }
 .video-fold[open] summary { margin-bottom: 12px; }
 .video-sm { max-width: 720px; }
+
+/* Plain skill page (Omri, 2026-11-19): one simple sentence + "N ways to use it" */
+.simple { font-size: 1.2rem; line-height: 1.6; margin: 4px 0 14px; max-width: 46ch; }
+.what-skill { background: var(--accent-soft); border-radius: var(--radius); padding: 16px 20px; }
+.what-skill h2 { color: var(--accent); font-size: 1.1rem; }
+.uses-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.use { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); }
+.use h3 { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; margin: 0 0 12px; }
+.use-n { flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--cta); color: var(--cta-ink); font-weight: 800; font-size: 1rem; }
+.use-label { font-size: .9rem; font-weight: 600; color: var(--ink-2); margin: 0 0 4px; }
+.use-ask { margin: 0; padding: 10px 14px; border-inline-start: 4px solid var(--cta); background: var(--accent-soft); border-radius: 8px; line-height: 1.6; unicode-bidi: plaintext; }
+.use-bar { display: flex; align-items: center; gap: 12px; margin: 6px 0 12px; }
+.use-get { margin: 0; max-width: 70ch; }
