@@ -106,6 +106,13 @@ Help for recording a video about a skill: 2 demo requests, Gemini's answer witho
 - Made by `video-help/make.py` (Python 3.12): Claude (`claude-opus-5-5`) picks the requests and the points, as Omri's rule says; Gemini API (`gemini-3.5-flash`) answers once with no skill and once with the skill and its `requires`. Output in `video-help/data/` (gitignored), then `scp video-help/data/*.json root@100.94.153.60:/root/Projects/skills-video-help/`. About 2 minutes per skill; 6 at a time. A changed skill: `--skills <name> --force`.
 - Local check: `ADMIN_PORT=5047 node test/serve.js` sends `/admin/*` to a local DRY_RUN admin server, so the panel works on one origin.
 
+## Hormozi parts (Omri, 2026-11-19)
+
+- **Share picture:** `assets/og.png` (1200x630) from `deploy/og/og.html`; render again with `deploy/og/make_og.ps1`.
+- **Proof line** on the home page: `PROOF_LINE` in `build.js`. It counts different addresses that downloaded a zip (nginx log on the VPS; the log is shared by every site and kept 14 days, so only the zip downloads can be counted). Raise the number by hand after a new count, never above what was measured.
+- **Next workshop box:** `workshop.yaml` (date text, price, link, `until`). Home page and every skill page. `assets/app.js` removes it in the browser after `until`; the build leaves it out once `until` has passed. No file = no box.
+- **"Without the skill / with the skill":** `compare/<name>.json` + `assets/compare/<name>.png`, made by `deploy/compare/make_compare.py` from the video helper's JSON (Gemini API answers). Shown on the skill page under "מה יוצא ממנו". Only for skills whose output is text: a skill whose output is a file (Word, Slides) looks flat as API text, so it gets no picture (create-choice-board was left out for this).
+
 ## Rules
 
 - Hebrew, right to left, logical CSS only (`margin-inline-start`, not `margin-left`). Code, file names and skill names are LTR islands (`<code dir="ltr">`, `<bdi>`). The SKILL.md viewer uses `unicode-bidi: plaintext` so each line picks its own direction.

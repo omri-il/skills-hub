@@ -1,0 +1,8 @@
+# The next public Gemini Skills workshop (Omri, 2026-11-19: the "next step" after a download).
+# The box shows on the home page and under the download on every skill page.
+# It hides itself in the browser after `until`, so an old date never stays on the site.
+# For the next run: change date_text, url and until, then push. No file = no box.
+date_text: "2.12 ב-19:30"
+price: 59
+url: https://events.omri-iram.co.il/065
+until: "2026-12-02T19:30:00+02:00"

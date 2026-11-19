@@ -60,6 +60,50 @@ const videoSkill = (v) => `<details class="video-fold">
     ${videoPlayer(v, 'video-sm')}
   </details>`;
 
+// Proof on the home page (Omri, 2026-11-19). Measured: 177 different addresses downloaded a skill zip
+// 8.11-19.11.2026 (nginx log on the VPS, bots left out; Omri's own tests are in it, so the line says "more than 150").
+// The number only grows, so the line stays true. Raise it by hand after a new count.
+const PROOF_LINE = 'יותר מ-150 מורים כבר הורידו סקילים מהאתר.';
+
+// ---------- the next workshop (workshop.yaml): the next step after a download (Omri, 2026-11-19) ----------
+const WORKSHOP = (() => {
+  const f = path.join(ROOT, 'workshop.yaml');
+  if (!fs.existsSync(f)) return null;
+  const w = YAML.parse(fs.readFileSync(f, 'utf8')) || {};
+  if (!w.url || !w.until || !w.date_text) return null;
+  if (new Date(w.until) < new Date()) return null; // already over when the site is built
+  return w;
+})();
+// assets/app.js removes the box once `data-until` has passed, so a date never stays after the workshop.
+const workshopBox = (cls = '') => (WORKSHOP ? `<aside class="workshop ${cls}" data-until="${esc(WORKSHOP.until)}" aria-labelledby="h-ws-${cls || 'x'}">
+  <div>
+    <h2 id="h-ws-${cls || 'x'}">רוצים לראות את זה עובד?</h2>
+    <p>בסדנה בזום של 90 דקות בונים יחד סקיל אחד שעובד לכיתה שלכם. הסדנה הבאה ב-${esc(WORKSHOP.date_text)}, <bdi>${esc(WORKSHOP.price)} ₪</bdi>.</p>
+  </div>
+  <a class="btn btn-ghost" href="${esc(WORKSHOP.url)}">לפרטים ולהרשמה</a>
+</aside>` : '');
+
+// ---------- "without the skill / with the skill" (compare/<name>.json + assets/compare/<name>.png, deploy/compare/make_compare.py) ----------
+const compareOf = (name) => {
+  const f = path.join(ROOT, 'compare', `${name}.json`);
+  return fs.existsSync(f) && fs.existsSync(path.join(ROOT, 'assets', 'compare', `${name}.png`))
+    ? JSON.parse(fs.readFileSync(f, 'utf8')) : null;
+};
+const compareBlock = (s) => {
+  const c = compareOf(s.name);
+  if (!c) return '';
+  // the PNG's own size, read from its header, so the page keeps the right space before it loads
+  const head = fs.readFileSync(path.join(ROOT, 'assets', 'compare', `${s.name}.png`)).subarray(16, 24);
+  const [w, h] = [head.readUInt32BE(0), head.readUInt32BE(4)];
+  return `<section class="block compare" aria-labelledby="h-compare">
+        <h2 id="h-compare">אותה בקשה, בלי הסקיל ועם הסקיל</h2>
+        <a class="compare-img" href="/assets/compare/${s.name}.png" target="_blank" rel="noopener"><img src="/assets/compare/${s.name}.png" alt="תשובה של ג'מיני לבקשה ${esc(c.label)}: מימין בלי הסקיל, משמאל עם הסקיל" loading="lazy" width="${w}" height="${h}"></a>
+        <h3>מה ההבדל</h3>
+        <ul>${c.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
+        <p class="muted small">תשובות אמיתיות של Gemini מ-${fmtDate(c.made)}. באפליקציה התוצאה יכולה להיות קצת שונה. לחיצה על התמונה פותחת אותה בגודל מלא.</p>
+      </section>`;
+};
+
 // The site shows Gemini only for now (Omri, 2026-11-11). meta.yaml keeps the other platforms; add them back here to show them.
 const SHOWN_PLATFORMS = ['Gemini'];
 const shown = (list) => list.filter((p) => SHOWN_PLATFORMS.includes(p));
@@ -260,8 +304,9 @@ const chips = (group, values) => `<div class="chips" role="group" aria-labelledb
 const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
-    <h1>מלמדים את ג'מיני פעם אחת.<br class="br-wide"> מקבלים תוצרים טובים יותר, עם פחות תיקונים.</h1>
-    <p class="lead">סקיל הוא קובץ הוראות קטן שמעלים לג'מיני. מאותו רגע, כשמבקשים דף עבודה, מצגת או מכתב להורים, ג'מיני כבר יודע איך עושים את זה טוב.<span class="lead-more"> למשל עברית שלא מתהפכת, שאלות מדורגות ומפתח תשובות שנבדק לפני שהוא מגיע אליכם. עדיין עוברים על התוצר לפני שנכנסים לכיתה, אבל יש פחות מה לתקן.</span></p>
+    <h1>דף עבודה, מבחן או מחוון מג'מיני,<br class="br-wide"> מוכן להדפסה.</h1>
+    <p class="lead">מעלים סקיל לג'מיני פעם אחת, ומאז הבקשות יוצאות בעברית שלא מתהפכת, ודפי העבודה מגיעים עם מפתח תשובות שנבדק. חינם, בלי הרשמה.<span class="lead-more"> סקיל הוא קובץ הוראות קטן. עדיין עוברים על התוצר לפני שנכנסים לכיתה, אבל יש פחות מה לתקן.</span></p>
+    <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
       <li><span><b>מורידים</b> סקיל או חבילה מהדף הזה</span></li>
       <li><span><b>מעלים</b> אותו לג'מיני, פעם אחת</span></li>
@@ -317,6 +362,8 @@ ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
   ${topicBundles.map(bundleCard).join('\n')}
   ${workshopBundles.length ? `<p class="workshop-line">הייתם בסדנה שלי? <a href="/bundles/#workshops">לחבילות מהסדנאות</a></p>` : ''}
 </section>` : ''}
+
+${WORKSHOP ? `<div class="wrap section">${workshopBox('home')}</div>` : ''}
 
 ${signupSection}
 `;
@@ -409,6 +456,8 @@ function skillPage(s) {
         <p class="output">${esc(s.output)}</p>
       </section>
 
+      ${compareBlock(s)}
+
       <section class="block trust" aria-labelledby="h-trust">
         <h2 id="h-trust">מה נבדק ומה עוד לא</h2>
         <p class="muted">בדקתי כל סקיל בשימוש אמיתי לפני שהעליתי אותו. זה מה שראיתי, כולל מה שעוד לא עובד מושלם.</p>
@@ -424,6 +473,8 @@ function skillPage(s) {
         </div>
         ${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).length ? `<p class="muted small">${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).map((p) => `ב-<bdi>${esc(p)}</bdi>`).join(' ו')} זה אותו פורמט ואמור לעבוד, אבל עוד לא בדקתי שם.</p>` : ''}
       </section>
+
+      ${workshopBox('skill')}
 
       ${installSteps(s, d)}
 
