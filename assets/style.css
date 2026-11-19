@@ -104,7 +104,6 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
   .hero-in { grid-template-columns: 1fr; padding-block: 22px 22px; }
   /* phone: a short hero, so the first skill shows sooner */
   .lead { font-size: 1.05rem; margin-bottom: 1em; }
-  .lead-more { display: none; }
   .steps { gap: 6px; }
   .steps li { padding-block: 4px; font-size: .95rem; }
   .hero-actions .btn { flex: 1 1 100%; }
@@ -144,9 +143,7 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .card-title { font-size: 1.25rem; margin-bottom: .4em; }
 .card-title a { color: var(--ink); text-decoration: none; }
 .card-title a:hover { color: var(--accent); text-decoration: underline; }
-.card-problem { margin: 0 0 10px; color: var(--ink-2); }
 .card-benefit { margin: 0 0 14px; flex: 1; color: var(--ink); }
-.card-benefit-label { font-weight: 700; color: var(--accent); }
 .block.benefit { background: var(--accent-soft); border-radius: var(--radius); padding: 16px 20px; }
 .block.benefit h2 { color: var(--accent); }
 .card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
@@ -246,7 +243,6 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 
 .install { padding-inline-start: 1.3em; margin: 0 0 20px; }
 .install li { margin-bottom: 8px; padding-inline-start: 4px; }
-.install-title { font-size: 1.05rem; margin-top: 4px; }
 .install-other { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .install-other > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
 .install-other p { margin: 0; }
