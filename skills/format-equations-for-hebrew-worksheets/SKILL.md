@@ -1,6 +1,6 @@
 ---
 name: format-equations-for-hebrew-worksheets
-description: מעצב דפי עבודה וחומרי עזר בעברית שיש בהם משוואות מתמטיות או ניסוחים כימיים, ויוצר אותם כקובץ Word שנפתח נכון ב-Word וב-Google Docs. השתמש כאשר יוצרים דף עבודה, דף תרגול, מבחן, בוחן, דף נוסחאות או מפתח תשובות בעברית שכולל נוסחאות, משוואות, שברים, שורשים, חזקות, סדרות, ניסוחים כימיים, יונים או מטענים, וכאשר סקיל אחר מבקש לעצב חומר כזה.
+description: מעצב דפי עבודה וחומרי עזר בעברית שיש בהם משוואות מתמטיות או ניסוחים כימיים, ויוצר אותם כקובץ Word שנפתח נכון ב-Word וב-Google Docs. השתמש כאשר יוצרים דף עבודה, דף תרגול, מבחן, בוחן, דף נוסחאות או מפתח תשובות בעברית שכולל נוסחאות, משוואות, שברים, שורשים, חזקות, סדרות, ניסוחים כימיים, יונים או מטענים, וכאשר סקיל אחר מבקש לעצב חומר כזה. לא לדף חשבון ליסודי (create-elementary-math-practice), לא ללוח בחירה (create-choice-board), ולא לטקסט שהמורה מדביק ב-Classroom (ai-resistant-task).
 ---
 
 # עיצוב משוואות בדפי עבודה בעברית
@@ -26,9 +26,13 @@ import re, subprocess, zipfile, shutil
 
 HEB = re.compile(r"[\u0590-\u05FF]")
 
-def build(md, out):
+def build(md, out, chem=False):
+    if chem:  # תו כיוון שנכתב כטקסט הופך לתו עצמו
+        md = md.replace("{lrm}", "‎").replace("\\u200e", "‎")
     open("worksheet.md", "w", encoding="utf-8").write(md)
-    subprocess.run(["pandoc", "worksheet.md", "-o", out], check=True)
+    # בכימיה: שורות צמודות (חתימה, שורות כותרת) נשארות שורות נפרדות
+    fmt = "markdown+hard_line_breaks" if chem else "markdown"
+    subprocess.run(["pandoc", "-f", fmt, "worksheet.md", "-o", out], check=True)
     problems = []
     tmp = out + ".tmp"
     with zipfile.ZipFile(out) as zin, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
@@ -59,6 +63,14 @@ def build(md, out):
                 for t in re.findall(r"<m:t>(.*?)</m:t>", xml, re.S):
                     if HEB.search(t):
                         problems.append("עברית בתוך משוואה: " + t[:60])
+                if chem and xml.count("<m:oMath>"):
+                    problems.append(f"בכימיה אין $: {xml.count('<m:oMath>')} משוואות Word בקובץ. לכתוב אותן כטקסט רגיל עם יוניקוד")
+                if chem:
+                    text = "".join(re.findall(r"<w:t[^>]*>(.*?)</w:t>", xml, re.S))
+                    for left in sorted(set(re.findall(r"\{\w+\}", text))):
+                        problems.append(f"נשאר בקובץ הטקסט {left}: לכתוב את התו עצמו או למחוק")
+                    if "חומצה כלורית" in text and "HClO₃" not in text:
+                        problems.append("HCl הוא 'מימן כלורי' (בתמיסה: 'תמיסת מימן כלורי'), לא 'חומצה כלורית'")
                 print("משוואות בקובץ:", xml.count("<m:oMath>"))
                 data = xml.encode("utf-8")
             elif item.filename == "word/styles.xml":
@@ -96,6 +108,7 @@ def build(md, out):
 - LaTeX רגיל: `\frac{a}{b}`, `\sqrt{x}`, `x^{2}`, `a_{n}`, `\cdot`.
 
 ### כימיה
+- **בדף כימיה אין `$` בכלל**: לא לניסוחים, לא למספרים ויחידות, ולא לחישובים. קוראים ל-`build(md, "<שם>.docx", chem=True)`, והוא מדווח על כל משוואה שנשארה.
 - ניסוחים כימיים נכתבים כ**טקסט רגיל עם תווי יוניקוד**, לא בתוך `$`: ספרות תחתיות ₀₁₂₃₄₅₆₇₈₉, מטענים ⁺ ⁻ ² ³ (לדוגמה Fe³⁺, ‏SO₄²⁻), מצבי צבירה (s) (l) (g) (aq).
 - **החץ הוא תמיד → או ⇌.** אסור ← או ⟵ בניסוח כימי. ← מותר רק בניסוח מילולי בעברית.
 - כל ניסוח בפסקה משלו. תנאי התגובה (אור, חום, זרז) במשפט עברי מתחת לניסוח.
