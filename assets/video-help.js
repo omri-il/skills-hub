@@ -29,11 +29,25 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {});
   }
 
+  // "בלי הסקיל: X. עם הסקיל: Y." -> Y, cut to 12 words: what to point at on camera.
+  function shortPoint(p) {
+    var t = String(p);
+    var i = t.indexOf('עם הסקיל:');
+    if (i !== -1) t = t.slice(i + 'עם הסקיל:'.length);
+    t = t.trim().replace(/\.$/, '');
+    var words = t.split(/\s+/);
+    return words.length > 12 ? words.slice(0, 12).join(' ') + '…' : t;
+  }
+
   function build(h) {
     var style = el('style');
     style.textContent = [
-      '#vh{position:fixed;top:0;bottom:0;inset-inline-end:0;width:min(420px,100vw);z-index:9999;background:#fff;color:#0f1d2e;',
-      'box-shadow:0 0 0 1px #dde3ea,0 10px 40px rgba(0,32,69,.25);display:flex;flex-direction:column;font-family:Rubik,system-ui,sans-serif;line-height:1.5}',
+      '#vh{position:fixed;bottom:16px;inset-inline-end:16px;width:min(300px,calc(100vw - 32px));z-index:9999;background:#fff;color:#0f1d2e;border-radius:14px;overflow:hidden;',
+      'box-shadow:0 0 0 1px #dde3ea,0 10px 40px rgba(0,32,69,.25);display:flex;flex-direction:column;font-family:Rubik,system-ui,sans-serif;line-height:1.45}',
+      '#vh .vh-row{margin:0 0 10px}',
+      '.vh-back{position:fixed;bottom:12px;inset-inline-end:12px;z-index:9999;width:40px;height:40px;border-radius:50%;border:0;background:#002045;color:#fff;font-size:18px;cursor:pointer;opacity:0;transition:opacity .2s}',
+      '.vh-back:hover,.vh-back:focus-visible{opacity:1}',
+      '.vh-back[hidden]{display:none}',
       '#vh[hidden]{display:none}',
       '#vh .vh-top{background:#002045;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px}',
       '#vh .vh-top b{flex:1;font-weight:600}',
@@ -59,55 +73,46 @@
     box.id = 'vh';
     box.setAttribute('aria-label', 'עזרה לסרטון');
     var top = el('div', 'vh-top');
-    top.appendChild(el('b', null, '🎬 עזרה לסרטון'));
+    top.appendChild(el('b', null, '🎬 ' + (h.title || 'עזרה לסרטון')));
     var hide = el('button', null, 'להסתיר (H)');
     hide.type = 'button';
     hide.addEventListener('click', function () { set(true); });
     top.appendChild(hide);
     box.appendChild(top);
 
+    // Short on purpose (Omri, 2026-11-19: "90% less"): one request to copy and 3 short things to point at.
+    // The full answers stay on the phone page, /admin/video/<name>.
     var body = el('div', 'vh-body');
-    if (h.opening) body.appendChild(el('p', 'vh-open', h.opening));
-    (h.demos || []).forEach(function (d, i) {
-      var s = el('section', 'vh-demo');
-      s.appendChild(el('h3', null, (i + 1) + '. ' + (d.label || 'בקשה לדוגמה')));
-      s.appendChild(el('div', 'vh-prompt', d.prompt || ''));
-      var row = el('div');
-      var b = el('button', 'vh-copy', 'להעתיק את הבקשה');
+    var d = (h.demos || [])[0];
+    if (d) {
+      var row = el('div', 'vh-row');
+      var b = el('button', 'vh-copy', 'להעתיק בקשה: ' + (d.label || 'דוגמה'));
       b.type = 'button';
       var st = el('span', 'vh-st');
       b.addEventListener('click', function () { copy(d.prompt || '', st); });
       row.appendChild(b); row.appendChild(st);
-      s.appendChild(row);
-      if (d.followup) s.appendChild(el('p', 'vh-small', 'אם Gemini שואל שאלה, לענות: ' + d.followup));
+      body.appendChild(row);
       if (d.show && d.show.length) {
-        s.appendChild(el('b', null, 'מה להראות במצלמה'));
+        body.appendChild(el('b', null, 'להראות:'));
         var ul = el('ul');
-        d.show.forEach(function (x) { ul.appendChild(el('li', null, x)); });
-        s.appendChild(ul);
+        d.show.forEach(function (x) { ul.appendChild(el('li', null, shortPoint(x))); });
+        body.appendChild(ul);
       }
-      [['Gemini בלי הסקיל', d.without], ['Gemini עם הסקיל', d['with']]].forEach(function (p) {
-        var det = el('details');
-        det.appendChild(el('summary', null, p[0]));
-        det.appendChild(el('div', 'vh-ans', p[1] || ''));
-        s.appendChild(det);
-      });
-      body.appendChild(s);
-    });
+    }
+    body.appendChild(el('p', 'vh-small', 'H מסתיר ומחזיר'));
     box.appendChild(body);
-
-    var foot = el('div', 'vh-foot');
-    foot.appendChild(document.createTextNode('רק אתה רואה את החלון הזה. H מסתיר ומחזיר. בטלפון: '));
-    var a = el('a', null, location.host + '/admin/video/' + name);
-    a.href = '/admin/video/' + name;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.dir = 'ltr';
-    foot.appendChild(a);
-    box.appendChild(foot);
     document.body.appendChild(box);
 
-    function set(hidden) { box.hidden = hidden; put(hidden); }
+    // When the panel is hidden, a small 🎬 button waits in the corner. It is invisible until the mouse
+    // reaches it, so it does not show in a recording.
+    var back = el('button', 'vh-back', '🎬');
+    back.type = 'button';
+    back.title = 'להחזיר את העזרה לסרטון';
+    back.setAttribute('aria-label', 'להחזיר את העזרה לסרטון');
+    back.addEventListener('click', function () { set(false); });
+    document.body.appendChild(back);
+
+    function set(hidden) { box.hidden = hidden; back.hidden = !hidden; put(hidden); }
     set(get());
     document.addEventListener('keydown', function (e) {
       if (e.code !== 'KeyH' || e.ctrlKey || e.altKey || e.metaKey) return;
