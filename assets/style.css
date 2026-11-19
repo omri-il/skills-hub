@@ -156,6 +156,12 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { font-size: .82rem; border-radius: 6px; padding: 2px 9px; border: 1px solid var(--line); background: var(--paper); color: var(--ink-2); }
+/* Omri, 2026-11-19: a skill that works well only in Gemini Pro. */
+.tag.tag-pro { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); font-weight: 600; }
+.pro-box { background: var(--warn-soft); border: 2px solid var(--cta); border-radius: var(--radius); padding: 14px 18px; margin: 0 0 20px; }
+.pro-box h2 { margin: 0 0 6px; font-size: 1.1rem; color: var(--ink); }
+.pro-box p { margin: 4px 0; }
+.pro-box bdi { white-space: nowrap; }
 .tag-subject { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
 
 /* buttons */

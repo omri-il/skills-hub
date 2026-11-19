@@ -200,8 +200,15 @@ const tag = (text, cls = '') => `<span class="tag ${cls}">${esc(text)}</span>`;
 // One tag for every skill: "מתאים ל-Gemini" (Omri, 2026-11-19: two tags, "נבדק" and "מתאים", confused him).
 // What was really tested stays on the skill page, under "מה נבדק ומה עוד לא".
 function platformTags(s) {
-  return platformsOf(s).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')).join('');
+  return platformsOf(s).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')).join('') + (s.needs_pro ? tag('צריך Gemini Pro', 'tag-pro') : '');
 }
+
+// Omri, 2026-11-19: a skill that works well only in Pro says it plainly, at the top of its page.
+const proBox = (s) => (s.needs_pro ? `<aside class="pro-box" role="note">
+      <h2>לעבוד במצב Pro</h2>
+      <p>הסקיל הזה עובד טוב רק במצב <bdi dir="ltr">Pro</bdi> של ג'מיני. במצב המהיר הוא טועה יותר.</p>
+      <p>לפני שמתחילים: לבחור <bdi dir="ltr">Pro</bdi> בתפריט שבראש השיחה. בחשבון של בית הספר (<bdi dir="ltr">Education Plus</bdi>) יש לכם גישה ל-<bdi dir="ltr">Pro</bdi>.</p>
+    </aside>` : '');
 
 // A helper skill (role: shared) does nothing alone (Omri, 2026-11-19): it is never downloaded by itself,
 // only with the skill that needs it.
@@ -497,6 +504,8 @@ function skillPage(s) {
 
   <div class="skill-grid">
     <div class="skill-main">
+      ${proBox(s)}
+
       ${plain ? usesBlock : factsBlocks}
 
       ${storyBlock}
