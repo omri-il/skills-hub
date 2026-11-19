@@ -155,6 +155,99 @@
   }
 })();
 
+// The email box after a download (Omri, 2026-11-19, the Hormozi plan): the download is free and starts at
+// once; then a small box asks for the email only, so the teacher hears when that skill improves.
+// POST /signup with weekly=1 and skill=<names>: list 106, the skill goes into the person's record,
+// and the first sign-up gets a welcome email (Listmonk selfservice/skills_mail.py).
+(function () {
+  if (!window.fetch || !window.URLSearchParams) return;
+  var KEY = 'skillsSignedUp';
+  function done() { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } }
+  function mark() { try { localStorage.setItem(KEY, '1'); } catch (e) {} }
+  var shownOnce = false;
+
+  function loadAltcha() {
+    if (document.querySelector('script[src="/public/static/altcha.umd.js"]')) return;
+    var s = document.createElement('script');
+    s.type = 'module';
+    s.src = '/public/static/altcha.umd.js';
+    document.head.appendChild(s);
+  }
+
+  function open(skill) {
+    if (done() || shownOnce) return;
+    shownOnce = true;
+    loadAltcha();
+    var many = skill.indexOf('|') !== -1;
+    var box = document.createElement('aside');
+    box.className = 'after-dl';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-labelledby', 'after-dl-h');
+    box.innerHTML =
+      '<button type="button" class="after-dl-x" aria-label="סגירה">×</button>' +
+      '<h2 id="after-dl-h">' + (many ? 'רוצים לדעת כשהסקילים האלה משתפרים?' : 'רוצים לדעת כשהסקיל הזה משתפר?') + '</h2>' +
+      '<p>ג\'מיני משתנה כל כמה שבועות, ואני מתקן את הסקילים לפי זה. השאירו מייל, ואשלח לכם את הגרסה החדשה כשהיא יוצאת. ' +
+      'פעם בשבוע יגיעו גם הסקילים החדשים. אפשר להסיר את עצמכם בלחיצה.</p>' +
+      '<form class="after-dl-form" novalidate>' +
+      '<label class="hp" aria-hidden="true">אל תמלאו שדה זה<input type="text" name="nonce" tabindex="-1" autocomplete="off"></label>' +
+      '<input type="email" name="email" dir="ltr" autocomplete="email" required maxlength="254" placeholder="המייל שלכם" aria-label="המייל שלכם">' +
+      '<button type="submit" class="btn btn-cta">שלחו לי את העדכונים</button>' +
+      '<altcha-widget auto="onload" hidefooter floating="false" challengeurl="/api/public/captcha/altcha" style="display:none"></altcha-widget>' +
+      '</form>' +
+      '<p class="after-dl-err" role="alert" hidden></p>';
+    document.body.appendChild(box);
+    var form = box.querySelector('form');
+    var err = box.querySelector('.after-dl-err');
+    var btn = form.querySelector('button');
+    box.querySelector('.after-dl-x').addEventListener('click', function () { box.remove(); });
+    setTimeout(function () { var i = form.querySelector('input[type=email]'); if (i) i.focus({ preventScroll: true }); }, 300);
+
+    function answer() {
+      var el = form.querySelector('altcha-widget input[name="altcha"]');
+      return el && el.value ? el.value : '';
+    }
+    function fail(t) { err.textContent = t; err.hidden = false; btn.disabled = false; btn.textContent = 'שלחו לי את העדכונים'; }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      err.hidden = true;
+      var email = form.elements.email.value.trim();
+      if (email.indexOf('@') < 1 || email.indexOf('.', email.indexOf('@')) < 0) return fail('כתובת המייל לא נראית תקינה. נא לבדוק אותה.');
+      btn.disabled = true;
+      btn.textContent = 'רגע…';
+      var tries = 0;
+      (function wait() {
+        var a = answer();
+        if (!a && tries++ < 40) return setTimeout(wait, 250); // the check runs by itself; up to 10 seconds
+        if (!a) return fail('הבדיקה נגד רובוטים לא הסתיימה. נסו שוב בעוד רגע.');
+        var body = new URLSearchParams();
+        body.append('email', email);
+        body.append('weekly', '1');
+        body.append('skill', skill);
+        body.append('nonce', form.elements.nonce.value);
+        body.append('altcha', a);
+        fetch('/signup', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (d) {
+            if (!d.ok) return fail(d.error || 'משהו השתבש. נסו שוב בעוד רגע.');
+            mark();
+            box.innerHTML = '<button type="button" class="after-dl-x" aria-label="סגירה">×</button>' +
+              '<h2>תודה! נרשמתם.</h2><p>מייל ראשון בדרך אליכם, עם בקשה לדוגמה לנסות בג\'מיני.</p>';
+            box.querySelector('.after-dl-x').addEventListener('click', function () { box.remove(); });
+          })
+          .catch(function () { fail('משהו השתבש. נסו שוב בעוד רגע.'); });
+      })();
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-skill]');
+    if (!a) return;
+    var skill = a.getAttribute('data-skill');
+    setTimeout(function () { open(skill); }, 1200); // after the download has started
+  });
+})();
+
 // Sign-up form (home page): POST /signup, which nginx sends to listmonk-selfservice.
 (function () {
   var form = document.getElementById('signupForm');

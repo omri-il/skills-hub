@@ -319,3 +319,13 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .use-ask { margin: 0; padding: 10px 14px; border-inline-start: 4px solid var(--cta); background: var(--accent-soft); border-radius: 8px; line-height: 1.6; unicode-bidi: plaintext; }
 .use-bar { display: flex; align-items: center; gap: 12px; margin: 6px 0 12px; }
 .use-get { margin: 0; max-width: 70ch; }
+
+/* The email box after a download (2026-11-19): a small card at the bottom, closed with ×. */
+.after-dl { position: fixed; z-index: 50; inset-inline: 16px; bottom: 16px; max-width: 460px; margin-inline-start: auto; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 10px 40px rgba(0, 32, 69, .22); padding: 18px 18px 14px; }
+.after-dl h2 { font-size: 1.15rem; margin: 0 0 6px; padding-inline-end: 28px; }
+.after-dl p { margin: 0 0 12px; font-size: .95rem; color: var(--ink-2); }
+.after-dl-form { display: flex; flex-wrap: wrap; gap: 8px; }
+.after-dl-form input[type="email"] { font: inherit; flex: 1 1 200px; min-height: 44px; padding: 8px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); text-align: end; }
+.after-dl-form .btn { flex: 1 1 auto; }
+.after-dl-x { position: absolute; top: 8px; inset-inline-end: 10px; width: 36px; height: 36px; border: 0; background: transparent; color: var(--ink-2); font-size: 1.5rem; line-height: 1; cursor: pointer; border-radius: 8px; }
+.after-dl-err { color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 6px 10px; margin: 10px 0 0; }
