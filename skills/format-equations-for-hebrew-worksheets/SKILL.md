@@ -45,6 +45,12 @@ def build(md, out):
                         r"(?<=[A-Za-z0-9\u00B2\u00B3\u00B9\u2070-\u209F])([\u207A\u207B)\]])(?!\u200E)",
                         "\\1\u200E", t.group(2)) + t.group(3), run, flags=re.S)
                 xml = re.sub(r"<w:r>.*?</w:r>", fix_run, xml, flags=re.S)
+                # טבלה מימין לשמאל: העמודה הראשונה בצד ימין
+                xml = re.sub(r"<w:tblPr>(?!(?:(?!</w:tblPr>).)*<w:bidiVisual)", "<w:tblPr><w:bidiVisual />", xml, flags=re.S)
+                heb = [p for p in re.findall(r"<w:p>(?:(?!</w:p>).)*?</w:p>", xml, re.S)
+                       if HEB.search("".join(re.findall(r"<w:t[^>]*>(.*?)</w:t>", p, re.S)))]
+                if [p for p in heb if "<w:bidi" not in p]:
+                    problems.append("פסקאות בעברית בלי כיוון מימין לשמאל: חסר dir: rtl בראש ה-Markdown")
                 xml = re.sub(r'(<w:p><w:pPr><w:pStyle w:val="Heading\d" />)(?=(?:(?!</w:p>).)*מפתח תשובות)',
                              r"\1<w:pageBreakBefore />", xml, flags=re.S)
                 for t in re.findall(r"<w:t[^>]*>(.*?)</w:t>", xml, re.S):
@@ -64,7 +70,9 @@ def build(md, out):
     return problems
 ```
 
-הקוד מתקן לבד שלושה דברים: מסיר סימון מימין לשמאל מקטעים באנגלית (אחרת Word הופך בהם את סדר המילים), מוסיף תו כיווניות LRM אחרי מטענים וסוגריים בניסוחים (אחרת ב-Google Docs ה-⁺ קופץ לתחילת השורה), מעביר את "מפתח תשובות" לעמוד חדש, וקובע גופן Arial לכל הטקסט (אחרת הניסוחים באנגלית יוצאים בגופן אחר מהעברית).
+הקוד מתקן לבד: מסיר סימון מימין לשמאל מקטעים באנגלית (אחרת Word הופך בהם את סדר המילים), מוסיף תו כיווניות LRM אחרי מטענים וסוגריים בניסוחים (אחרת ב-Google Docs ה-⁺ קופץ לתחילת השורה), הופך כל טבלה לטבלה מימין לשמאל, מעביר את "מפתח תשובות" לעמוד חדש, וקובע גופן Arial לכל הטקסט (אחרת הניסוחים באנגלית יוצאים בגופן אחר מהעברית).
+
+**אם `build` נכשל, תקן את ה-Markdown והרץ שוב את `build`. אף פעם לא לעבור לבנייה ידנית ב-python-docx**: קובץ כזה יוצא משמאל לימין.
 
 ## כללי כתיבה ב-Markdown
 
