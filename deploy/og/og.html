@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- The share picture (assets/og.png, 1200x630) for WhatsApp, Facebook and the rest.
+     Render it again after a change: deploy/og/make_og.ps1 (Chrome headless). -->
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: "Rubik"; src: url("../../assets/fonts/Rubik-hebrew.woff2") format("woff2"); font-weight: 300 900; unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: "Rubik"; src: url("../../assets/fonts/Rubik-latin.woff2") format("woff2"); font-weight: 300 900; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+body {
+  font-family: "Rubik", sans-serif; color: #fff;
+  background: radial-gradient(ellipse at 50% 0%, #1A365D 0%, #002045 62%, #001630 100%);
+  display: flex; flex-direction: column; justify-content: center; padding: 0 90px; box-sizing: border-box;
+}
+.top { display: flex; align-items: center; gap: 18px; margin-bottom: 34px; }
+.logo { width: 64px; height: 64px; }
+.brand { font-size: 34px; font-weight: 700; color: #D6E3FF; }
+h1 { font-size: 96px; font-weight: 800; line-height: 1.08; margin: 0 0 22px; }
+.line { font-size: 46px; font-weight: 500; color: #D6E3FF; margin: 0 0 40px; }
+.row { display: flex; align-items: center; gap: 28px; }
+.tag { background: #FFC250; color: #002045; font-weight: 700; font-size: 38px; padding: 10px 26px; border-radius: 14px; }
+.url { font-size: 32px; color: #D6E3FF; direction: ltr; unicode-bidi: isolate; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <svg class="logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#FFFFFF" fill-opacity=".12"/><path d="M16 4.5 26.5 10 16 15.5 5.5 10Z" fill="#FFFFFF"/><path d="M5.5 16 16 21.5 26.5 16" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M5.5 21.5 16 27 26.5 21.5" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".7"/></svg>
+    <span class="brand">עומרי אירם | בינה בהוראה</span>
+  </div>
+  <h1>סקילים לג'מיני למורים</h1>
+  <p class="line">דפי עבודה, מבחנים ומחוונים, בעברית שלא מתהפכת</p>
+  <div class="row">
+    <span class="tag">הורדה חינם</span>
+    <span class="url">skills.omri-iram.co.il</span>
+  </div>
+</body>
+</html>

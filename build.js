@@ -101,7 +101,7 @@ fs.cpSync(path.join(ROOT, 'assets'), path.join(DIST, 'assets'), { recursive: tru
 for (const s of skills) makeZip(s.name);
 
 // ---------- QR (drawn here, at build time, no outside service) ----------
-const qrSvg = await QRCode.toString(`${SITE}/`, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#1d2421', light: '#ffffff' } });
+const qrSvg = await QRCode.toString(`${SITE}/`, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#002045', light: '#ffffff' } });
 write('assets/qr.svg', qrSvg);
 
 // ---------- layout ----------
@@ -119,6 +119,13 @@ function page({ title, description, body, canonical }) {
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${SITE}${canonical}">
 <meta property="og:locale" content="he_IL">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="סקילים למורים">
+<meta property="og:image" content="${SITE}/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="סקילים חינמיים לג'מיני למורים, מאת עומרי אירם">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/Rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css?v=${ASSET_V}">
@@ -171,7 +178,7 @@ function card(s) {
   return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-groups="${esc(s.groups.join('|'))}" data-fits="${esc(s.fits.join('|'))}" data-who="${esc(s.who.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}" data-search="${esc(search)}">
   <h3 class="card-title"><a href="/skills/${s.name}/">${esc(s.title)}</a></h3>
   <p class="card-problem">${esc(firstSentence(s.problem))}</p>
-  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לך:</span> ${esc(s.benefit)}</p>
+  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לכם:</span> ${esc(s.benefit)}</p>
   <div class="tags">${s.subjects.map((x) => tag(x, 'tag-subject')).join('')}${platformTags(s)}</div>
   <div class="card-actions">
     ${dlLink(d.files, d.label, 'btn btn-primary', ` aria-label="הורדת ${esc(s.title)} (${esc(d.note)})"`)}
@@ -254,13 +261,16 @@ const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
     <h1>מלמדים את ג'מיני פעם אחת.<br class="br-wide"> מקבלים תוצרים טובים יותר, עם פחות תיקונים.</h1>
-    <p class="lead">סקיל הוא קובץ הוראות קטן שמעלים לג'מיני. מאותו רגע, כשמבקשים דף עבודה, מצגת או מכתב להורים, ג'מיני כבר יודע איך עושים את זה טוב: עברית שלא מתהפכת, שאלות מדורגות, ומפתח תשובות שנבדק לפני שהוא מגיע אליכם. עדיין עוברים על התוצר לפני שנכנסים לכיתה, אבל יש פחות מה לתקן.</p>
+    <p class="lead">סקיל הוא קובץ הוראות קטן שמעלים לג'מיני. מאותו רגע, כשמבקשים דף עבודה, מצגת או מכתב להורים, ג'מיני כבר יודע איך עושים את זה טוב.<span class="lead-more"> למשל עברית שלא מתהפכת, שאלות מדורגות ומפתח תשובות שנבדק לפני שהוא מגיע אליכם. עדיין עוברים על התוצר לפני שנכנסים לכיתה, אבל יש פחות מה לתקן.</span></p>
     <ol class="steps">
       <li><span><b>מורידים</b> סקיל או חבילה מהדף הזה</span></li>
       <li><span><b>מעלים</b> אותו לג'מיני, פעם אחת</span></li>
       <li><span><b>מבקשים כרגיל</b>. הסקיל לא נכנס לפעולה? כותבים <code dir="ltr">@</code> ואת השם שלו</span></li>
     </ol>
-    ${VIDEO ? `<p class="hero-video"><a class="btn btn-primary btn-video" href="#video">צפו בסרטון ההתקנה (${esc(VIDEO.minutes)} דקות)</a></p>` : ''}
+    <p class="hero-actions">
+      <a class="btn btn-cta btn-lg" href="#skills">לבחירת סקיל</a>
+      ${VIDEO ? `<a class="btn btn-ghost btn-video" href="#video">איך מתקינים (סרטון, ${esc(VIDEO.minutes)} דקות)</a>` : ''}
+    </p>
   </div>
   <figure class="qr">
     <img src="/assets/qr.svg" width="140" height="140" alt="קוד QR לכתובת skills.omri-iram.co.il">
@@ -268,9 +278,7 @@ const homeBody = `
   </figure>
 </div></section>
 
-${VIDEO ? videoHome(VIDEO) : ''}
-
-<section class="wrap section" aria-labelledby="h-skills">
+<section class="wrap section" id="skills" aria-labelledby="h-skills">
   <div class="section-head">
     <h2 id="h-skills">הסקילים</h2>
     <p class="muted">כל סקיל מגיע עם רשימה כנה של מה נבדק ומה עוד לא.</p>
@@ -299,6 +307,8 @@ ${VIDEO ? videoHome(VIDEO) : ''}
   </div>
 </section>
 
+${VIDEO ? videoHome(VIDEO) : ''}
+
 ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
   <div class="section-head">
     <h2 id="h-bundles">חבילות</h2>
@@ -313,7 +323,7 @@ ${signupSection}
 
 write('index.html', page({
   title: 'סקילים למורים | עומרי אירם',
-  description: 'סקילים לג\'מיני שיוצרים דפי עבודה בעברית במתמטיקה ובמדעים, עם משוואות תקינות ומפתח תשובות שנבדק. הורדה חופשית.',
+  description: `${mains.length} סקילים לג'מיני למורים בכל המקצועות: דפי עבודה, מבחנים, מחוונים, מצגות ומכתבים להורים, בעברית שלא מתהפכת. הורדה חינם, בלי הרשמה.`,
   canonical: '/',
   body: homeBody,
 }));
@@ -387,7 +397,7 @@ function skillPage(s) {
         <p>${esc(s.problem)}</p>
       </section>
       <section class="block benefit" aria-labelledby="h-benefit">
-        <h2 id="h-benefit">מה זה חוסך לך</h2>
+        <h2 id="h-benefit">מה זה חוסך לכם</h2>
         <p>${esc(s.benefit)}</p>
       </section>
       <section class="block" aria-labelledby="h-what">
@@ -469,7 +479,7 @@ function bundleSkill(n) {
   return `<li class="card bundle-skill">
   <h3 class="card-title"><a href="/skills/${n}/">${esc(s.title)}</a></h3>
   <p class="card-problem">${esc(firstSentence(s.problem))}</p>
-  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לך:</span> ${esc(s.benefit)}</p>
+  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לכם:</span> ${esc(s.benefit)}</p>
   <p class="card-note">מפעילים עם <code dir="ltr">@${esc(n)}</code></p>
   <div class="card-actions">
     <a class="btn btn-ghost btn-sm" href="/skills/${n}/">מה בדיוק הוא עושה</a>
