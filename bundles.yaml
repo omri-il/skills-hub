@@ -6,7 +6,7 @@
   workshop: "#B058"
   date: 2026-11-18
   title: חבילת הסדנה "Gemini שעובד בשבילכם"
-  description: 5 הסקילים מהסדנה של 18.11. מעלים לג'מיני כל קובץ בנפרד, ומפעילים עם @ ושם הסקיל.
+  description: 5 הסקילים מהסדנה של 18.11.
   skills:
     - create-choice-board
     - create-rubric
@@ -15,7 +15,7 @@
     - red-team
 - id: math-chem-worksheets
   title: חבילת דפי עבודה למתמטיקה וכימיה
-  description: ארבעת הסקילים יחד. מספיק להעלות את כולם לג'מיני ולבקש דף עבודה.
+  description: 4 סקילים לדף עבודה עם משוואות ומפתח שנבדק.
   skills:
     - create-math-practice
     - create-chemistry-practice
@@ -23,7 +23,7 @@
     - verify-solutions
 - id: assessment-with-ai
   title: חבילת הערכה בעידן ה-AI
-  description: 8 סקילים להערכה, מתכנון ועד משוב. כל אחד עובד לבד, ומפעילים אותו עם @ ושם הסקיל.
+  description: 8 סקילים להערכה, מתכנון ועד משוב.
   skills:
     - assessment-plan
     - create-rubric
@@ -35,14 +35,14 @@
     - ai-resistant-task
 - id: apps-script-for-teachers
   title: חבילת Apps Script למורים
-  description: לומדה ששומרת תשובות בגיליון, לוח סיכום בלחיצה, ותיקון של קוד שלא עובד.
+  description: לומדה ששומרת תשובות, לוח סיכום ותיקון קוד.
   skills:
     - apps-script-lomda
     - apps-script-dashboard
     - apps-script-fix
 - id: elementary-math
   title: חבילה למורי מתמטיקה ביסודי
-  description: 4 סקילים לכיתות א' עד ו'. מעלים לג'מיני כל קובץ בנפרד, ומפעילים עם @ ושם הסקיל.
+  description: 4 סקילים לכיתות א'-ו'.
   skills:
     - create-elementary-math-practice
     - create-choice-board

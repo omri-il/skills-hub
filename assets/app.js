@@ -136,10 +136,10 @@
         document.body.removeChild(a);
         i++;
         if (i < files.length) {
-          say('מוריד קובץ ' + i + ' מתוך ' + files.length + '. אם הדפדפן שואל, מאשרים הורדה של כמה קבצים.');
+          say('מוריד קובץ ' + i + ' מתוך ' + files.length + '. הדפדפן שואל? מאשרים.');
           setTimeout(next, 900);
         } else {
-          say('ירדו ' + files.length + ' קבצים. לא פותחים אותם: מעלים כל אחד לג\'מיני כמו שהוא.');
+          say('ירדו ' + files.length + ' קבצים. מעלים כל אחד לג\'מיני, בלי לפתוח.');
           delete btn.dataset.busy;
         }
       })();
