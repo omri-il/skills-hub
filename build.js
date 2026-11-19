@@ -423,6 +423,9 @@ function skillPage(s) {
   // Omri, 2026-11-19: a skill with `simple` + `uses` opens with a plain sentence and 3 ways to use it,
   // instead of the 4 blocks problem / benefit / what / output.
   const plain = s.simple && s.uses.length;
+  // English inside a Hebrew line (an error message, "Google Forms") keeps its own direction.
+  // Split before escaping, so an entity like &quot; is never cut.
+  const he = (t) => t.split(/([A-Za-z][A-Za-z0-9.:_\- ]*[A-Za-z0-9])/).map((part, i) => (i % 2 ? `<bdi dir="ltr">${esc(part)}</bdi>` : esc(part))).join('');
   const usesBlock = plain ? `<section class="block what-skill" aria-labelledby="h-what-skill">
         <h2 id="h-what-skill">מה זה סקיל?</h2>
         <p>קובץ קטן עם הוראות לג'מיני. מעלים אותו פעם אחת, ומאז ג'מיני יודע לעשות את המשימה הזאת טוב. לא צריך לזכור שום פקודה: מבקשים כרגיל.</p>
@@ -431,12 +434,12 @@ function skillPage(s) {
         <h2 id="h-uses">${s.uses.length} דרכים להשתמש בזה</h2>
         <ol class="uses-list">${s.uses.map((u, i) => `
           <li class="use">
-            <h3><span class="use-n" aria-hidden="true">${i + 1}</span>${esc(u.when)}</h3>
+            <h3><span class="use-n" aria-hidden="true">${i + 1}</span>${he(u.when)}</h3>
             <p class="use-label">כותבים לג'מיני:</p>
-            <blockquote class="use-ask" id="ask-${s.name}-${i}">${esc(u.ask)}</blockquote>
+            <blockquote class="use-ask" id="ask-${s.name}-${i}">${he(u.ask)}</blockquote>
             <div class="use-bar"><button type="button" class="btn btn-ghost btn-sm" data-copy="ask-${s.name}-${i}">העתקה</button><span class="copy-status" role="status" aria-live="polite"></span></div>
             <p class="use-label">מקבלים:</p>
-            <p class="use-get">${esc(u.get)}</p>
+            <p class="use-get">${he(u.get)}</p>
           </li>`).join('')}
         </ol>
       </section>` : '';
@@ -464,7 +467,7 @@ function skillPage(s) {
     <div>
       <p class="eyebrow">${s.role === 'shared' ? 'סקיל עזר' : 'סקיל'} · ${esc(s.audience)}</p>
       <h1>${esc(s.title)}</h1>
-      ${plain ? `<p class="simple">${esc(s.simple)}</p>` : ''}
+      ${plain ? `<p class="simple">${he(s.simple)}</p>` : ''}
       <p class="meta-line">גרסה <bdi dir="ltr">${esc(s.version)}</bdi> · עודכן ${fmtDate(s.updated)} · <code dir="ltr">${esc(s.name)}</code></p>
       <div class="tags">${s.subjects.map((x) => tag(x, 'tag-subject')).join('')}${platformTags(s)}</div>
     </div>
