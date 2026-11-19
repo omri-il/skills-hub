@@ -202,7 +202,13 @@ function platformTags(s) {
   return platformsOf(s).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')).join('');
 }
 
+// A helper skill (role: shared) does nothing alone (Omri, 2026-11-19): it is never downloaded by itself,
+// only with the skill that needs it.
+const hostOf = (s) => (s.role === 'shared' ? skills.find((x) => x.role === 'main' && x.requires.includes(s.name)) : null);
+
 function downloadFor(s) {
+  const host = hostOf(s);
+  if (host) return downloadFor(host);
   const auto = autoBundles.get(s.name);
   if (auto) {
     const extra = auto.skills.length - 1;
@@ -353,10 +359,6 @@ ${bundles.length ? `<section class="wrap section" id="bundles" aria-labelledby="
   <ul class="grid">
     ${mains.filter((s) => s.category === c.name).map(card).join('\n')}
   </ul>`).join('\n  ')}
-  ${shared.length ? `<h3 class="sub-head">סקילי עזר <span class="muted">(כבר בתוך ההורדה של הסקיל שצריך אותם)</span></h3>
-  <ul class="grid" id="grid-shared">
-    ${shared.map(card).join('\n')}
-  </ul>` : ''}
   <div class="empty" id="empty" hidden>
     <p id="empty-text">אין סקיל שמתאים. נסו מילה אחרת.</p>
     <p id="empty-subject" hidden>עוד אין סקיל ל<span id="empty-subject-name"></span>. הסקילים הכלליים מתאימים גם לכם. רוצים סקיל ל<span id="empty-subject-name2"></span>? <a href="#signup">ספרו לי בהרשמה</a>.</p>
@@ -414,12 +416,19 @@ function skillPage(s) {
   const d = downloadFor(s);
   const auto = autoBundles.get(s.name);
   const callers = usedBy(s.name);
-  const dl = auto
+  const host = hostOf(s);
+  // A skill that needs helper skills, and a helper skill, download only as the whole set (Omri, 2026-11-19).
+  const dl = host
+    ? `<div class="dl-box">
+    ${dlLink(d.files, 'הורדה עם הסקיל שצריך אותו', 'btn btn-primary btn-lg')}
+    <p class="card-note">סקיל עזר. הוא עובד רק עם ${skillLink(host.name)}, ולכן יורד איתו · ${filesCount(d.files.length)} · ${sizeOf(d.files)}</p>
+    ${dlStatus}
+  </div>`
+    : auto
     ? `<div class="dl-box">
     ${dlLink(d.files, 'הורדת הסקיל וסקילי העזר', 'btn btn-primary btn-lg')}
     <p class="card-note">${filesCount(d.files.length)} · ${sizeOf(d.files)}</p>
     ${dlStatus}
-    <p class="dl-alt">יש לכם את סקילי העזר? <a href="${zipHref(s.name)}" download>רק הסקיל הזה</a> (${sizeOf(s.name)})</p>
   </div>`
     : `<div class="dl-box">
     ${dlLink(d.files, 'הורדת הסקיל', 'btn btn-primary btn-lg')}
@@ -432,6 +441,11 @@ function skillPage(s) {
   // English inside a Hebrew line (an error message, "Google Forms") keeps its own direction.
   // Split before escaping, so an entity like &quot; is never cut.
   const he = (t) => t.split(/([A-Za-z][A-Za-z0-9.:_\- ]*[A-Za-z0-9])/).map((part, i) => (i % 2 ? `<bdi dir="ltr">${esc(part)}</bdi>` : esc(part))).join('');
+  // Omri, 2026-11-19: "the story behind the skill", only when meta.yaml has `story`.
+  const storyBlock = s.story ? `<section class="block story" aria-labelledby="h-story">
+        <h2 id="h-story">הסיפור מאחורי הסקיל</h2>
+        ${s.story.split(/\n\s*\n/).map((para) => `<p>${he(para.trim())}</p>`).join('')}
+      </section>` : '';
   const usesBlock = plain ? `<section class="block what-skill" aria-labelledby="h-what-skill">
         <h2 id="h-what-skill">מה זה סקיל?</h2>
         <p>קובץ קטן עם הוראות לג'מיני. מעלים אותו פעם אחת, ומאז ג'מיני יודע לעשות את המשימה הזאת טוב. לא צריך לזכור שום פקודה: מבקשים כרגיל.</p>
@@ -440,7 +454,7 @@ function skillPage(s) {
         <h2 id="h-uses">${s.uses.length} דרכים להשתמש בזה</h2>
         <ol class="uses-list">${s.uses.map((u, i) => `
           <li class="use">
-            <h3><span class="use-n" aria-hidden="true">${i + 1}</span>${he(u.when)}</h3>
+            <h3><span class="use-n" aria-hidden="true">${i + 1}</span><span>${he(u.when)}</span></h3>
             <p class="use-label">כותבים לג'מיני:</p>
             <blockquote class="use-ask" id="ask-${s.name}-${i}">${he(u.ask)}</blockquote>
             <div class="use-bar"><button type="button" class="btn btn-ghost btn-sm" data-copy="ask-${s.name}-${i}">העתקה</button><span class="copy-status" role="status" aria-live="polite"></span></div>
@@ -483,6 +497,8 @@ function skillPage(s) {
   <div class="skill-grid">
     <div class="skill-main">
       ${plain ? usesBlock : factsBlocks}
+
+      ${storyBlock}
 
       ${compareBlock(s)}
 
@@ -560,7 +576,7 @@ function bundleSkill(n) {
   <p class="card-note">מפעילים עם <code dir="ltr">@${esc(n)}</code></p>
   <div class="card-actions">
     <a class="btn btn-ghost btn-sm" href="/skills/${n}/">פרטים</a>
-    <a class="btn btn-ghost btn-sm" href="${zipHref(n)}" download aria-label="הורדת ${esc(s.title)} בלבד">רק הסקיל הזה</a>
+    ${s.role === 'shared' || s.requires.length ? '' : `<a class="btn btn-ghost btn-sm" href="${zipHref(n)}" download aria-label="הורדת ${esc(s.title)} בלבד">רק הסקיל הזה</a>`}
   </div>
 </li>`;
 }
@@ -598,7 +614,7 @@ function bundlePage(b) {
       <li>מורידים את ${filesCount(b.skills.length)}. <b>לא פותחים אותם</b>. הדפדפן שואל? מאשרים.</li>
       <li>בג'מיני: <b>הגדרות</b> ← <b>סקילים (כישורים)</b> ← <b>העלאת סקיל</b>. מעלים כל קובץ בנפרד.</li>
       <li>בצ'אט חדש כותבים <code dir="ltr">@</code> ואת שם הסקיל, למשל <code dir="ltr">@${esc(first)}</code>, ובוחרים מהרשימה.</li>
-      <li>חסר קובץ? בכל כרטיס יש "רק הסקיל הזה".</li>
+      <li>חסר קובץ? ${b.skills.map((n) => `<a href="${zipHref(n)}" download>${esc(byName.get(n).title)}</a>`).join(', ')}.</li>
     </ol>
   </section>
 

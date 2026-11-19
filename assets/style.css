@@ -337,3 +337,7 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .after-dl-form .btn { flex: 1 1 auto; }
 .after-dl-x { position: absolute; top: 8px; inset-inline-end: 10px; width: 36px; height: 36px; border: 0; background: transparent; color: var(--ink-2); font-size: 1.5rem; line-height: 1; cursor: pointer; border-radius: 8px; }
 .after-dl-err { color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 6px 10px; margin: 10px 0 0; }
+
+/* The story behind the skill (Omri, 2026-11-19): optional `story` in meta.yaml */
+.story { border-inline-start: 4px solid var(--cta); padding-inline-start: 16px; }
+.story p { max-width: 65ch; line-height: 1.7; margin: 0 0 8px; }
