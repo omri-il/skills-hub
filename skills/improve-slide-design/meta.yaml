@@ -20,6 +20,7 @@ what_it_does: 'בודק כל שקף ב-7 שאלות: רעיון אחד, כמות
 output: ביקורת עם תיקונים, או מצגת לפי הכללים
 requires: []
 role: main
+category: עזרי הוראה
 tested:
 - עוד לא נבדק
 limitations:

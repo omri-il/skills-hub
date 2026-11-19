@@ -22,6 +22,7 @@ requires:
 - improve-slide-design
 - fix-slides-rtl
 role: main
+category: עזרי הוראה
 tested:
 - 'מצגת על מחזור המים (Flash ו-Pro), גם עם שם הסקיל: ג''מיני בנה מצגת Canvas משלו, בלי הסקיל (7.11.2026)'
 limitations:

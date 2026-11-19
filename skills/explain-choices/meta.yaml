@@ -18,6 +18,7 @@ what_it_does: 'לפני כל תשובה מציג "השיקולים שלי": מה
 output: '"השיקולים שלי", ואחריהם התשובה'
 requires: []
 role: main
+category: כלים לכל יום
 tested:
 - עוד לא נבדק
 limitations:

@@ -21,6 +21,7 @@ what_it_does: במקום כפתור הייצוא, ג'מיני בונה קובץ 
 output: קובץ PowerPoint להורדה
 requires: []
 role: main
+category: עזרי הוראה
 tested:
 - קובץ שג'מיני בנה בסביבת הקוד שלו נפתח ב-Slides מימין לשמאל (7.11.2026)
 limitations:

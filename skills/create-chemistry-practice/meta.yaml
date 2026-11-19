@@ -22,6 +22,7 @@ requires:
 - format-equations-for-hebrew-worksheets
 - verify-solutions
 role: main
+category: עזרי הוראה
 tested:
 - 'דף חומצות ובסיסים לכיתה י'': ניסוחים, חצים ומפתח נכונים בקובץ Word'
 limitations:

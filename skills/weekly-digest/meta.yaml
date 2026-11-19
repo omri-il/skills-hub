@@ -14,6 +14,7 @@ what_it_does: 'קורא את המייל והיומן של השבוע (קריאה
 output: סיכום בצ'אט, ב-5 חלקים
 requires: []
 role: main
+category: כלים לכל יום
 tested:
 - עוד לא נבדק
 limitations:
