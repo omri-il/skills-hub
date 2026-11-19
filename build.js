@@ -182,19 +182,24 @@ function card(s) {
 </li>`;
 }
 
+// Every bundle has its own page (Omri, 2026-11-19). The home page shows only the topic bundles, as short cards.
+// A workshop bundle (bundles.yaml `workshop`) is reached by its own link, from the workshop's learning page.
+const bundleHref = (b) => `/bundles/${b.id}/`;
+const topicBundles = bundles.filter((b) => !b.workshop);
+const workshopBundles = bundles.filter((b) => b.workshop).sort((a, z) => z.date.localeCompare(a.date));
+const bundleEyebrow = (b) => (b.workshop ? `חבילה מהסדנה של ${fmtDate(b.date)}` : 'חבילה');
+
 function bundleCard(b) {
-  const items = b.skills.map((n) => `<li><a href="/skills/${n}/">${esc(byName.get(n).title)}</a> · <a href="${zipHref(n)}" download aria-label="הורדת ${esc(byName.get(n).title)} בלבד">הורדה</a></li>`).join('');
-  return `<article class="bundle">
+  return `<article class="bundle bundle-short">
   <div class="bundle-text">
-    <p class="eyebrow">חבילה · ${b.skills.length} סקילים, קובץ נפרד לכל אחד</p>
-    <h3>${esc(b.title)}</h3>
+    <p class="eyebrow">${bundleEyebrow(b)} · ${b.skills.length} סקילים</p>
+    <h3><a href="${bundleHref(b)}">${esc(b.title)}</a></h3>
     <p>${esc(b.description)}</p>
-    <ul class="bundle-list">${items}</ul>
   </div>
   <div class="bundle-cta">
-    ${dlLink(b.skills, 'הורדת החבילה', 'btn btn-primary btn-lg')}
+    ${dlLink(b.skills, 'הורדת החבילה', 'btn btn-primary')}
+    <a class="btn btn-ghost" href="${bundleHref(b)}">מה יש בחבילה</a>
     <span class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)}</span>
-    <span class="card-note">לא צריך לחלץ כלום</span>
     ${dlStatus}
   </div>
 </article>`;
@@ -299,7 +304,8 @@ ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
     <h2 id="h-bundles">חבילות</h2>
     <p class="muted">סקילים שעובדים יחד, בלחיצה אחת. כל סקיל יורד כקובץ משלו, ומעלים אותו לג'מיני כמו שהוא.</p>
   </div>
-  ${bundles.map(bundleCard).join('\n')}
+  ${topicBundles.map(bundleCard).join('\n')}
+  ${workshopBundles.length ? `<p class="workshop-line">הייתם בסדנה שלי? <a href="/bundles/#workshops">לחבילות מהסדנאות</a></p>` : ''}
 </section>` : ''}
 
 ${signupSection}
@@ -436,9 +442,9 @@ function skillPage(s) {
         <h2>סקילים שמשתמשים בו</h2>
         <ul>${callers.map((c) => `<li>${skillLink(c.name)}</li>`).join('')}</ul>
       </section>` : ''}
-      ${bundles.filter((b) => b.skills.includes(s.name)).map((b) => `<section class="side-box">
+      ${topicBundles.filter((b) => b.skills.includes(s.name)).map((b) => `<section class="side-box">
         <h2>נמצא בחבילה</h2>
-        <p><b>${esc(b.title)}</b></p>
+        <p><a href="${bundleHref(b)}"><b>${esc(b.title)}</b></a></p>
         ${dlLink(b.skills, `הורדת החבילה (${filesCount(b.skills.length)})`, 'btn btn-ghost btn-sm')}
         ${dlStatus}
       </section>`).join('')}
@@ -454,6 +460,86 @@ function skillPage(s) {
   }));
 }
 skills.forEach(skillPage);
+
+// ---------- bundle pages (Omri, 2026-11-19) ----------
+// One page per bundle: one download button, a short card per skill, install steps, and the bundle's video.
+// The page loads nothing from another site (CSP), so the video is a link to YouTube, not an embed.
+function bundleSkill(n) {
+  const s = byName.get(n);
+  return `<li class="card bundle-skill">
+  <h3 class="card-title"><a href="/skills/${n}/">${esc(s.title)}</a></h3>
+  <p class="card-problem">${esc(firstSentence(s.problem))}</p>
+  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לך:</span> ${esc(s.benefit)}</p>
+  <p class="card-note">מפעילים עם <code dir="ltr">@${esc(n)}</code></p>
+  <div class="card-actions">
+    <a class="btn btn-ghost btn-sm" href="/skills/${n}/">מה בדיוק הוא עושה</a>
+    <a class="btn btn-ghost btn-sm" href="${zipHref(n)}" download aria-label="הורדת ${esc(s.title)} בלבד">רק הסקיל הזה</a>
+  </div>
+</li>`;
+}
+
+function bundlePage(b) {
+  const first = b.skills[0];
+  const body = `
+<div class="wrap skill">
+  <nav class="crumbs" aria-label="מיקום"><a href="/">כל הסקילים</a> <span aria-hidden="true">‹</span> <a href="/bundles/">חבילות</a> <span aria-hidden="true">‹</span> <span>${esc(b.title)}</span></nav>
+  <header class="skill-head">
+    <div>
+      <p class="eyebrow">${bundleEyebrow(b)}</p>
+      <h1>${esc(b.title)}</h1>
+      <p class="lead-sm">${esc(b.description)}</p>
+      ${b.video ? `<p><a class="btn btn-ghost btn-video" href="${esc(b.video)}" target="_blank" rel="noopener">צפו בסרטון על הסקילים${b.video_minutes ? ` (${esc(b.video_minutes)} דקות)` : ''}</a></p>` : ''}
+    </div>
+    <div class="dl-box">
+      ${dlLink(b.skills, `הורדת ${b.skills.length} הסקילים`, 'btn btn-primary btn-lg')}
+      <p class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)} · לא צריך לחלץ כלום</p>
+      ${dlStatus}
+    </div>
+  </header>
+
+  <section class="block" aria-labelledby="h-in">
+    <h2 id="h-in">מה יש בחבילה</h2>
+    <ul class="grid">
+      ${b.skills.map(bundleSkill).join('\n')}
+    </ul>
+  </section>
+
+  <section class="block" aria-labelledby="h-install">
+    <h2 id="h-install">איך מתקינים</h2>
+    ${VIDEO ? videoSkill(VIDEO) : ''}
+    <ol class="install">
+      <li>לוחצים על הכפתור הראשי בדף הזה ויורדים ${filesCount(b.skills.length)}. <b>לא פותחים אותם</b>. אם הדפדפן שואל, מאשרים הורדה של כמה קבצים.</li>
+      <li>בג'מיני פותחים את <b>הגדרות</b>, ונכנסים ל-<b>סקילים (כישורים)</b>.</li>
+      <li>בוחרים <b>העלאת סקיל</b> ובוחרים קובץ אחד. חוזרים על זה לכל קובץ.</li>
+      <li>פותחים צ'אט חדש, כותבים <code dir="ltr">@</code> ואת שם הסקיל, למשל <code dir="ltr">@${esc(first)}</code>, ובוחרים אותו מהרשימה שנפתחת. ככה הוא רץ בוודאות.</li>
+      <li>חסר קובץ? בכל כרטיס למעלה יש כפתור "רק הסקיל הזה".</li>
+    </ol>
+  </section>
+
+  <p class="signup-link"><a href="/#signup">רוצים מייל שבועי עם הסקילים החדשים? להרשמה</a></p>
+</div>`;
+
+  write(`bundles/${b.id}/index.html`, page({
+    title: `${b.title} | סקילים למורים`,
+    description: b.description,
+    canonical: bundleHref(b),
+    body,
+  }));
+}
+bundles.forEach(bundlePage);
+
+const bundleRow = (b) => `<li><a href="${bundleHref(b)}"><b>${esc(b.title)}</b></a> <span class="muted">· ${b.workshop ? `${fmtDate(b.date)} · ` : ''}${b.skills.length} סקילים</span></li>`;
+write('bundles/index.html', page({
+  title: 'חבילות | סקילים למורים',
+  description: 'חבילות של סקילים לג\'מיני: לפי נושא, ומהסדנאות.',
+  canonical: '/bundles/',
+  body: `<div class="wrap skill">
+  <nav class="crumbs" aria-label="מיקום"><a href="/">כל הסקילים</a> <span aria-hidden="true">‹</span> <span>חבילות</span></nav>
+  <h1>חבילות</h1>
+  ${topicBundles.length ? `<section class="block" aria-labelledby="h-topic"><h2 id="h-topic">לפי נושא</h2><ul class="bundle-rows">${topicBundles.map(bundleRow).join('')}</ul></section>` : ''}
+  ${workshopBundles.length ? `<section class="block" id="workshops" aria-labelledby="h-ws"><h2 id="h-ws">מהסדנאות</h2><p class="muted">החבילה של כל סדנה, לפי התאריך. החדשה ראשונה.</p><ul class="bundle-rows">${workshopBundles.map(bundleRow).join('')}</ul></section>` : ''}
+</div>`,
+}));
 
 // ---------- 404, robots, sitemap ----------
 write('404.html', page({
@@ -474,6 +560,8 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>${SITE}/</loc></url>
 ${skills.map((s) => `<url><loc>${SITE}/skills/${s.name}/</loc><lastmod>${s.updated}</lastmod></url>`).join('\n')}
+<url><loc>${SITE}/bundles/</loc></url>
+${topicBundles.map((b) => `<url><loc>${SITE}${bundleHref(b)}</loc></url>`).join('\n')}
 </urlset>
 `);
 
