@@ -63,6 +63,12 @@ def build(md, out, chem=False):
                         problems.append("עברית בתוך משוואה: " + t[:60])
                 if chem and xml.count("<m:oMath>"):
                     problems.append(f"בכימיה אין $: {xml.count('<m:oMath>')} משוואות Word בקובץ. לכתוב אותן כטקסט רגיל עם יוניקוד")
+                if chem:
+                    text = "".join(re.findall(r"<w:t[^>]*>(.*?)</w:t>", xml, re.S))
+                    for left in sorted(set(re.findall(r"\{\w+\}", text))):
+                        problems.append(f"נשאר בקובץ הטקסט {left}: לכתוב את התו עצמו או למחוק")
+                    if "חומצה כלורית" in text and "HClO₃" not in text:
+                        problems.append("HCl הוא 'מימן כלורי' (בתמיסה: 'תמיסת מימן כלורי'), לא 'חומצה כלורית'")
                 print("משוואות בקובץ:", xml.count("<m:oMath>"))
                 data = xml.encode("utf-8")
             elif item.filename == "word/styles.xml":
