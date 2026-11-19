@@ -118,7 +118,8 @@ const filesCount = (n) => `${n} קבצים`;
 // Without JavaScript the link gets the first file, and each page also lists a link per file.
 function dlLink(files, label, cls, attrs = '') {
   const multi = files.length > 1 ? ` data-files="${files.join('|')}"` : '';
-  return `<a class="${cls}" href="${zipHref(files[0])}" download${multi}${attrs}>${label}</a>`;
+  // data-skill: after the download, app.js offers the "tell me when it improves" email box (Omri, 2026-11-19).
+  return `<a class="${cls}" href="${zipHref(files[0])}" download${multi} data-skill="${files.join('|')}"${attrs}>${label}</a>`;
 }
 const dlStatus = '<span class="dl-status" role="status" aria-live="polite"></span>';
 const write = (rel, content) => {
@@ -632,12 +633,18 @@ write('404.html', page({
   canonical: '/',
   body: `<div class="wrap section"><h1>הדף הזה לא קיים</h1><p><a href="/">חזרה לכל הסקילים</a></p></div>`,
 }));
-// skills.json: read every Thursday by Listmonk's scripts/skills_weekly_draft.py (the weekly email).
+// skills.json: read every Thursday by Listmonk's scripts/skills_weekly_draft.py (the weekly email), and by
+// Listmonk's selfservice/skills_mail.py (2026-11-19): the welcome email (video, workshop) and the daily
+// skill-update email (version, and the new `tested` lines = what improved).
 write('skills.json', JSON.stringify({
   skills: skills.map((s) => ({
     name: s.name, title: s.title, version: s.version, updated: s.updated,
     role: s.role, category: s.category, problem: firstSentence(s.problem), benefit: s.benefit,
+    tested: s.tested,
+    example: (s.uses && s.uses[0] && s.uses[0].ask) || null, // the welcome email's request to try
   })),
+  workshop: WORKSHOP ? { date_text: WORKSHOP.date_text, price: WORKSHOP.price, url: WORKSHOP.url, until: WORKSHOP.until } : null,
+  video: VIDEO ? { youtube: VIDEO.youtube || null, minutes: VIDEO.minutes } : null,
 }, null, 1));
 write('robots.txt',`User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
