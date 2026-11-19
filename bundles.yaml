@@ -35,3 +35,11 @@
     - apps-script-lomda
     - apps-script-dashboard
     - apps-script-fix
+- id: elementary-math
+  title: חבילה למורי מתמטיקה ביסודי
+  description: 4 סקילים לכיתות א' עד ו'. מעלים לג'מיני כל קובץ בנפרד, ומפעילים עם @ ושם הסקיל.
+  skills:
+    - create-elementary-math-practice
+    - create-choice-board
+    - misconceptions-from-answers
+    - simple-language
