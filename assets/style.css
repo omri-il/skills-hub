@@ -168,6 +168,22 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .btn-cta, .dl-box .btn-primary { background: var(--cta); color: var(--cta-ink); }
 .btn-cta:hover, .dl-box .btn-primary:hover { filter: brightness(1.05); text-decoration: none; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 0; }
+.proof { margin: 0 0 18px; font-weight: 600; color: var(--accent); }
+.proof::before { content: "✓ "; }
+
+/* the next workshop (workshop.yaml) */
+.workshop { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; background: var(--accent-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 34px; }
+.workshop h2 { font-size: 1.2rem; margin: 0 0 4px; }
+.workshop p { margin: 0; max-width: 60ch; }
+@media (max-width: 559px) { .workshop .btn { flex: 1 1 100%; } }
+
+/* without the skill / with the skill */
+.compare-img { display: block; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 6px 0 16px; }
+.compare-img img { display: block; width: 100%; height: auto; }
+.compare h3 { font-size: 1.05rem; margin: 0 0 6px; }
+.compare ul { margin: 0 0 10px; padding-inline-start: 1.2em; max-width: 70ch; }
+.compare li + li { margin-top: 6px; }
+
 .btn-ghost { background: transparent; color: var(--accent); border-color: var(--line); }
 .btn-ghost:hover { border-color: var(--accent); }
 .btn-lg { font-size: 1.05rem; padding: 12px 24px; min-height: 52px; }

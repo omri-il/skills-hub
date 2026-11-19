@@ -98,6 +98,12 @@
     });
   }
 
+  // The next-workshop box (workshop.yaml) leaves once its workshop has started, even before the next build.
+  document.querySelectorAll('[data-until]').forEach(function (box) {
+    var until = Date.parse(box.dataset.until);
+    if (!isNaN(until) && Date.now() > until) box.remove();
+  });
+
   document.querySelectorAll('[data-copy]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var src = document.getElementById(btn.dataset.copy);
