@@ -1,7 +1,7 @@
 name: feedback-by-rubric
 title: משוב לעבודות לפי מחוון, בלי שמות
-version: 1.0.0
-updated: 2026-11-17
+version: 1.1.0
+updated: 2026-11-19
 subjects:
 - כל המקצועות
 platforms:
