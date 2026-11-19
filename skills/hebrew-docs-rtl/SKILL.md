@@ -39,7 +39,8 @@ HEB = re.compile(r"[֐-׿]")
 
 def build(md, out):
     open("doc.md", "w", encoding="utf-8").write(md)
-    subprocess.run(["pandoc", "doc.md", "-o", out], check=True)
+    # hard_line_breaks: שורה בלי שורה ריקה לפניה (חתימה, שורות כותרת) יורדת שורה ולא נדבקת לשורה הקודמת
+    subprocess.run(["pandoc", "-f", "markdown+hard_line_breaks", "doc.md", "-o", out], check=True)
     problems = []
     tmp = out + ".tmp"
     with zipfile.ZipFile(out) as zin, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
@@ -82,7 +83,7 @@ def build(md, out):
   lang: he
   ---
   ```
-- **שורה ריקה בין כל שתי פסקאות.** שורות צמודות מתאחדות לפסקה אחת.
+- **שורה ריקה בין כל שתי פסקאות.** שורות צמודות נשארות שורות נפרדות באותה פסקה: כך כותבים חתימה (שם, תפקיד, טלפון) ושורות כותרת (כיתה, מקצוע, תאריך).
 - כותרות עם `#` ו-`##`. רשימות עם `-` או `1.`, ושורה ריקה לפני הרשימה.
 - טבלאות בתחביר Markdown רגיל (`| עמודה | עמודה |`). כתוב את העמודות בסדר הקריאה בעברית: העמודה הראשונה תופיע בצד ימין.
 - **פסקה לא מתחילה במילה באנגלית או במספר.** אחרת היא עלולה להתיישר לשמאל. התחל במילה בעברית: "הכלי Gemini", "בשנת 2026", "סעיף 3".
