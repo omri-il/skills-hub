@@ -22,6 +22,7 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import YAML from 'yaml';
 import { loadSkills } from '../lib/skills.js';
+import { stats } from './stats.js';
 
 const PASSWORD = process.env.ADMIN_PASSWORD || '';
 const SECRET = process.env.ADMIN_SECRET || '';
@@ -250,6 +251,7 @@ function listPage(note) {
   const warn = errors.length ? `<p class="note bad">יש בעיה בקבצים של האתר, והוא לא מתעדכן: ${esc(errors.join(' '))}</p>` : '';
   const msg = note ? `<p class="note${note.ok ? '' : ' bad'}" role="status">${esc(note.text)}</p>` : '';
   return page('ניהול הסקילים', `${msg}${warn}
+<p><a class="btn" href="/admin/stats">📊 נתוני האתר: מי נכנס ומה הורידו</a></p>
 <p>הסתרה מורידה סקיל מהאתר, ואפשר להחזיר אותו בלחיצה. מחיקה מוחקת אותו מהתיקייה. כל שינוי מופיע באתר תוך כ-10 שניות.</p>
 <p>🎬 עזרה לסרטון: בעמוד של כל סקיל באתר יש חלון צד שרק אתה רואה. המקש H מסתיר אותו ומחזיר אותו, גם לפני הקלטה.</p>
 <h2>מופיעים באתר (${shown.length})</h2>${shown.map((s) => row(s, requiredBy)).join('') || '<p>אין.</p>'}
@@ -269,6 +271,62 @@ function confirmPage(name) {
 <p>כדי להוריד אותו רק לזמן מה, עדיף ללחוץ "להסתיר מהאתר".</p>
 <div class="acts">${actionButton('delete', s.name, `כן, למחוק את "${esc(s.title)}"`, 'danger')}<a class="btn" href="/admin">לא, לחזור לרשימה</a></div>`;
   return page('למחוק סקיל?', `<div class="box">${body}</div>`);
+}
+
+// ---------- site numbers (Omri, 2026-11-19), from nginx's own log of this site: admin/stats.js ----------
+const STATS_CSS = `
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 8px}
+.big div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.big b{display:block;font-size:1.8rem;color:var(--navy);line-height:1.1}
+.big span{color:var(--ink2);font-size:.9rem}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.95rem}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:start}
+th{background:#eef1f6;font-weight:600}
+td.n{direction:ltr;text-align:end;font-variant-numeric:tabular-nums;width:6em}
+.bar{height:10px;background:var(--navy);border-radius:5px;min-width:2px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tabs a{padding:5px 12px;border:1px solid var(--navy);border-radius:99px;text-decoration:none;color:var(--navy)}
+.tabs a.on{background:var(--navy);color:#fff}
+.small{color:var(--ink2);font-size:.88rem}`;
+
+function statsPage(days) {
+  const { all } = state();
+  const titles = new Map(all.map((s) => [s.name, s.title]));
+  const st = stats({ days, titles });
+  const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : '');
+  const maxDay = Math.max(1, ...st.perDay.map((d) => d.visitors));
+  const tabs = [7, 30, 90].map((d) => `<a class="${d === days ? 'on' : ''}" href="/admin/stats?days=${d}">${d} ימים</a>`).join('');
+  const none = !st.first;
+  const body = `<p><a href="/admin">‹ לרשימת הסקילים</a></p>
+<h1 style="font-size:1.25rem;margin:0 0 10px">📊 נתוני האתר</h1>
+<div class="tabs">${tabs}</div>
+${none ? '<p class="note">עוד אין נתונים לתקופה הזאת. הרישום של האתר התחיל ב-19.11.2026.</p>' : `
+<div class="big">
+<div><b>${st.visitors}</b><span>מבקרים</span></div>
+<div><b>${st.downloaders}</b><span>הורידו לפחות סקיל אחד</span></div>
+<div><b>${pct(st.downloaders, st.visitors) || '0%'}</b><span>מהמבקרים הורידו</span></div>
+<div><b>${st.signups}</b><span>נרשמו למייל השבועי</span></div>
+<div><b>${pct(st.phone, st.phone + st.desktop)}</b><span>מהטלפון</span></div>
+</div>
+<p class="small">מבקר = כתובת אחת עם דפדפן אחד. בית ספר עם רשת אחת יכול להיספר כמבקר אחד. הביקורים שלך לא נספרים. המספרים מ-<bdi>${esc(st.first.split('-').reverse().join('.'))}</bdi> ואילך. לפני 19.11.2026 נספרו רק דפי הסקילים וההורדות, בלי דף הבית.</p>
+
+<h2>הסקילים: כמה נכנסו וכמה הורידו</h2>
+<table><tr><th>סקיל</th><th>נכנסו לדף</th><th>הורידו</th></tr>
+${st.perSkill.map((s) => `<tr><td>${esc(s.title)}</td><td class="n">${s.views}</td><td class="n">${s.downloads}</td></tr>`).join('')}
+</table>
+<p class="small">הורדה מדף הבית או מחבילה נספרת גם בלי כניסה לדף של הסקיל.</p>
+
+<h2>מאיפה הגיעו</h2>
+<table><tr><th>מקור</th><th>מבקרים</th></tr>
+${st.sources.map((s) => `<tr><td>${esc(s.source)}</td><td class="n">${s.visitors}</td></tr>`).join('')}
+</table>
+<p class="small">"ישיר, וואטסאפ או מייל" = קישור שנפתח מוואטסאפ, ממייל, או שהקלידו אותו. אפשר להפריד אותם: קישור עם <code>?utm_source=whatsapp</code> בסוף נספר בנפרד.</p>
+
+<h2>כל יום</h2>
+<table><tr><th>יום</th><th>מבקרים</th><th>הורדות</th><th></th></tr>
+${st.perDay.slice().reverse().map((d) => `<tr><td><bdi>${esc(d.day.split('-').reverse().join('.'))}</bdi></td><td class="n">${d.visitors}</td><td class="n">${d.downloads}</td><td style="width:40%"><div class="bar" style="width:${Math.round((d.visitors / maxDay) * 100)}%"></div></td></tr>`).join('')}
+</table>`}`;
+  return page('נתוני האתר', `<style>${STATS_CSS}</style>${body}`);
 }
 
 // The same helper as the panel on the skill page, as a page of its own: to read on a phone while recording.
@@ -373,6 +431,10 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && (url.pathname === '/admin' || url.pathname === '/admin/')) {
       // Also for a login made before the helper existed (2026-11-19): it has no SEEN cookie yet.
       return send(res, 200, await serial(() => listPage()), { 'Set-Cookie': seenCookie(true) });
+    }
+    if (req.method === 'GET' && url.pathname === '/admin/stats') {
+      const d = Number(url.searchParams.get('days'));
+      return send(res, 200, statsPage([7, 30, 90].includes(d) ? d : 30));
     }
     const video = url.pathname.match(/^\/admin\/video\/([a-z0-9-]+)\/?$/);
     if (req.method === 'GET' && video) return send(res, 200, helpPage(video[1]));

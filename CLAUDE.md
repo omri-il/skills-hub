@@ -106,6 +106,13 @@ Help for recording a video about a skill: 2 demo requests, Gemini's answer witho
 - Made by `video-help/make.py` (Python 3.12): Claude (`claude-opus-5-5`) picks the requests and the points, as Omri's rule says; Gemini API (`gemini-3.5-flash`) answers once with no skill and once with the skill and its `requires`. Output in `video-help/data/` (gitignored), then `scp video-help/data/*.json root@100.94.153.60:/root/Projects/skills-video-help/`. About 2 minutes per skill; 6 at a time. A changed skill: `--skills <name> --force`.
 - Local check: `ADMIN_PORT=5047 node test/serve.js` sends `/admin/*` to a local DRY_RUN admin server, so the panel works on one origin.
 
+## Site numbers (Omri, 2026-11-19)
+
+- `/admin/stats` (button on `/admin`): visitors, downloads per skill, where they came from, phone or computer, per day; 7 / 30 / 90 days. Code: `admin/stats.js`.
+- Source: the site's own nginx log, `/var/log/nginx/skills/access.log`, JSON lines (`log_format skills_json` in `deploy/skills.omri-iram.co.il.conf`), kept 90 days by `deploy/skills-hub.logrotate` (copy at `/etc/logrotate.d/skills-hub`). Omri's visits (cookie `skills_admin_seen`) and bots are left out. Nothing runs in the visitor's browser and no cookie is set for this.
+- `history-before-2026-11-19.log` in the same folder: the old lines from nginx's shared log (`deploy/import_old_log.py`), skill pages and zips only, from 8.11.2026. They include Omri's own visits.
+- A visitor = one address with one browser. A link with `?utm_source=whatsapp` (or newsletter, facebook, qr…) is counted under that source.
+
 ## Hormozi parts (Omri, 2026-11-19)
 
 - **Share picture:** `assets/og.png` (1200x630) from `deploy/og/og.html`; render again with `deploy/og/make_og.ps1`.
