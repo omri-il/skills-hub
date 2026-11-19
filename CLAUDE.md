@@ -63,6 +63,8 @@ Home page filters (Omri, 2026-11-12): a search box, "מי אתם?" (`who`) and "
 - `main` skills come first on the home page; `shared` ones under "סקילי עזר".
 - `tested` and `limitations` are the site's credibility: write them as plain observations from a real run, never marketing. Ask Omri; don't invent them.
 - A skill with `requires` gets an automatic bundle (itself plus everything it requires, at any depth). Its page's main button downloads those zips one by one; a secondary link downloads the skill alone.
+- **Every bundle in `bundles.yaml` has its own page** `/bundles/<id>/` (Omri, 2026-11-19): one download button, a card per skill, install steps, and an optional `video` (a full https YouTube link, plus `video_minutes`; a link, not an embed, because of the CSP). `/bundles/` lists them all. The home page shows only topic bundles, as short cards.
+- **A workshop bundle** has `workshop` (the running number, e.g. `"#B058"`) and `date` (YYYY-MM-DD, required with `workshop`). It is never on the home page or on a skill page: only on its own page and under "מהסדנאות" in `/bundles/`. Put its page link (a go.omri-iram.co.il short link) in the workshop's learning page, in the install station. Ten workshops must not mean ten bundles on the home page.
 - **A bundle is never one zip of several skills** (Omri, 2026-11-09): a teacher would have to extract it, and Gemini takes one skill per upload. One click downloads a separate zip per skill (`data-files` in `assets/app.js`), and each is uploaded as it is.
 
 ## Build checks (lib/skills.js)

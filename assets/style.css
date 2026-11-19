@@ -162,6 +162,17 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .dl-status { display: block; font-size: .9rem; font-weight: 600; color: var(--accent); margin-block-start: 8px; }
 .dl-status:empty { display: none; }
 .eyebrow { font-size: .85rem; font-weight: 600; color: var(--accent); margin: 0 0 6px; }
+.bundle h3 a { color: var(--ink); text-decoration: none; }
+.bundle h3 a:hover { color: var(--accent); text-decoration: underline; }
+.bundle-short { padding: 20px 24px; border-width: 1px; }
+.bundle-short .bundle-cta { gap: 8px; }
+.bundle-short .bundle-cta .btn { width: 100%; }
+.workshop-line { margin: 6px 0 0; color: var(--ink-2); }
+.lead-sm { font-size: 1.08rem; color: var(--ink-2); margin: 8px 0 14px; }
+.bundle-rows { list-style: none; padding: 0; margin: 0; }
+.bundle-rows li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.bundle-skill code { font-size: .9em; }
+.skill-head + .block { margin-block-start: 32px; }
 @media (max-width: 720px) { .bundle { grid-template-columns: 1fr; } .bundle-list { columns: 1; } .bundle-cta { align-items: stretch; } }
 
 /* skill page */

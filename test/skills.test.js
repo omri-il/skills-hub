@@ -95,6 +95,17 @@ test('a bundle naming a missing skill fails', () => {
   assert.ok(errors.some((e) => e.includes('skill "nope" does not exist')));
 });
 
+test('a workshop bundle needs its date, and a video must be a full link', () => {
+  const bad = loadSkills(fixture({ 'a-skill': {} }, '- id: w\n  title: t\n  description: d\n  workshop: "#B001"\n  video: youtu.be/x\n  skills: [a-skill]\n'));
+  assert.ok(bad.errors.some((e) => e.includes('needs "date"')));
+  assert.ok(bad.errors.some((e) => e.includes('"video" must be a full https link')));
+  const good = loadSkills(fixture({ 'a-skill': {} }, '- id: w\n  title: t\n  description: d\n  workshop: "#B001"\n  date: 2026-11-18\n  video: https://youtu.be/x\n  video_minutes: 7\n  skills: [a-skill]\n'));
+  assert.deepEqual(good.errors, []);
+  assert.equal(good.bundles[0].workshop, '#B001');
+  assert.equal(good.bundles[0].date, '2026-11-18');
+  assert.equal(good.bundles[0].video_minutes, '7');
+});
+
 test('automatic bundle holds the skill and everything it needs, at any depth', () => {
   const dir = fixture({
     top: { meta: META('top', 'requires: [mid]') },
