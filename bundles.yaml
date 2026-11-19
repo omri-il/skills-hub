@@ -14,8 +14,8 @@
     - ai-resistant-task
     - red-team
 - id: math-chem-worksheets
-  title: חבילת דפי עבודה במתמטיקה
-  description: דף עבודה עם משוואות ומפתח שנבדק.
+  title: חבילת דפי עבודה במתמטיקה ובכימיה
+  description: דף עבודה עם משוואות או ניסוחים, ומפתח שנבדק.
   skills:
     - create-math-practice
     - create-chemistry-practice
