@@ -302,7 +302,7 @@ const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
     <h1>דף עבודה, מבחן או מחוון מג'מיני,<br class="br-wide"> מוכן להדפסה.</h1>
-    <p class="lead">מעלים סקיל לג'מיני פעם אחת, ומאז הבקשות יוצאות בעברית שלא מתהפכת, ודפי העבודה מגיעים עם מפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
+    <p class="lead">מעלים סקיל לג'מיני פעם אחת. מאז מקבלים עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
     <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
       <li><span><b>מורידים</b> סקיל</span></li>
@@ -323,7 +323,6 @@ const homeBody = `
 <section class="wrap section" id="skills" aria-labelledby="h-skills">
   <div class="section-head">
     <h2 id="h-skills">הסקילים</h2>
-    <p class="muted">בכל סקיל: מה נבדק ומה עוד לא.</p>
   </div>
   <div class="filters">
     <div class="search" role="search">
