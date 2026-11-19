@@ -28,8 +28,6 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = Path(__file__).resolve().parent / "data"
 GEMINI_MODEL = "gemini-3.5-flash"
 CLAUDE_MODEL = "claude-opus-5-5"
-# The Gemini app can run Python for data work; the API needs the tool turned on to match it.
-CODE_TOOL = {"class-results-analysis", "misconceptions-from-answers", "create-test"}
 
 PICK = """You help Omri Iram, an Israeli teacher trainer, record a short YouTube video that shows the power of one
 Gemini skill. In the video he types a request into Gemini twice: once in a chat with no skill, once with the
@@ -143,18 +141,60 @@ def ask_claude(claude, prompt):
     return extract_json("".join(b.text for b in msg.content if b.type == "text"))
 
 
+def docx_text(data):
+    """The text of a Word file Gemini made, paragraphs and table rows, so the panel and Claude can read it."""
+    import io
+    import docx
+    d = docx.Document(io.BytesIO(data))
+    lines = [p.text for p in d.paragraphs if p.text.strip()]
+    for t in d.tables:
+        for row in t.rows:
+            cells = []
+            for c in row.cells:
+                if c.text.strip() and c.text.strip() not in cells:
+                    cells.append(c.text.strip())
+            lines.append(" | ".join(cells))
+    return "\n".join(lines)
+
+
+def answer_text(resp):
+    """Everything Gemini gave: its text, and a file it made with the code tool (a .docx is read out).
+    Skills like create-choice-board answer only with a file, so resp.text alone is empty (2026-11-19)."""
+    out = []
+    for c in resp.candidates or []:
+        for p in (c.content.parts if c.content else None) or []:
+            if p.text:
+                out.append(p.text)
+            elif p.inline_data and p.inline_data.data:
+                mime = p.inline_data.mime_type or ""
+                if "wordprocessingml" in mime:
+                    try:
+                        out.append("[Gemini יצר קובץ Word. התוכן שלו:]\n" + docx_text(p.inline_data.data))
+                    except Exception:
+                        out.append("[Gemini יצר קובץ Word]")
+                else:
+                    out.append(f"[Gemini יצר קובץ: {mime}]")
+            elif p.code_execution_result and p.code_execution_result.output:
+                res = p.code_execution_result.output.strip()
+                if res:
+                    out.append("[פלט הקוד:]\n" + res[:1500])
+    return "\n\n".join(out)
+
+
 def ask_gemini(gemini, name, demo, skill_on):
     from google.genai import types
     system = "You are Gemini, helping a teacher in Israel."
     if skill_on:
         texts = "\n\n".join(f'<skill name="{n}">\n{skill_md(n)}\n</skill>' for n in with_requires(name))
         system += " The user has installed the following skills, and they are active for this conversation. Follow them exactly.\n\n" + texts
-    tools = [types.Tool(code_execution=types.ToolCodeExecution())] if name in CODE_TOOL else None
+    # The Gemini app runs code and makes files for every chat, so both runs get the code tool (2026-11-19:
+    # without it, skills that build a .docx gave an empty answer).
+    tools = [types.Tool(code_execution=types.ToolCodeExecution())]
     cfg = types.GenerateContentConfig(system_instruction=system, tools=tools)
     contents = [types.Content(role="user", parts=[types.Part(text=demo["prompt"])])]
     out = []
     for turn in range(2):
-        text = retry(lambda: gemini.models.generate_content(model=GEMINI_MODEL, contents=contents, config=cfg).text or "")
+        text = retry(lambda: answer_text(gemini.models.generate_content(model=GEMINI_MODEL, contents=contents, config=cfg)))
         out.append(text)
         asked = "?" in text and len(text) < 2500 and "```" not in text
         if turn == 0 and asked and demo.get("followup"):
@@ -173,6 +213,8 @@ def make(name, claude, gemini):
     for d in picked["demos"][:3]:
         d["without"] = ask_gemini(gemini, name, d, False)
         d["with"] = ask_gemini(gemini, name, d, True)
+        if not d["without"].strip() or not d["with"].strip():
+            raise RuntimeError(f"empty Gemini answer in demo '{d.get('label')}': no points written on an empty answer")
         d["show"] = ask_claude(claude, POINTS.format(name=name, skill=skill_md(name), prompt=d["prompt"], without=d["without"], with_=d["with"]))["show"]
         demos.append(d)
     data = {"name": name, "title": m["title"], "made": datetime.date.today().isoformat(), "model": GEMINI_MODEL,
