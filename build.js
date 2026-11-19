@@ -51,12 +51,12 @@ const videoPlayer = (v, cls = '') => `<div class="video ${cls}">
 const videoHome = (v) => `<section class="wrap section" id="video" aria-labelledby="h-video">
   <div class="section-head">
     <h2 id="h-video">${esc(v.title)}</h2>
-    <p class="muted">סרטון של ${esc(v.minutes)} דקות: מהורדה מהאתר ועד סקיל שעובד בג'מיני.</p>
+    <p class="muted">${esc(v.minutes)} דקות: מההורדה ועד סקיל שעובד.</p>
   </div>
   ${videoPlayer(v)}
 </section>`;
 const videoSkill = (v) => `<details class="video-fold">
-    <summary>מעדיפים לראות? סרטון התקנה של ${esc(v.minutes)} דקות</summary>
+    <summary>סרטון התקנה (${esc(v.minutes)} דקות)</summary>
     ${videoPlayer(v, 'video-sm')}
   </details>`;
 
@@ -78,7 +78,7 @@ const WORKSHOP = (() => {
 const workshopBox = (cls = '') => (WORKSHOP ? `<aside class="workshop ${cls}" data-until="${esc(WORKSHOP.until)}" aria-labelledby="h-ws-${cls || 'x'}">
   <div>
     <h2 id="h-ws-${cls || 'x'}">רוצים לראות את זה עובד?</h2>
-    <p>בסדנה בזום של 90 דקות בונים יחד סקיל אחד שעובד לכיתה שלכם. הסדנה הבאה ב-${esc(WORKSHOP.date_text)}, <bdi>${esc(WORKSHOP.price)} ₪</bdi>.</p>
+    <p>סדנה בזום של 90 דקות: בונים יחד סקיל לכיתה שלכם. ב-${esc(WORKSHOP.date_text)}, <bdi>${esc(WORKSHOP.price)} ₪</bdi>.</p>
   </div>
   <a class="btn btn-ghost" href="${esc(WORKSHOP.url)}">לפרטים ולהרשמה</a>
 </aside>` : '');
@@ -100,7 +100,7 @@ const compareBlock = (s) => {
         <a class="compare-img" href="/assets/compare/${s.name}.png" target="_blank" rel="noopener"><img src="/assets/compare/${s.name}.png" alt="תשובה של ג'מיני לבקשה ${esc(c.label)}: מימין בלי הסקיל, משמאל עם הסקיל" loading="lazy" width="${w}" height="${h}"></a>
         <h3>מה ההבדל</h3>
         <ul>${c.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
-        <p class="muted small">תשובות אמיתיות של Gemini מ-${fmtDate(c.made)}. באפליקציה התוצאה יכולה להיות קצת שונה. לחיצה על התמונה פותחת אותה בגודל מלא.</p>
+        <p class="muted small">תשובות אמיתיות של Gemini מ-${fmtDate(c.made)}. לחיצה מגדילה את התמונה.</p>
       </section>`;
 };
 
@@ -113,7 +113,7 @@ const sizeOf = (ids) => {
   const bytes = [ids].flat().reduce((sum, id) => sum + fs.statSync(path.join(DIST, 'downloads', `${id}.zip`)).size, 0);
   return `${Math.max(1, Math.round(bytes / 1024))}KB`;
 };
-const filesCount = (n) => (n === 2 ? 'שני קבצים נפרדים' : `${n} קבצים נפרדים`);
+const filesCount = (n) => `${n} קבצים`;
 // With several files, app.js downloads them one after the other (data-files).
 // Without JavaScript the link gets the first file, and each page also lists a link per file.
 function dlLink(files, label, cls, attrs = '') {
@@ -185,8 +185,7 @@ ${canonical.startsWith('/skills/') ? `<script src="/assets/video-help.js?v=${ASS
 ${body}
 </main>
 <footer class="foot"><div class="wrap">
-  <p>הסקילים חינמיים לשימוש בכיתה ובבית הספר. נבנו ונבדקו על ידי <a href="https://omri-iram.co.il">עומרי אירם | בינה בהוראה</a>.</p>
-  <p class="muted">מצאתם בעיה בסקיל? ספרו לי ב-<bdi dir="ltr">hello@omri-iram.co.il</bdi> ואני אתקן.</p>
+  <p>חינם, מאת <a href="https://omri-iram.co.il">עומרי אירם | בינה בהוראה</a>. בעיה בסקיל? <bdi dir="ltr">hello@omri-iram.co.il</bdi></p>
 </div></footer>
 </body>
 </html>
@@ -207,10 +206,10 @@ function downloadFor(s) {
     return {
       files: auto.skills,
       label: 'הורדה',
-      note: `${filesCount(auto.skills.length)}: הסקיל ו${extra === 1 ? 'סקיל עזר אחד' : extra === 2 ? 'שני סקילי עזר' : `${extra} סקילי עזר`}`,
+      note: `${filesCount(auto.skills.length)}: הסקיל ו-${extra === 1 ? 'סקיל עזר' : `${extra} סקילי עזר`}`,
     };
   }
-  return { files: [s.name], label: 'הורדה', note: 'קובץ zip אחד' };
+  return { files: [s.name], label: 'הורדה', note: 'קובץ zip' };
 }
 
 // ---------- home ----------
@@ -220,12 +219,11 @@ function card(s) {
   const search = [s.title, s.problem, s.benefit, s.what_it_does, s.output, s.audience, ...s.subjects, s.name].join(' ').replace(/\s+/g, ' ');
   return `<li class="card" data-subjects="${esc(s.subjects.join('|'))}" data-groups="${esc(s.groups.join('|'))}" data-fits="${esc(s.fits.join('|'))}" data-who="${esc(s.who.join('|'))}" data-platforms="${esc(platformsOf(s).join('|'))}" data-search="${esc(search)}">
   <h3 class="card-title"><a href="/skills/${s.name}/">${esc(s.title)}</a></h3>
-  <p class="card-problem">${esc(firstSentence(s.problem))}</p>
-  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לכם:</span> ${esc(s.benefit)}</p>
+  <p class="card-benefit">${esc(s.benefit)}</p>
   <div class="tags">${s.subjects.map((x) => tag(x, 'tag-subject')).join('')}${platformTags(s)}</div>
   <div class="card-actions">
     ${dlLink(d.files, d.label, 'btn btn-primary', ` aria-label="הורדת ${esc(s.title)} (${esc(d.note)})"`)}
-    <a class="btn btn-ghost" href="/skills/${s.name}/">מה בדיוק הוא עושה</a>
+    <a class="btn btn-ghost" href="/skills/${s.name}/">פרטים</a>
   </div>
   <p class="card-note">${esc(d.note)} · ${sizeOf(d.files)}</p>
   ${dlStatus}
@@ -270,7 +268,7 @@ const signupSection = `<section class="wrap section" id="signup" aria-labelledby
   <div class="signup">
     <div class="signup-text">
       <h2 id="h-signup">סקילים חדשים, פעם בשבוע</h2>
-      <p>פעם בשבוע אשלח מייל קצר עם הסקילים שעלו לאתר. ומי שרוצה לנסות סקילים לפני שהם עולים ולספר לי מה עבד, יכול להירשם כבודק בטא.</p>
+      <p>מייל קצר עם הסקילים החדשים. רוצים לנסות סקילים לפני כולם? הירשמו כבודקי בטא.</p>
     </div>
     <form class="signup-form" id="signupForm" novalidate>
       <div id="signupFields">
@@ -280,13 +278,13 @@ const signupSection = `<section class="wrap section" id="signup" aria-labelledby
         <fieldset class="boxes">
           <legend>מה תרצו לקבל?</legend>
           <label class="box"><input type="checkbox" name="weekly" value="1" checked> מייל שבועי עם הסקילים החדשים</label>
-          <label class="box"><input type="checkbox" name="beta" value="1"> להיות בודק בטא: לנסות סקילים לפני כולם</label>
+          <label class="box"><input type="checkbox" name="beta" value="1"> בודק בטא: סקילים לפני כולם</label>
         </fieldset>
         <div class="hp" aria-hidden="true"><label for="nonce">אל תמלאו שדה זה</label><input type="text" id="nonce" name="nonce" tabindex="-1" autocomplete="off"></div>
         <altcha-widget id="altcha" auto="onload" hidefooter challengeurl="/api/public/captcha/altcha" strings='{"label":"בודקים שאתם לא רובוט","verifying":"בודקים…","verified":"אומת","waitAlert":"רגע, עוד בודקים…","error":"הבדיקה נכשלה. נסו לרענן את הדף.","expired":"הבדיקה פגה. רעננו את הדף."}'></altcha-widget>
         <button type="submit" class="btn btn-send btn-lg" id="signupBtn">הרשמה</button>
         <p class="signup-err" id="signupErr" role="alert" hidden></p>
-        <p class="muted small">אפשר להסיר את עצמכם בכל רגע, בקישור שבתחתית כל מייל.</p>
+        <p class="muted small">אפשר להסיר את עצמכם בכל רגע, בקישור בתחתית המייל.</p>
       </div>
       <p class="signup-done" id="signupDone" role="status" hidden>נרשמתם. תודה!</p>
     </form>
@@ -304,16 +302,16 @@ const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
     <h1>דף עבודה, מבחן או מחוון מג'מיני,<br class="br-wide"> מוכן להדפסה.</h1>
-    <p class="lead">מעלים סקיל לג'מיני פעם אחת, ומאז הבקשות יוצאות בעברית שלא מתהפכת, ודפי העבודה מגיעים עם מפתח תשובות שנבדק. חינם, בלי הרשמה.<span class="lead-more"> סקיל הוא קובץ הוראות קטן. עדיין עוברים על התוצר לפני שנכנסים לכיתה, אבל יש פחות מה לתקן.</span></p>
+    <p class="lead">מעלים סקיל לג'מיני פעם אחת. מאז מקבלים עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
     <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
-      <li><span><b>מורידים</b> סקיל או חבילה מהדף הזה</span></li>
-      <li><span><b>מעלים</b> אותו לג'מיני, פעם אחת</span></li>
-      <li><span><b>מבקשים כרגיל</b>. הסקיל לא נכנס לפעולה? כותבים <code dir="ltr">@</code> ואת השם שלו</span></li>
+      <li><span><b>מורידים</b> סקיל</span></li>
+      <li><span><b>מעלים</b> לג'מיני, פעם אחת</span></li>
+      <li><span><b>מבקשים כרגיל</b>. לא עבד? כותבים <code dir="ltr">@</code> ואת שם הסקיל</span></li>
     </ol>
     <p class="hero-actions">
       <a class="btn btn-cta btn-lg" href="#skills">לבחירת סקיל</a>
-      ${VIDEO ? `<a class="btn btn-ghost btn-video" href="#video">איך מתקינים (סרטון, ${esc(VIDEO.minutes)} דקות)</a>` : ''}
+      ${VIDEO ? `<a class="btn btn-ghost btn-video" href="#video">סרטון התקנה (${esc(VIDEO.minutes)} דקות)</a>` : ''}
     </p>
   </div>
   <figure class="qr">
@@ -325,7 +323,6 @@ const homeBody = `
 <section class="wrap section" id="skills" aria-labelledby="h-skills">
   <div class="section-head">
     <h2 id="h-skills">הסקילים</h2>
-    <p class="muted">כל סקיל מגיע עם רשימה כנה של מה נבדק ומה עוד לא.</p>
   </div>
   <div class="filters">
     <div class="search" role="search">
@@ -340,13 +337,13 @@ const homeBody = `
   <ul class="grid" id="grid-main">
     ${mains.map(card).join('\n')}
   </ul>
-  ${shared.length ? `<h3 class="sub-head">סקילי עזר <span class="muted">(סקילים אחרים קוראים להם לבד. הם כבר בתוך ההורדה של הסקיל שצריך אותם)</span></h3>
+  ${shared.length ? `<h3 class="sub-head">סקילי עזר <span class="muted">(כבר בתוך ההורדה של הסקיל שצריך אותם)</span></h3>
   <ul class="grid" id="grid-shared">
     ${shared.map(card).join('\n')}
   </ul>` : ''}
   <div class="empty" id="empty" hidden>
-    <p id="empty-text">אין סקיל שמתאים לחיפוש הזה. אפשר לנסות מילה אחרת, או להציג שוב את כל הסקילים.</p>
-    <p id="empty-subject" hidden>עוד אין סקיל מיוחד ל<span id="empty-subject-name"></span>. הסקילים הכלליים, כמו מצגת לשיעור ולוח בחירה, מתאימים גם לכם. רוצים סקיל ל<span id="empty-subject-name2"></span>? <a href="#signup">ספרו לי בהרשמה</a>, ואני אבנה אותו.</p>
+    <p id="empty-text">אין סקיל שמתאים. נסו מילה אחרת.</p>
+    <p id="empty-subject" hidden>עוד אין סקיל ל<span id="empty-subject-name"></span>. הסקילים הכלליים מתאימים גם לכם. רוצים סקיל ל<span id="empty-subject-name2"></span>? <a href="#signup">ספרו לי בהרשמה</a>.</p>
     <button type="button" class="btn btn-ghost" id="reset">הצגת כל הסקילים</button>
   </div>
 </section>
@@ -356,7 +353,7 @@ ${VIDEO ? videoHome(VIDEO) : ''}
 ${bundles.length ? `<section class="wrap section" aria-labelledby="h-bundles">
   <div class="section-head">
     <h2 id="h-bundles">חבילות</h2>
-    <p class="muted">סקילים שעובדים יחד, בלחיצה אחת. כל סקיל יורד כקובץ משלו, ומעלים אותו לג'מיני כמו שהוא.</p>
+    <p class="muted">כמה סקילים בלחיצה אחת. כל אחד יורד כקובץ נפרד.</p>
   </div>
   ${topicBundles.map(bundleCard).join('\n')}
   ${workshopBundles.length ? `<p class="workshop-line">הייתם בסדנה שלי? <a href="/bundles/#workshops">לחבילות מהסדנאות</a></p>` : ''}
@@ -383,28 +380,27 @@ function installSteps(s, d) {
   return `<section class="block" aria-labelledby="h-install">
   <h2 id="h-install">איך מתקינים</h2>
   ${VIDEO ? videoSkill(VIDEO) : ''}
-  <h3 class="install-title">בג'מיני</h3>
   <ol class="install">
     ${isBundle
-      ? `<li>לוחצים על הכפתור הראשי בדף הזה ויורדים ${filesCount(d.files.length)}. <b>לא פותחים אותם</b>. אם הדפדפן שואל, מאשרים הורדה של כמה קבצים.</li>
-    <li>בג'מיני פותחים את <b>הגדרות</b>, ונכנסים ל-<b>סקילים (כישורים)</b>.</li>
-    <li>בוחרים <b>העלאת סקיל</b> ובוחרים קובץ אחד. חוזרים על זה לכל קובץ.</li>
-    <li>חסר קובץ? אפשר להוריד כל אחד בנפרד: ${d.files.map((n) => `<a href="${zipHref(n)}" download>${esc(byName.get(n).title)}</a>`).join(', ')}.</li>`
-      : `<li>מורידים את קובץ ה-zip מהכפתור בדף הזה. <b>לא פותחים אותו</b>.</li>
-    <li>בג'מיני פותחים את <b>הגדרות</b>, ונכנסים ל-<b>סקילים (כישורים)</b>.</li>
-    <li>בוחרים <b>העלאת סקיל</b> ובוחרים את הקובץ שהורדתם.</li>`}
-    <li>פותחים צ'אט חדש ומבקשים כרגיל, למשל: <q>${esc(exampleAsk(s))}</q>.</li>
-    <li>ג'מיני ענה בלי הסקיל? כותבים <code dir="ltr">@</code> ואת שם הסקיל בתחילת הבקשה (<code dir="ltr">@${esc(s.name)}</code>), ובוחרים אותו מהרשימה שנפתחת. ככה הוא רץ בוודאות.</li>
-    <li>יצאה גרסה חדשה של הסקיל? מורידים שוב, ובהגדרות בוחרים <b>החלפת סקיל</b>. העדכון לא מגיע לבד.</li>
+      ? `<li>מורידים את ${filesCount(d.files.length)}. <b>לא פותחים אותם</b>. הדפדפן שואל? מאשרים.</li>
+    <li>בג'מיני: <b>הגדרות</b> ← <b>סקילים (כישורים)</b> ← <b>העלאת סקיל</b>. מעלים כל קובץ בנפרד.</li>
+    <li>חסר קובץ? ${d.files.map((n) => `<a href="${zipHref(n)}" download>${esc(byName.get(n).title)}</a>`).join(', ')}.</li>`
+      : `<li>מורידים את קובץ ה-zip. <b>לא פותחים אותו</b>.</li>
+    <li>בג'מיני: <b>הגדרות</b> ← <b>סקילים (כישורים)</b> ← <b>העלאת סקיל</b>, ובוחרים את הקובץ.</li>`}
+    <li>בצ'אט חדש מבקשים כרגיל${exampleAsk(s) ? `, למשל: <q>${esc(exampleAsk(s))}</q>` : ''}.</li>
+    <li>לא עבד? כותבים בהתחלה <code dir="ltr">@${esc(s.name)}</code> ובוחרים מהרשימה.</li>
+    <li>גרסה חדשה? מורידים שוב ובוחרים <b>החלפת סקיל</b>. העדכון לא מגיע לבד.</li>
   </ol>
 </section>`;
 }
 
 function exampleAsk(s) {
   if (s.subjects.includes('כימיה') && s.name.includes('chem')) return "דף עבודה באיזון ניסוחים לכיתה י', כקובץ Word";
+  if (s.name.includes('elementary')) return "דף תרגול בשברים לכיתה ד', כקובץ Word";
   if (s.name.includes('math')) return "דף תרגול בסדרות הנדסיות ל-4 יחידות, כקובץ Word";
   if (s.name.includes('verify')) return 'תבדוק את מפתח התשובות של דף העבודה שהעליתי';
-  return 'דף עבודה במשוואות ריבועיות לכיתה ט\', כקובץ Word';
+  // Other skills: no example, rather than a worksheet example that does not fit them.
+  return '';
 }
 
 function skillPage(s) {
@@ -413,10 +409,10 @@ function skillPage(s) {
   const callers = usedBy(s.name);
   const dl = auto
     ? `<div class="dl-box">
-    ${dlLink(d.files, 'הורדת הסקיל עם מה שהוא צריך', 'btn btn-primary btn-lg')}
-    <p class="card-note">${filesCount(d.files.length)} · ${sizeOf(d.files)} · זה מה שרוב המורים צריכים</p>
+    ${dlLink(d.files, 'הורדת הסקיל וסקילי העזר', 'btn btn-primary btn-lg')}
+    <p class="card-note">${filesCount(d.files.length)} · ${sizeOf(d.files)}</p>
     ${dlStatus}
-    <p class="dl-alt">יש לכם כבר את סקילי העזר? <a href="${zipHref(s.name)}" download>הורדת הסקיל הזה בלבד</a> (${sizeOf(s.name)})</p>
+    <p class="dl-alt">יש לכם את סקילי העזר? <a href="${zipHref(s.name)}" download>רק הסקיל הזה</a> (${sizeOf(s.name)})</p>
   </div>`
     : `<div class="dl-box">
     ${dlLink(d.files, 'הורדת הסקיל', 'btn btn-primary btn-lg')}
@@ -439,11 +435,11 @@ function skillPage(s) {
   <div class="skill-grid">
     <div class="skill-main">
       <section class="block" aria-labelledby="h-problem">
-        <h2 id="h-problem">הבעיה שהוא פותר</h2>
+        <h2 id="h-problem">הבעיה</h2>
         <p>${esc(s.problem)}</p>
       </section>
       <section class="block benefit" aria-labelledby="h-benefit">
-        <h2 id="h-benefit">מה זה חוסך לכם</h2>
+        <h2 id="h-benefit">חוסך לכם</h2>
         <p>${esc(s.benefit)}</p>
       </section>
       <section class="block" aria-labelledby="h-what">
@@ -451,7 +447,7 @@ function skillPage(s) {
         <p>${esc(s.what_it_does)}</p>
       </section>
       <section class="block" aria-labelledby="h-out">
-        <h2 id="h-out">מה יוצא ממנו</h2>
+        <h2 id="h-out">מה מקבלים</h2>
         <p class="output">${esc(s.output)}</p>
       </section>
 
@@ -459,25 +455,24 @@ function skillPage(s) {
 
       <section class="block trust" aria-labelledby="h-trust">
         <h2 id="h-trust">מה נבדק ומה עוד לא</h2>
-        <p class="muted">בדקתי כל סקיל בשימוש אמיתי לפני שהעליתי אותו. זה מה שראיתי, כולל מה שעוד לא עובד מושלם.</p>
         <div class="trust-cols">
           <div class="trust-ok">
             <h3><span class="ico" aria-hidden="true">✓</span> נבדק ועבד${shown(s.tested_on).length ? ` (${esc(shown(s.tested_on).join(', '))})` : ''}</h3>
             <ul>${s.tested.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
           </div>
           <div class="trust-warn">
-            <h3><span class="ico" aria-hidden="true">!</span> עוד לא, או שכדאי לדעת</h3>
+            <h3><span class="ico" aria-hidden="true">!</span> כדאי לדעת</h3>
             <ul>${s.limitations.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
           </div>
         </div>
-        ${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).length ? `<p class="muted small">${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).map((p) => `ב-<bdi>${esc(p)}</bdi>`).join(' ו')} זה אותו פורמט ואמור לעבוד, אבל עוד לא בדקתי שם.</p>` : ''}
+        ${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).length ? `<p class="muted small">${shown(s.compatible).filter((p) => !s.tested_on.includes(p)).map((p) => `ב-<bdi>${esc(p)}</bdi>`).join(' ו')} זה אמור לעבוד, אבל עוד לא בדקתי.</p>` : ''}
       </section>
 
       ${workshopBox('skill')}
 
       ${installSteps(s, d)}
 
-      <p class="signup-link"><a href="/#signup">רוצים מייל שבועי עם הסקילים החדשים, או לנסות סקילים לפני כולם? להרשמה</a></p>
+      <p class="signup-link"><a href="/#signup">מייל שבועי עם סקילים חדשים: להרשמה</a></p>
 
       <section class="block" aria-labelledby="h-source">
         <h2 id="h-source">מה כתוב בסקיל</h2>
@@ -495,7 +490,7 @@ function skillPage(s) {
     <aside class="skill-side">
       ${s.requires.length ? `<section class="side-box">
         <h2>דורש גם</h2>
-        <p class="muted small">הסקיל הזה קורא לסקילים האלה. ההורדה הראשית כוללת אותם.</p>
+        <p class="muted small">ההורדה הראשית כוללת אותם.</p>
         <ul>${s.requires.map((n) => `<li>${skillLink(n)}</li>`).join('')}</ul>
       </section>` : ''}
       ${callers.length ? `<section class="side-box">
@@ -528,11 +523,10 @@ function bundleSkill(n) {
   const s = byName.get(n);
   return `<li class="card bundle-skill">
   <h3 class="card-title"><a href="/skills/${n}/">${esc(s.title)}</a></h3>
-  <p class="card-problem">${esc(firstSentence(s.problem))}</p>
-  <p class="card-benefit"><span class="card-benefit-label">מה זה חוסך לכם:</span> ${esc(s.benefit)}</p>
+  <p class="card-benefit">${esc(s.benefit)}</p>
   <p class="card-note">מפעילים עם <code dir="ltr">@${esc(n)}</code></p>
   <div class="card-actions">
-    <a class="btn btn-ghost btn-sm" href="/skills/${n}/">מה בדיוק הוא עושה</a>
+    <a class="btn btn-ghost btn-sm" href="/skills/${n}/">פרטים</a>
     <a class="btn btn-ghost btn-sm" href="${zipHref(n)}" download aria-label="הורדת ${esc(s.title)} בלבד">רק הסקיל הזה</a>
   </div>
 </li>`;
@@ -548,11 +542,11 @@ function bundlePage(b) {
       <p class="eyebrow">${bundleEyebrow(b)}</p>
       <h1>${esc(b.title)}</h1>
       <p class="lead-sm">${esc(b.description)}</p>
-      ${b.video ? `<p><a class="btn btn-ghost btn-video" href="${esc(b.video)}" target="_blank" rel="noopener">צפו בסרטון על הסקילים${b.video_minutes ? ` (${esc(b.video_minutes)} דקות)` : ''}</a></p>` : ''}
+      ${b.video ? `<p><a class="btn btn-ghost btn-video" href="${esc(b.video)}" target="_blank" rel="noopener">סרטון על הסקילים${b.video_minutes ? ` (${esc(b.video_minutes)} דקות)` : ''}</a></p>` : ''}
     </div>
     <div class="dl-box">
       ${dlLink(b.skills, `הורדת ${b.skills.length} הסקילים`, 'btn btn-primary btn-lg')}
-      <p class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)} · לא צריך לחלץ כלום</p>
+      <p class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)}</p>
       ${dlStatus}
     </div>
   </header>
@@ -568,15 +562,14 @@ function bundlePage(b) {
     <h2 id="h-install">איך מתקינים</h2>
     ${VIDEO ? videoSkill(VIDEO) : ''}
     <ol class="install">
-      <li>לוחצים על הכפתור הראשי בדף הזה ויורדים ${filesCount(b.skills.length)}. <b>לא פותחים אותם</b>. אם הדפדפן שואל, מאשרים הורדה של כמה קבצים.</li>
-      <li>בג'מיני פותחים את <b>הגדרות</b>, ונכנסים ל-<b>סקילים (כישורים)</b>.</li>
-      <li>בוחרים <b>העלאת סקיל</b> ובוחרים קובץ אחד. חוזרים על זה לכל קובץ.</li>
-      <li>פותחים צ'אט חדש, כותבים <code dir="ltr">@</code> ואת שם הסקיל, למשל <code dir="ltr">@${esc(first)}</code>, ובוחרים אותו מהרשימה שנפתחת. ככה הוא רץ בוודאות.</li>
-      <li>חסר קובץ? בכל כרטיס למעלה יש כפתור "רק הסקיל הזה".</li>
+      <li>מורידים את ${filesCount(b.skills.length)}. <b>לא פותחים אותם</b>. הדפדפן שואל? מאשרים.</li>
+      <li>בג'מיני: <b>הגדרות</b> ← <b>סקילים (כישורים)</b> ← <b>העלאת סקיל</b>. מעלים כל קובץ בנפרד.</li>
+      <li>בצ'אט חדש כותבים <code dir="ltr">@</code> ואת שם הסקיל, למשל <code dir="ltr">@${esc(first)}</code>, ובוחרים מהרשימה.</li>
+      <li>חסר קובץ? בכל כרטיס יש "רק הסקיל הזה".</li>
     </ol>
   </section>
 
-  <p class="signup-link"><a href="/#signup">רוצים מייל שבועי עם הסקילים החדשים? להרשמה</a></p>
+  <p class="signup-link"><a href="/#signup">מייל שבועי עם סקילים חדשים: להרשמה</a></p>
 </div>`;
 
   write(`bundles/${b.id}/index.html`, page({
@@ -597,7 +590,7 @@ write('bundles/index.html', page({
   <nav class="crumbs" aria-label="מיקום"><a href="/">כל הסקילים</a> <span aria-hidden="true">‹</span> <span>חבילות</span></nav>
   <h1>חבילות</h1>
   ${topicBundles.length ? `<section class="block" aria-labelledby="h-topic"><h2 id="h-topic">לפי נושא</h2><ul class="bundle-rows">${topicBundles.map(bundleRow).join('')}</ul></section>` : ''}
-  ${workshopBundles.length ? `<section class="block" id="workshops" aria-labelledby="h-ws"><h2 id="h-ws">מהסדנאות</h2><p class="muted">החבילה של כל סדנה, לפי התאריך. החדשה ראשונה.</p><ul class="bundle-rows">${workshopBundles.map(bundleRow).join('')}</ul></section>` : ''}
+  ${workshopBundles.length ? `<section class="block" id="workshops" aria-labelledby="h-ws"><h2 id="h-ws">מהסדנאות</h2><p class="muted">החדשה ראשונה.</p><ul class="bundle-rows">${workshopBundles.map(bundleRow).join('')}</ul></section>` : ''}
 </div>`,
 }));
 
