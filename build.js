@@ -194,11 +194,10 @@ ${body}
 }
 
 const tag = (text, cls = '') => `<span class="tag ${cls}">${esc(text)}</span>`;
+// One tag for every skill: "מתאים ל-Gemini" (Omri, 2026-11-19: two tags, "נבדק" and "מתאים", confused him).
+// What was really tested stays on the skill page, under "מה נבדק ומה עוד לא".
 function platformTags(s) {
-  return [
-    ...shown(s.tested_on).map((p) => tag(`נבדק ב-${p}`, 'tag-tested')),
-    ...shown(s.compatible).filter((p) => !s.tested_on.includes(p)).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')),
-  ].join('');
+  return platformsOf(s).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')).join('');
 }
 
 function downloadFor(s) {

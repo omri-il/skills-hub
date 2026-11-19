@@ -156,8 +156,6 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { font-size: .82rem; border-radius: 6px; padding: 2px 9px; border: 1px solid var(--line); background: var(--paper); color: var(--ink-2); }
 .tag-subject { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
-.tag-tested { background: var(--ok-soft); border-color: transparent; color: var(--ok); font-weight: 600; }
-.tag-tested::before { content: "✓ "; }
 
 /* buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-weight: 600; font-size: .98rem; text-decoration: none; border-radius: 10px; padding: 9px 18px; min-height: 44px; border: 1.5px solid transparent; cursor: pointer; }
