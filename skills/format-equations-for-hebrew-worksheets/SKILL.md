@@ -27,6 +27,8 @@ import re, subprocess, zipfile, shutil
 HEB = re.compile(r"[\u0590-\u05FF]")
 
 def build(md, out, chem=False):
+    if chem:  # תו כיוון שנכתב כטקסט הופך לתו עצמו
+        md = md.replace("{lrm}", "‎").replace("\\u200e", "‎")
     open("worksheet.md", "w", encoding="utf-8").write(md)
     # בכימיה: שורות צמודות (חתימה, שורות כותרת) נשארות שורות נפרדות
     fmt = "markdown+hard_line_breaks" if chem else "markdown"
