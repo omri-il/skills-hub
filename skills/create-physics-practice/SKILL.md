@@ -233,7 +233,7 @@ a = (0 − 20 m/s) ÷ 5 s = −4 m/s²
 מעתיקים את כל הקוד הזה, תו בתו ובלי לקצר, לאותה הרצה שבה מוגדרת `build` מסקיל העיצוב. אחר כך קוראים ל-`build_physics(md, "<שם-באנגלית>.docx")` במקום ל-`build`.
 
 ```python
-import io, math, re
+import io, math, os, re, tempfile
 import docx
 import matplotlib
 matplotlib.use("Agg")
@@ -406,10 +406,16 @@ def build_physics(md, out):
         print("בשרטוט שבשאלה שמתי ? במקום מספר שלא כתוב בשאלה:", ", ".join(hidden), "| אם זה נתון, לכתוב אותו גם בטקסט של השאלה")
     problems = ["קוד הציורים קוצר (%s). מעתיקים את כל קוד הציורים שוב, תו בתו, ובונים שוב" % ", ".join(short)] if short else []
     md = re.sub(r"^[ \t]*\[draw (.*?)\][ \t]*$", keep, md, flags=re.M)
-    problems += list(build(md, out, chem=True))
+    work = tempfile.mkdtemp()  # worksheet.md and the first .docx stay out of the teacher's folder: one file per run
+    here = os.getcwd()
+    os.chdir(work)
+    try:
+        problems += list(build(md, os.path.join(work, "sheet.docx"), chem=True))
+    finally:
+        os.chdir(here)
     if "[draw" in md:
         problems.append("ציור בתוך משפט. [draw ...] רק בשורה משלו")
-    doc = docx.Document(out)
+    doc = docx.Document(os.path.join(work, "sheet.docx"))
     paras = doc.paragraphs
     for k, p in enumerate(paras):
         m = re.fullmatch(r"FIGURE(\d+)END", p.text.strip())
