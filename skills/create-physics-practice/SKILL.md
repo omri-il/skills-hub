@@ -142,8 +142,8 @@ lang: he
 - קו שבור לפי נקודות: `[draw graph x=t:s y=v:m/s pts=0,0;4,12;10,12;12,0]`
 - פונקציה: `[draw graph x=t:s y=x:m fn=5+2*t^2 from=0 to=4]`. המשתנה בנוסחה הוא האות של הציר האופקי.
 - `x=` ו-`y=` הם שם הגודל והיחידה, עם נקודתיים ביניהם.
-- הקוד כותב על הצירים את הערכים של הנקודות. `nums=no` מסתיר את המספרים, לשאלה איכותית.
-- גרף בשאלה מראה רק את מה שהתלמיד קורא ממנו. אם השאלה מבקשת להמיר יחידה או לחשב ערך, הגרף לא מראה את התוצאה (למשל: הנתון ב-km/h, והגרף ב-m/s עם `nums=no`, או בלי גרף).
+- הקוד כותב על הצירים את הערכים של הנקודות. `nums=no` מסתיר את המספרים, לשאלה איכותית. `hide=20` מראה "?" במקום הערך 20 בציר המהירות. בשאלה עם km/h הקוד עושה את זה לבד.
+- גרף בשאלה מראה רק את מה שהתלמיד קורא ממנו. אם השאלה מבקשת להמיר יחידה או לחשב ערך, הגרף לא מראה את התוצאה (למשל: הנתון ב-km/h, והגרף ב-m/s עם `hide=`, או בלי גרף).
 - הקוד מדפיס לכל קטע את השיפוע ואת השטח שמתחת לקו (בגרף מהירות-זמן: התאוצה וההעתק).
 
 ### שרטוט כוחות: `[draw forces ...]`
@@ -261,6 +261,8 @@ def _graph(d, notes, problems):
         if d.get("nums") != "no":
             ax.set_xticks(sorted(set(xs)))
             ax.set_yticks(sorted(set(ys + [0.0])))
+            hid = [float(v) for v in d.get("hide", "").split(",") if v]
+            ax.set_yticklabels(["?" if any(abs(t - v) < 0.05 for v in hid) else _n(t) for t in ax.get_yticks()])
     else:
         expr = d["fn"].replace("^", "**")
         a, b = float(d.get("from", 0)), float(d["to"])
@@ -371,6 +373,18 @@ def build_physics(md, out):
                 hidden.append("%s=%s" % (f.group(1), f.group(2)))
                 return "%s=?:" % f.group(1)
             return re.sub(r"\b(\w+)=([\d.]+):", one, m.group(0))
+        kmh = [float(k) / 3.6 for k in re.findall(r"(?<![\d.])(\d+(?:\.\d+)?)\s*km/h", text)]
+        def hide_graph(m):
+            g = m.group(0)
+            if "nums=no" in g or "m/s" not in g or not kmh:
+                return g
+            ys = [float(p.split(",")[1]) for p in re.findall(r"-?[\d.]+,-?[\d.]+", g)]
+            hit = sorted({_n(y) for y in ys for v in kmh if abs(y - v) < 0.05})
+            if hit:
+                hidden.append("גרף: ? במקום %s m/s (תוצאת ההמרה מ-km/h)" % ",".join(hit))
+                return g.rstrip()[:-1].rstrip() + " hide=%s]" % ",".join(hit)
+            return g
+        sec = re.sub(r"^[ \t]*\[draw graph .*?\][ \t]*$", hide_graph, sec, flags=re.M)
         return re.sub(r"^[ \t]*\[draw forces .*?\][ \t]*$", hide, sec, flags=re.M)
     student = "".join(per_question(sec) for sec in re.split(r"(?m)(?=^#{1,2} )", student))
     md = student + ("" if key_at < 0 else md[key_at:])
