@@ -15,6 +15,9 @@
 // what to point at on camera. Only Omri sees it: the JSON files are NOT in git (the repo is public), and
 // /admin/api/video-help/<name> sends one only with the login cookie. assets/video-help.js shows it as a side
 // panel on the skill page (key H hides it for a recording); /admin/video/<name> is the same for a phone.
+//
+// Share links (Omri, 2026-11-20): the same panel makes a short link for one place Omri shares a skill in
+// (admin/share.js), and /admin/stats shows what came from each link.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -23,6 +26,7 @@ import { execFileSync } from 'node:child_process';
 import YAML from 'yaml';
 import { loadSkills } from '../lib/skills.js';
 import { stats } from './stats.js';
+import { readShares, createShare, cleanLabel, goClicks } from './share.js';
 
 const PASSWORD = process.env.ADMIN_PASSWORD || '';
 const SECRET = process.env.ADMIN_SECRET || '';
@@ -253,7 +257,7 @@ function listPage(note) {
   return page('ניהול הסקילים', `${msg}${warn}
 <p><a class="btn" href="/admin/stats">📊 נתוני האתר: מי נכנס ומה הורידו</a></p>
 <p>הסתרה מורידה סקיל מהאתר, ואפשר להחזיר אותו בלחיצה. מחיקה מוחקת אותו מהתיקייה. כל שינוי מופיע באתר תוך כ-10 שניות.</p>
-<p>🎬 עזרה לסרטון: בעמוד של כל סקיל באתר יש חלון צד שרק אתה רואה. המקש H מסתיר אותו ומחזיר אותו, גם לפני הקלטה.</p>
+<p>🎬 🔗 בעמוד של כל סקיל באתר יש חלון צד שרק אתה רואה: עזרה לסרטון, ולינק מקוצר לכל מקום שבו משתפים את הסקיל. המקש H מסתיר אותו ומחזיר אותו, גם לפני הקלטה.</p>
 <h2>מופיעים באתר (${shown.length})</h2>${shown.map((s) => row(s, requiredBy)).join('') || '<p>אין.</p>'}
 <h2>מוסתרים (${hidden.length})</h2>${hidden.map((s) => row(s, requiredBy)).join('') || '<p>אין סקילים מוסתרים.</p>'}`);
 }
@@ -289,10 +293,18 @@ td.n{direction:ltr;text-align:end;font-variant-numeric:tabular-nums;width:6em}
 .tabs a.on{background:var(--navy);color:#fff}
 .small{color:var(--ink2);font-size:.88rem}`;
 
-function statsPage(days) {
+const fmtDate = (iso) => { const d = new Date(iso); return Number.isNaN(+d) ? '' : d.toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric' }); };
+
+async function statsPage(days) {
   const { all } = state();
   const titles = new Map(all.map((s) => [s.name, s.title]));
-  const st = stats({ days, titles });
+  const st = stats({ days, titles, shares: readShares() });
+  const clicks = st.shares.length ? await goClicks() : new Map();
+  const shareRows = st.shares.map((s) => `<tr><td>${esc(s.label)}<br><a class="small" href="${esc(s.short)}" target="_blank" rel="noopener"><bdi>${esc(s.short.replace(/^https?:\/\//, ''))}</bdi></a></td><td>${esc(titles.get(s.skill) || s.skill)}</td><td><bdi>${esc(fmtDate(s.created))}</bdi></td><td class="n">${clicks.has(s.code) ? clicks.get(s.code) : ''}</td><td class="n">${s.visitors}</td><td class="n">${s.downloaders}</td><td class="n">${s.signups}</td></tr>`).join('');
+  const sharesBlock = `<h2 id="shares">🔗 לינקים ששיתפת</h2>
+${st.shares.length ? `<div style="overflow-x:auto"><table><tr><th>איפה שיתפת</th><th>סקיל</th><th>נוצר</th><th>לחצו</th><th>מבקרים</th><th>הורידו</th><th>השאירו מייל</th></tr>${shareRows}</table></div>
+<p class="small">"לחצו" = כל לחיצה על הלינק המקוצר. "מבקרים" = אנשים שונים שהגיעו ממנו ב-${days} הימים האלה. "הורידו" ו"השאירו מייל" = מה שעשו המבקרים האלה אחרי שהגיעו. הלחיצות שלך לא נספרות.</p>`
+    : '<p class="note">עוד אין לינקים. בעמוד של כל סקיל באתר, בחלון הצד שרק אתה רואה, כותבים איפה משתפים ולוחצים "ליצור לינק מקוצר".</p>'}`;
   const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : '');
   const maxDay = Math.max(1, ...st.perDay.map((d) => d.visitors));
   const tabs = [7, 30, 90].map((d) => `<a class="${d === days ? 'on' : ''}" href="/admin/stats?days=${d}">${d} ימים</a>`).join('');
@@ -300,7 +312,7 @@ function statsPage(days) {
   const body = `<p><a href="/admin">‹ לרשימת הסקילים</a></p>
 <h1 style="font-size:1.25rem;margin:0 0 10px">📊 נתוני האתר</h1>
 <div class="tabs">${tabs}</div>
-${none ? '<p class="note">עוד אין נתונים לתקופה הזאת. הרישום של האתר התחיל ב-19.11.2026.</p>' : `
+${none ? `<p class="note">עוד אין נתונים לתקופה הזאת. הרישום של האתר התחיל ב-19.11.2026.</p>${sharesBlock}` : `
 <div class="big">
 <div><b>${st.visitors}</b><span>מבקרים</span></div>
 <div><b>${st.downloaders}</b><span>הורידו לפחות סקיל אחד</span></div>
@@ -309,6 +321,8 @@ ${none ? '<p class="note">עוד אין נתונים לתקופה הזאת. הר
 <div><b>${pct(st.phone, st.phone + st.desktop)}</b><span>מהטלפון</span></div>
 </div>
 <p class="small">מבקר = כתובת אחת עם דפדפן אחד. בית ספר עם רשת אחת יכול להיספר כמבקר אחד. הביקורים שלך לא נספרים. המספרים מ-<bdi>${esc(st.first.split('-').reverse().join('.'))}</bdi> ואילך. לפני 19.11.2026 נספרו רק דפי הסקילים וההורדות, בלי דף הבית.</p>
+
+${sharesBlock}
 
 <h2>הסקילים: כמה נכנסו וכמה הורידו</h2>
 <table><tr><th>סקיל</th><th>נכנסו לדף</th><th>הורידו</th></tr>
@@ -423,6 +437,35 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify(h || { error: 'none' }));
     }
 
+    // Share links for the skill page's panel (assets/video-help.js). JSON, never a redirect.
+    const shareApi = url.pathname.match(/^\/admin\/api\/share(?:\/([a-z0-9-]+))?$/);
+    if (shareApi) {
+      const json = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'X-Content-Type-Options': 'nosniff' };
+      const out = (code, o) => { res.writeHead(code, json); res.end(JSON.stringify(o)); };
+      if (!loggedIn(req)) { res.writeHead(401, { ...json, 'Set-Cookie': seenCookie(false) }); return res.end('{"error":"login"}'); }
+      if (req.method === 'GET' && shareApi[1]) {
+        const mine = readShares().filter((s) => s.skill === shareApi[1]);
+        const st = mine.length ? stats({ days: 90, shares: mine }) : { shares: [] };
+        return out(200, { links: st.shares.map(({ id, label, short, created, visitors, downloaders, signups }) => ({ id, label, short, created, visitors, downloaders, signups })) });
+      }
+      if (req.method === 'POST' && !shareApi[1]) {
+        const f = await body(req);
+        const skill = f.get('skill') || '';
+        const label = cleanLabel(f.get('label'));
+        if (!label) return out(400, { error: 'לכתוב איפה משתפים את הלינק.' });
+        if (!/^[a-z0-9-]+$/.test(skill) || !loadSkills(REPO).all.some((s) => s.name === skill)) return out(404, { error: 'הסקיל הזה לא קיים.' });
+        try {
+          const e = await createShare({ skill, label, site: SITE, dry: DRY });
+          console.log(`${new Date().toISOString()} share ${skill} ${e.id} ${e.short}`);
+          return out(200, { id: e.id, label: e.label, short: e.short, created: e.created, visitors: 0, downloaders: 0, signups: 0 });
+        } catch (err) {
+          console.error(err);
+          return out(502, { error: 'לא הצלחתי ליצור לינק מקוצר. לנסות שוב בעוד דקה.' });
+        }
+      }
+      return out(405, { error: 'method' });
+    }
+
     if (!loggedIn(req)) {
       if (req.method === 'GET' && (url.pathname === '/admin' || url.pathname === '/admin/')) return send(res, 200, loginPage());
       return go(res, '/admin');
@@ -434,7 +477,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === 'GET' && url.pathname === '/admin/stats') {
       const d = Number(url.searchParams.get('days'));
-      return send(res, 200, statsPage([7, 30, 90].includes(d) ? d : 30));
+      return send(res, 200, await statsPage([7, 30, 90].includes(d) ? d : 30));
     }
     const video = url.pathname.match(/^\/admin\/video\/([a-z0-9-]+)\/?$/);
     if (req.method === 'GET' && video) return send(res, 200, helpPage(video[1]));
