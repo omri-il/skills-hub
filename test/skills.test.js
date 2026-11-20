@@ -89,6 +89,25 @@ test('who: a value outside the list fails, and no who means everyone', () => {
   assert.deepEqual(none.skills[0].who, WHO);
 });
 
+test('fixes ("איך זה עוזר?"): intro + 1-4 lines, each with without and with', () => {
+  const good = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  intro: 'בלי הסקיל:'\n  list:\n  - without: 'טעות.'\n    with: 'תיקון.'") } }));
+  assert.deepEqual(good.errors, []);
+  assert.deepEqual(good.skills[0].fixes, { intro: 'בלי הסקיל:', list: [{ without: 'טעות.', with: 'תיקון.' }] });
+  const half = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  intro: 'בלי הסקיל:'\n  list:\n  - without: 'טעות.'") } }));
+  assert.ok(half.errors.some((e) => e.includes('both "without" and "with"')));
+  const noIntro = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  list:\n  - without: 'a'\n    with: 'b'") } }));
+  assert.ok(noIntro.errors.some((e) => e.includes('fixes needs "intro"')));
+  const five = "fixes:\n  intro: 'x'\n  list:\n" + "  - without: 'a'\n    with: 'b'\n".repeat(5);
+  assert.ok(loadSkills(fixture({ 'a-skill': { meta: META('a-skill', five) } })).errors.some((e) => e.includes('keep 1-4')));
+  assert.equal(loadSkills(fixture({ 'a-skill': {} })).skills[0].fixes, null);
+});
+
+test('every shown skill has a "איך זה עוזר?" block', () => {
+  const { skills } = loadSkills(ROOT);
+  const missing = skills.filter((s) => !s.fixes).map((s) => s.name);
+  assert.deepEqual(missing, []);
+});
+
 test('subject groups: a subject in no group fails, fits adds a group, own groups come from subjects', () => {
   assert.ok(loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace('[מתמטיקה]', '[אומנות]') } }))
     .errors.some((e) => e.includes('subject "אומנות" is in no group')));
