@@ -14,11 +14,12 @@
     - ai-resistant-task
     - red-team
 - id: math-chem-worksheets
-  title: חבילת דפי עבודה במתמטיקה ובכימיה
-  description: דף עבודה עם משוואות או ניסוחים, ומפתח שנבדק.
+  title: חבילת דפי עבודה במתמטיקה, בכימיה ובפיזיקה
+  description: דף עבודה עם משוואות, ניסוחים או גרפים, ומפתח שנבדק.
   skills:
     - create-math-practice
     - create-chemistry-practice
+    - create-physics-practice
     - format-equations-for-hebrew-worksheets
     - verify-solutions
 - id: assessment-with-ai
