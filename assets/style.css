@@ -353,3 +353,8 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 /* The story behind the skill (Omri, 2026-11-19): optional `story` in meta.yaml */
 .story { border-inline-start: 4px solid var(--cta); padding-inline-start: 16px; }
 .story p { max-width: 65ch; line-height: 1.7; margin: 0 0 8px; }
+/* "איך זה עוזר?" (Omri, 2026-11-20): the mistake in plain text, the skill's fix in bold under it */
+.fixes { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; }
+.fixes p { margin: 0 0 8px; max-width: 65ch; }
+.fixes-list { margin: 0; padding-inline-start: 20px; display: grid; gap: 10px; max-width: 65ch; line-height: 1.6; }
+.fix-with { display: block; font-weight: 600; color: var(--accent); }

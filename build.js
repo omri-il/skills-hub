@@ -454,6 +454,14 @@ function skillPage(s) {
         <h2 id="h-story">הסיפור מאחורי הסקיל</h2>
         ${s.story.split(/\n\s*\n/).map((para) => `<p>${he(para.trim())}</p>`).join('')}
       </section>` : '';
+  // Omri, 2026-11-20: "why not just ask Gemini?": the mistakes Gemini makes without the skill, and the fix for each.
+  const fixesBlock = s.fixes ? `<section class="block fixes" aria-labelledby="h-fixes">
+        <h2 id="h-fixes">איך זה עוזר?</h2>
+        <p>${he(s.fixes.intro)}</p>
+        <ul class="fixes-list">${s.fixes.list.map((f) => `
+          <li><span class="fix-without">${he(f.without)}</span> <span class="fix-with">${he(f.with)}</span></li>`).join('')}
+        </ul>
+      </section>` : '';
   const usesBlock = plain ? `<section class="block what-skill" aria-labelledby="h-what-skill">
         <h2 id="h-what-skill">מה זה סקיל?</h2>
         <p>קובץ קטן עם הוראות לג'מיני. מעלים אותו פעם אחת, ומאז ג'מיני יודע לעשות את המשימה הזאת טוב. לא צריך לזכור שום פקודה: מבקשים כרגיל.</p>
@@ -510,6 +518,8 @@ function skillPage(s) {
       ${proBox(s)}
 
       ${plain ? usesBlock : factsBlocks}
+
+      ${fixesBlock}
 
       ${storyBlock}
 
