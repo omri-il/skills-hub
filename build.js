@@ -501,10 +501,7 @@ function skillPage(s) {
     </div>
     <div class="dl-col">
       ${dl}
-      <figure class="qr qr-skill">
-        <img src="/skills/${esc(s.name)}/qr.svg" width="110" height="110" alt="קוד QR לדף הסקיל ${esc(s.title)}">
-        <figcaption>סורקים ומקבלים את הסקיל בטלפון</figcaption>
-      </figure>
+      <img class="qr-skill" src="/skills/${esc(s.name)}/qr.svg" width="110" height="110" alt="קוד QR להורדת הסקיל ${esc(s.title)} בטלפון">
     </div>
   </header>
 
