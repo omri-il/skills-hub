@@ -499,7 +499,13 @@ function skillPage(s) {
       <p class="meta-line">גרסה <bdi dir="ltr">${esc(s.version)}</bdi> · עודכן ${fmtDate(s.updated)} · <code dir="ltr">${esc(s.name)}</code></p>
       <div class="tags">${s.subjects.map((x) => tag(x, 'tag-subject')).join('')}${platformTags(s)}</div>
     </div>
-    ${dl}
+    <div class="dl-col">
+      ${dl}
+      <figure class="qr qr-skill">
+        <img src="/skills/${esc(s.name)}/qr.svg" width="110" height="110" alt="קוד QR לדף הסקיל ${esc(s.title)}">
+        <figcaption>סורקים ומקבלים את הסקיל בטלפון</figcaption>
+      </figure>
+    </div>
   </header>
 
   <div class="skill-grid">
@@ -572,6 +578,11 @@ function skillPage(s) {
     canonical: `/skills/${s.name}/`,
     body,
   }));
+}
+// Omri, 2026-11-20: a small QR on every skill page, so in a workshop he can say "scan it and you have the skill".
+// It holds only that page's fixed public address; utm_source=qr counts these visits under "qr" in /admin/stats.
+for (const s of skills) {
+  write(`skills/${s.name}/qr.svg`, await QRCode.toString(`${SITE}/skills/${s.name}/?utm_source=qr`, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#002045', light: '#ffffff' } }));
 }
 skills.forEach(skillPage);
 
