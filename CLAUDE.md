@@ -118,6 +118,13 @@ Help for recording a video about a skill: 2 demo requests, Gemini's answer witho
 - `history-before-2026-11-19.log` in the same folder: the old lines from nginx's shared log (`deploy/import_old_log.py`), skill pages and zips only, from 8.11.2026. They include Omri's own visits.
 - A visitor = one address with one browser. A link with `?utm_source=whatsapp` (or newsletter, facebook, qr…) is counted under that source.
 
+## Share links (Omri, 2026-11-20)
+
+- On every skill page, the admin side panel (`assets/video-help.js`, now shown on every skill page, also with no video helper) has "🔗 לינק לשיתוף": Omri writes where he shares the skill ("קבוצת מורי מתמטיקה"), and gets a go.omri-iram.co.il short link for that one place, copied at once.
+- Behind it: `https://skills.omri-iram.co.il/skills/<name>/?utm_source=s-<id>` (6 letters). `admin/share.js` makes the short link through the go-shortener API on the VPS (`GO_ADMIN_PASSWORD` in `deploy/skills-hub-admin.env` = the go-shortener's own `ADMIN_PASSWORD`) and keeps the list in `SHARE_FILE`, default `/root/Projects/skills-share/links.json`. NOT in git: the repo is public and the labels name Omri's groups.
+- Routes: `GET /admin/api/share/<name>` (this skill's links with counts, for the panel), `POST /admin/api/share` (skill, label). Login cookie only, JSON.
+- `/admin/stats` → "🔗 לינקים ששיתפת" (`#shares`): per link, clicks (the go-shortener's count), visitors, who downloaded after, who left an email after. A visitor belongs to the last share link they opened. The sources table names a share link by its label.
+
 ## Hormozi parts (Omri, 2026-11-19)
 
 - **Share picture:** `assets/og.png` (1200x630) from `deploy/og/og.html`; render again with `deploy/og/make_og.ps1`.

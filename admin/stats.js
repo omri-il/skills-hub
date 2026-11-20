@@ -26,11 +26,17 @@ function readLines() {
       try { out.push(JSON.parse(line)); } catch {}
     }
   }
-  return out;
+  // In time order: the rotated files are read in any order, and a share link counts what happens after it.
+  return out.sort((a, b) => (String(a.t) < String(b.t) ? -1 : String(a.t) > String(b.t) ? 1 : 0));
 }
 
+// A share link made on a skill page (admin/share.js): ?utm_source=s-<id>.
+const shareOf = (uri) => /[?&]utm_source=s-([a-z0-9]{6})(?:&|$)/.exec(uri || '')?.[1] || null;
+
 // Where a visit came from, in words Omri uses. No referrer = a link opened from WhatsApp, an email app or typed in.
-function source(r, uri) {
+function source(r, uri, labels) {
+  const sh = shareOf(uri);
+  if (sh) return `🔗 ${labels.get(sh) || 'לינק ששיתפת'}`;
   const utm = /[?&]utm_source=([^&]+)/.exec(uri || '');
   if (utm) {
     const u = decodeURIComponent(utm[1]).toLowerCase();
@@ -54,7 +60,12 @@ function source(r, uri) {
 
 const dayOf = (t) => String(t).slice(0, 10);
 
-export function stats({ days = 30, titles = new Map(), now = new Date() } = {}) {
+// shares: the list from admin/share.js. A visitor who opened a share link belongs to it, and so do the
+// skills that visitor downloads and the email box filled after it (the last share link they opened).
+export function stats({ days = 30, titles = new Map(), now = new Date(), shares = [] } = {}) {
+  const labels = new Map(shares.map((s) => [s.id, s.label]));
+  const perShare = new Map(shares.map((s) => [s.id, { v: new Set(), d: new Set(), signups: 0 }]));
+  const cameBy = new Map(); // visitor -> share id
   const from = new Date(now.getTime() - days * 864e5).toISOString().slice(0, 10);
   const visitors = new Set();
   const byDay = new Map(); // day -> {v:Set, d:Set}
@@ -74,7 +85,12 @@ export function stats({ days = 30, titles = new Map(), now = new Date() } = {}) 
     const d = byDay.get(day) || { v: new Set(), d: new Set() };
     byDay.set(day, d);
 
-    if (e.m === 'POST' && uri === '/signup' && e.s >= 200 && e.s < 300) { signups++; continue; }
+    if (e.m === 'POST' && uri === '/signup' && e.s >= 200 && e.s < 300) {
+      signups++;
+      const by = perShare.get(cameBy.get(who));
+      if (by) by.signups++;
+      continue;
+    }
     if (e.m !== 'GET' || e.s !== 200 && e.s !== 206 && e.s !== 304) continue;
 
     const zip = ZIP.exec(uri);
@@ -84,6 +100,7 @@ export function stats({ days = 30, titles = new Map(), now = new Date() } = {}) 
       if (!skillDl.has(zip[1])) skillDl.set(zip[1], new Set());
       skillDl.get(zip[1]).add(who);
       d.d.add(`${who}|${zip[1]}`);
+      perShare.get(cameBy.get(who))?.d.add(who);
       continue;
     }
     if (!PAGE.test(uri)) continue;
@@ -91,7 +108,9 @@ export function stats({ days = 30, titles = new Map(), now = new Date() } = {}) 
     if (uri === '/') home++;
     const sk = /^\/skills\/([a-z0-9-]+)/.exec(uri);
     if (sk) { if (!skillViews.has(sk[1])) skillViews.set(sk[1], new Set()); skillViews.get(sk[1]).add(who); }
-    const src = source(e.r, e.u);
+    const sh = shareOf(e.u);
+    if (sh && perShare.has(sh)) { cameBy.set(who, sh); perShare.get(sh).v.add(who); }
+    const src = source(e.r, e.u, labels);
     if (src) { if (!sources.has(src)) sources.set(src, new Set()); sources.get(src).add(who); }
   }
 
@@ -109,6 +128,10 @@ export function stats({ days = 30, titles = new Map(), now = new Date() } = {}) 
       views: (skillViews.get(n) || new Set()).size,
       downloads: (skillDl.get(n) || new Set()).size,
     })).sort((a, b) => b.downloads - a.downloads || b.views - a.views),
+    shares: shares.map((s) => {
+      const x = perShare.get(s.id);
+      return { ...s, visitors: x.v.size, downloaders: x.d.size, signups: x.signups };
+    }).sort((a, b) => String(b.created).localeCompare(String(a.created))),
     sources: [...sources.entries()].map(([s, v]) => ({ source: s, visitors: v.size })).sort((a, b) => b.visitors - a.visitors),
   };
 }
