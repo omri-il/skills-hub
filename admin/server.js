@@ -26,7 +26,7 @@ import { execFileSync } from 'node:child_process';
 import YAML from 'yaml';
 import { loadSkills } from '../lib/skills.js';
 import { stats } from './stats.js';
-import { readShares, createShare, cleanLabel, goClicks } from './share.js';
+import { readShares, createShare, cleanLabel, goClicks, pageOf, checkPage } from './share.js';
 
 const PASSWORD = process.env.ADMIN_PASSWORD || '';
 const SECRET = process.env.ADMIN_SECRET || '';
@@ -86,10 +86,22 @@ function undo() {
 
 // ---------- the skills ----------
 function state() {
-  const { all, errors } = loadSkills(REPO);
+  const { all, errors, bundles } = loadSkills(REPO);
   const requiredBy = new Map(all.map((s) => [s.name, []]));
   for (const s of all) for (const r of s.requires) requiredBy.get(r)?.push(s);
-  return { all, errors, requiredBy, byName: new Map(all.map((s) => [s.name, s])) };
+  return { all, errors, bundles, requiredBy, byName: new Map(all.map((s) => [s.name, s])) };
+}
+
+// A share link's page in words, for the stats table.
+function pageTitle(p, all, bundles) {
+  if (p === '/') return 'דף הבית';
+  if (p === '/bundles/') return 'כל החבילות';
+  const m = /^\/(skills|bundles)\/([a-z0-9-]+)\/$/.exec(p);
+  if (!m) return p;
+  if (m[1] === 'skills') return all.find((s) => s.name === m[2])?.title || m[2];
+  const b = bundles.find((x) => x.id === m[2]);
+  if (!b) return m[2];
+  return /^חבילה/.test(b.title) ? b.title : `חבילה: ${b.title}`;
 }
 
 function setHidden(name, on) {
@@ -296,15 +308,15 @@ td.n{direction:ltr;text-align:end;font-variant-numeric:tabular-nums;width:6em}
 const fmtDate = (iso) => { const d = new Date(iso); return Number.isNaN(+d) ? '' : d.toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric' }); };
 
 async function statsPage(days) {
-  const { all } = state();
+  const { all, bundles } = state();
   const titles = new Map(all.map((s) => [s.name, s.title]));
   const st = stats({ days, titles, shares: readShares() });
   const clicks = st.shares.length ? await goClicks() : new Map();
-  const shareRows = st.shares.map((s) => `<tr><td>${esc(s.label)}<br><a class="small" href="${esc(s.short)}" target="_blank" rel="noopener"><bdi>${esc(s.short.replace(/^https?:\/\//, ''))}</bdi></a></td><td>${esc(titles.get(s.skill) || s.skill)}</td><td><bdi>${esc(fmtDate(s.created))}</bdi></td><td class="n">${clicks.has(s.code) ? clicks.get(s.code) : ''}</td><td class="n">${s.visitors}</td><td class="n">${s.downloaders}</td><td class="n">${s.signups}</td></tr>`).join('');
+  const shareRows = st.shares.map((s) => `<tr><td>${esc(s.label)}<br><a class="small" href="${esc(s.short)}" target="_blank" rel="noopener"><bdi>${esc(s.short.replace(/^https?:\/\//, ''))}</bdi></a></td><td>${esc(pageTitle(pageOf(s), all, bundles))}</td><td><bdi>${esc(fmtDate(s.created))}</bdi></td><td class="n">${clicks.has(s.code) ? clicks.get(s.code) : ''}</td><td class="n">${s.visitors}</td><td class="n">${s.downloaders}</td><td class="n">${s.signups}</td></tr>`).join('');
   const sharesBlock = `<h2 id="shares">🔗 לינקים ששיתפת</h2>
-${st.shares.length ? `<div style="overflow-x:auto"><table><tr><th>איפה שיתפת</th><th>סקיל</th><th>נוצר</th><th>לחצו</th><th>מבקרים</th><th>הורידו</th><th>השאירו מייל</th></tr>${shareRows}</table></div>
+${st.shares.length ? `<div style="overflow-x:auto"><table><tr><th>איפה שיתפת</th><th>עמוד</th><th>נוצר</th><th>לחצו</th><th>מבקרים</th><th>הורידו</th><th>השאירו מייל</th></tr>${shareRows}</table></div>
 <p class="small">"לחצו" = כל לחיצה על הלינק המקוצר. "מבקרים" = אנשים שונים שהגיעו ממנו ב-${days} הימים האלה. "הורידו" ו"השאירו מייל" = מה שעשו המבקרים האלה אחרי שהגיעו. הלחיצות שלך לא נספרות.</p>`
-    : '<p class="note">עוד אין לינקים. בעמוד של כל סקיל באתר, בחלון הצד שרק אתה רואה, כותבים איפה משתפים ולוחצים "ליצור לינק מקוצר".</p>'}`;
+    : '<p class="note">עוד אין לינקים. בכל עמוד באתר (סקיל, חבילה או דף הבית), בחלון הצד שרק אתה רואה, כותבים איפה משתפים ולוחצים "ליצור לינק מקוצר".</p>'}`;
   const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : '');
   const maxDay = Math.max(1, ...st.perDay.map((d) => d.visitors));
   const tabs = [7, 30, 90].map((d) => `<a class="${d === days ? 'on' : ''}" href="/admin/stats?days=${d}">${d} ימים</a>`).join('');
@@ -437,26 +449,30 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify(h || { error: 'none' }));
     }
 
-    // Share links for the skill page's panel (assets/video-help.js). JSON, never a redirect.
+    // Share links for the page panel (assets/video-help.js). JSON, never a redirect.
+    // GET /admin/api/share?page=/bundles/x/ (or the older /admin/api/share/<skill>): that page's links.
+    // POST page (or the older skill), label: a new link.
     const shareApi = url.pathname.match(/^\/admin\/api\/share(?:\/([a-z0-9-]+))?$/);
     if (shareApi) {
       const json = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'X-Content-Type-Options': 'nosniff' };
       const out = (code, o) => { res.writeHead(code, json); res.end(JSON.stringify(o)); };
       if (!loggedIn(req)) { res.writeHead(401, { ...json, 'Set-Cookie': seenCookie(false) }); return res.end('{"error":"login"}'); }
-      if (req.method === 'GET' && shareApi[1]) {
-        const mine = readShares().filter((s) => s.skill === shareApi[1]);
+      if (req.method === 'GET') {
+        const p = shareApi[1] ? `/skills/${shareApi[1]}/` : url.searchParams.get('page') || '';
+        const mine = readShares().filter((s) => pageOf(s) === p);
         const st = mine.length ? stats({ days: 90, shares: mine }) : { shares: [] };
         return out(200, { links: st.shares.map(({ id, label, short, created, visitors, downloaders, signups }) => ({ id, label, short, created, visitors, downloaders, signups })) });
       }
       if (req.method === 'POST' && !shareApi[1]) {
         const f = await body(req);
-        const skill = f.get('skill') || '';
+        const asked = f.get('page') || (f.get('skill') ? `/skills/${f.get('skill')}/` : '');
         const label = cleanLabel(f.get('label'));
         if (!label) return out(400, { error: 'לכתוב איפה משתפים את הלינק.' });
-        if (!/^[a-z0-9-]+$/.test(skill) || !loadSkills(REPO).all.some((s) => s.name === skill)) return out(404, { error: 'הסקיל הזה לא קיים.' });
+        const page = checkPage(asked, loadSkills(REPO));
+        if (!page) return out(404, { error: 'העמוד הזה לא קיים באתר.' });
         try {
-          const e = await createShare({ skill, label, site: SITE, dry: DRY });
-          console.log(`${new Date().toISOString()} share ${skill} ${e.id} ${e.short}`);
+          const e = await createShare({ page, label, site: SITE, dry: DRY });
+          console.log(`${new Date().toISOString()} share ${page} ${e.id} ${e.short}`);
           return out(200, { id: e.id, label: e.label, short: e.short, created: e.created, visitors: 0, downloaders: 0, signups: 0 });
         } catch (err) {
           console.error(err);

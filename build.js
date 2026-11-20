@@ -176,7 +176,7 @@ function page({ title, description, body, canonical }) {
 <link rel="preload" href="/assets/fonts/Rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css?v=${ASSET_V}">
 <script src="/assets/app.js?v=${ASSET_V}" defer></script>
-${canonical.startsWith('/skills/') ? `<script src="/assets/video-help.js?v=${ASSET_V}" defer></script>\n` : ''}</head>
+${canonical === '/' || canonical.startsWith('/skills/') || canonical.startsWith('/bundles/') ? `<script src="/assets/video-help.js?v=${ASSET_V}" defer></script>\n` : ''}</head>
 <body>
 <a class="skip" href="#main">דילוג לתוכן</a>
 <header class="topbar"><div class="wrap topbar-in">

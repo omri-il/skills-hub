@@ -1,4 +1,4 @@
-// Share links (Omri, 2026-11-20): on a skill page, Omri writes where he shares the skill ("קבוצת מורי
+// Share links (Omri, 2026-11-20): on a skill page, the home page or a bundle page, Omri writes where he shares the skill ("קבוצת מורי
 // מתמטיקה"), and gets a go.omri-iram.co.il short link for that one place. The long link behind it ends with
 // ?utm_source=s-<id>, so admin/stats.js counts who came from that place, who downloaded and who left an email.
 //
@@ -40,11 +40,26 @@ const newId = (taken) => {
   }
 };
 
+// The page a link opens (Omri, 2026-11-20: also the home page and the bundle pages). Links made before
+// that have only `skill`.
+export const pageOf = (s) => s.page || `/skills/${s.skill}/`;
+
+// The pages a share link may open: "/", "/bundles/", "/bundles/<id>/", "/skills/<name>/".
+// skills, bundles: what loadSkills() returns. Returns null for any other path.
+export function checkPage(p, { all = [], bundles = [] } = {}) {
+  if (p === '/' || p === '/bundles/') return p;
+  const m = /^\/(skills|bundles)\/([a-z0-9-]+)\/$/.exec(String(p || ''));
+  if (!m) return null;
+  const ok = m[1] === 'skills' ? all.some((s) => s.name === m[2]) : bundles.some((b) => b.id === m[2]);
+  return ok ? p : null;
+}
+
 // dry: a local test with no go-shortener password gets a made-up short link.
-export async function createShare({ skill, label, site, dry = false }) {
+export async function createShare({ page, label, site, dry = false }) {
   const list = readShares();
   const id = newId(new Set(list.map((s) => s.id)));
-  const long = `${site}/skills/${skill}/?utm_source=s-${id}`;
+  const long = `${site}${page}?utm_source=s-${id}`;
+  const skill = /^\/skills\/([a-z0-9-]+)\/$/.exec(page)?.[1];
   let short; let code = '';
   if (!GO_PASSWORD) {
     if (!dry) throw new Error('GO_ADMIN_PASSWORD is not set');
@@ -60,7 +75,7 @@ export async function createShare({ skill, label, site, dry = false }) {
     if (!r.ok || !j.short) throw new Error(`go-shortener: ${j.error || r.status}`);
     short = j.short; code = j.code || '';
   }
-  const entry = { id, skill, label, short, code, long, created: new Date().toISOString() };
+  const entry = { id, page, ...(skill ? { skill } : {}), label, short, code, long, created: new Date().toISOString() };
   list.push(entry);
   writeShares(list);
   return entry;
