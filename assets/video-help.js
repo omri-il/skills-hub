@@ -7,10 +7,14 @@
 // Share links (Omri, 2026-11-20): the panel also makes a short link for one place he shares the skill in
 // (/admin/api/share, admin/share.js), and lists this skill's links with what came from each. So the panel
 // shows on every skill page, also one with no video helper.
+// Since 2026-11-20 (Omri: "also on the home page and the bundles") it also shows on the home page, /bundles/
+// and each bundle page, with the share box only.
 (function () {
-  var m = location.pathname.match(/^\/skills\/([a-z0-9-]+)\/?$/);
-  if (!m || !window.fetch || !/(?:^|;\s*)skills_admin_seen=1/.test(document.cookie)) return;
-  var name = m[1];
+  var path = location.pathname.replace(/\/?$/, '/');
+  if (!/^\/(?:bundles\/(?:[a-z0-9-]+\/)?|skills\/[a-z0-9-]+\/)?$/.test(path)) return;
+  if (!window.fetch || !/(?:^|;\s*)skills_admin_seen=1/.test(document.cookie)) return;
+  var m = path.match(/^\/skills\/([a-z0-9-]+)\/$/);
+  var name = m ? m[1] : null;
   var KEY = 'videoHelpHidden';
   function get() { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } }
   function put(v) { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {} }
@@ -20,7 +24,10 @@
       .then(function (r) { return r.status === 401 ? 'login' : r.ok ? r.json() : null; })
       .catch(function () { return null; });
   }
-  Promise.all([ask('/admin/api/video-help/' + name), ask('/admin/api/share/' + name)]).then(function (a) {
+  Promise.all([
+    name ? ask('/admin/api/video-help/' + name) : Promise.resolve(null),
+    ask('/admin/api/share?page=' + encodeURIComponent(path))
+  ]).then(function (a) {
     if (a[0] === 'login' || a[1] === 'login') return; // the login ended: nothing to show
     build(a[0] && a[0].demos ? a[0] : null, a[1] && a[1].links ? a[1].links : []);
   });
@@ -136,7 +143,8 @@
     function shareBox(list) {
       var box = el('div', 'vh-share');
       box.appendChild(el('b', null, '🔗 לינק לשיתוף'));
-      box.appendChild(el('p', 'vh-small', 'לכתוב איפה משתפים. כל מקום מקבל לינק מקוצר משלו, ובנתוני האתר רואים מה הגיע ממנו.'));
+      box.appendChild(el('p', 'vh-small', (name ? 'הלינק פותח את הסקיל הזה. ' : path === '/' ? 'הלינק פותח את דף הבית. ' : path === '/bundles/' ? 'הלינק פותח את רשימת החבילות. ' : 'הלינק פותח את החבילה הזאת. ') +
+        'לכתוב איפה משתפים. כל מקום מקבל לינק מקוצר משלו, ובנתוני האתר רואים מה הגיע ממנו.'));
       var form = el('form');
       var input = el('input');
       input.type = 'text';
@@ -180,7 +188,7 @@
         if (!label) { err.textContent = 'לכתוב קודם איפה משתפים.'; err.hidden = false; input.focus(); return; }
         make.disabled = true;
         var b = new URLSearchParams();
-        b.append('skill', name);
+        b.append('page', path);
         b.append('label', label);
         fetch('/admin/api/share', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: b.toString() })
           .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })

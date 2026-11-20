@@ -10,7 +10,7 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'skills-log-'));
 process.env.SKILLS_LOG_DIR = dir;
 process.env.SHARE_FILE = path.join(dir, 'links.json');
 const { stats } = await import('../admin/stats.js');
-const { cleanLabel, readShares } = await import('../admin/share.js');
+const { cleanLabel, readShares, checkPage, pageOf } = await import('../admin/share.js');
 
 const UA_A = 'Mozilla/5.0 (Linux; Android 14) Chrome/130 Mobile';
 const UA_B = 'Mozilla/5.0 (Windows NT 10.0) Chrome/130';
@@ -50,4 +50,12 @@ test('a label is one clean line', () => {
 
 test('no list file = no links', () => {
   assert.deepEqual(readShares(), []);
+});
+
+test('a share link opens a skill, a bundle, the bundle list or the home page, and nothing else', () => {
+  const site = { all: [{ name: 'create-test' }], bundles: [{ id: 'math-pack' }] };
+  for (const p of ['/', '/bundles/', '/bundles/math-pack/', '/skills/create-test/']) assert.equal(checkPage(p, site), p);
+  for (const p of ['/skills/nope/', '/bundles/nope/', '/admin/', '//evil.com/', '/skills/create-test', 'https://x.com/']) assert.equal(checkPage(p, site), null);
+  assert.equal(pageOf({ skill: 'create-test' }), '/skills/create-test/', 'a link made before 2026-11-20 has only skill');
+  assert.equal(pageOf({ page: '/' }), '/');
 });
