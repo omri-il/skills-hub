@@ -232,9 +232,12 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .dl-box .btn { width: 100%; }
 .dl-alt { font-size: .9rem; margin: 12px 0 0; }
 /* Omri, 2026-11-20: the QR sits in the download box, beside the button, with no sentence. */
-.dl-col { display: flex; align-items: center; gap: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-.dl-col .dl-box { flex: 1; min-width: 0; background: none; border: 0; padding: 0; }
-.qr-skill { flex: none; display: block; width: 110px; height: 110px; background: #fff; border-radius: 6px; padding: 4px; }
+/* Omri, 2026-11-21: beside the button the QR squeezed the button into 3 lines. Now it sits under the box, centred. */
+.dl-col { display: flex; flex-direction: column; align-items: stretch; gap: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+.dl-col .dl-box { min-width: 0; background: none; border: 0; padding: 0; }
+.qr-skill { flex: none; display: block; align-self: center; width: 110px; height: 110px; background: #fff; border-radius: 6px; padding: 4px; }
+.dl-pick { margin: 0 0 10px; font-weight: 600; }
+.dl-hosts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 /* On a phone the visitor is already there: no QR (same as the home page). */
 @media (max-width: 559px) { .qr-skill { display: none; } }
 @media (max-width: 820px) { .skill-head { grid-template-columns: 1fr; padding: 20px; } }
