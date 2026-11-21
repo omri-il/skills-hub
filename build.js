@@ -147,6 +147,24 @@ write('assets/qr.svg', qrSvg);
 
 // ---------- layout ----------
 const ASSET_V = Date.now().toString(36);
+// Search engines: who made the site, so a search for "סקילים עומרי אירם" / "skills Omri Iram" finds it.
+const LD_HOME = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite', '@id': `${SITE}/#website`, url: `${SITE}/`,
+      name: 'סקילים למורים של עומרי אירם',
+      alternateName: ['Gemini Skills למורים', 'Omri Iram Skills', 'סקילים לג\'מיני', 'Skills עומרי אירם'],
+      inLanguage: 'he', author: { '@id': 'https://omri-iram.co.il/#person' },
+    },
+    {
+      '@type': 'Person', '@id': 'https://omri-iram.co.il/#person',
+      name: 'עומרי אירם', alternateName: 'Omri Iram', url: 'https://omri-iram.co.il/',
+      sameAs: ['https://www.youtube.com/@being-a-teacher'],
+    },
+  ],
+}).replace(/</g, '\\u003c');
+
 function page({ title, description, body, canonical }) {
   return `<!doctype html>
 <html lang="he" dir="rtl">
@@ -167,6 +185,8 @@ function page({ title, description, body, canonical }) {
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="סקילים חינמיים לג'מיני למורים, מאת עומרי אירם">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="עומרי אירם (Omri Iram)">
+${canonical === '/' ? `<script type="application/ld+json">${LD_HOME}</script>\n` : ''}
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/Rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css?v=${ASSET_V}">
@@ -381,7 +401,7 @@ ${signupSection}
 `;
 
 write('index.html', page({
-  title: 'סקילים למורים | עומרי אירם',
+  title: 'סקילים למורים (Gemini Skills) | עומרי אירם',
   description: `${mains.length} סקילים לג'מיני למורים ולצוותי הנהלה: לוח בחירה לתלמידים, וסיכום ומשימות לצוות. כל סקיל עבר בדיקה של 25 בקשות. הורדה חינם, בלי הרשמה.`,
   canonical: '/',
   body: homeBody,
@@ -618,7 +638,7 @@ function skillPage(s) {
 </div>`;
 
   write(`skills/${s.name}/index.html`, page({
-    title: `${s.title} | סקילים למורים`,
+    title: `${s.title} | סקילים של עומרי אירם`,
     description: firstSentence(s.problem),
     canonical: `/skills/${s.name}/`,
     body,
