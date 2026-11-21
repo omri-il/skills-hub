@@ -111,14 +111,14 @@ def tidy(md):
     # כל שורה פסקה משלה, כל סעיף (א., ב.) בשורה משלו, ואין משוואה באמצע משפט
     n = {"moved": 0, "plain": 0, "parts": 0, "leak": 0}
     out, block, prev, prev_table = [], None, False, False
-    for i, raw in enumerate(md.split("\n")):
+    for raw in md.split("\n"):
         s = raw.strip()
         if block:
             out.append(raw)
             if (block == "front" and s in ("---", "...")) or (block == "math" and s.endswith("$$")) or (block == "code" and s.startswith(FENCE)):
                 block, prev, prev_table = None, True, False
             continue
-        if i == 0 and s == "---":
+        if s == "---" and not any(x.strip() for x in out):  # הכותרת dir: rtl, גם אחרי שורה ריקה
             block = "front"
             out.append(raw)
             continue
