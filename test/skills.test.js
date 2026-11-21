@@ -41,7 +41,8 @@ function fixture(skills, bundles) {
 test('the real skills in this repo pass every check', () => {
   const { errors, skills } = loadSkills(ROOT);
   assert.deepEqual(errors, []);
-  assert.ok(skills.length >= 4);
+  // At least one skill is shown. Omri's bar (2026-11-21: 20/25 at 7+, none under 5) left 3, so no fixed higher count.
+  assert.ok(skills.length >= 1);
 });
 
 test('name must match the folder', () => {
