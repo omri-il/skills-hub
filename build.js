@@ -318,7 +318,7 @@ const homeBody = `
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-text">
     <h1>חוסכים שעות עבודה בכל שבוע,<br class="br-wide"> עם Gemini Skills.</h1>
-    <p class="lead">דף עבודה או לוח בחירה מג'מיני, מוכן להדפסה. עברית שלא מתהפכת ומפתח תשובות שנבדק. חינם, בלי הרשמה.</p>
+    <p class="lead">לוח בחירה לתלמידים, וסיכום ומשימות לצוות, מוכנים מג'מיני תוך דקה. חינם, בלי הרשמה.</p>
     <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
       <li><span><b>מורידים</b> חבילה או סקיל</span></li>
@@ -382,7 +382,7 @@ ${signupSection}
 
 write('index.html', page({
   title: 'סקילים למורים | עומרי אירם',
-  description: `${mains.length} סקילים לג'מיני למורים בכל המקצועות: דפי עבודה, לוחות בחירה, ניתוח ציונים ומכתבים להורים, בעברית שלא מתהפכת. הורדה חינם, בלי הרשמה.`,
+  description: `${mains.length} סקילים לג'מיני למורים ולצוותי הנהלה: לוח בחירה לתלמידים, וסיכום ומשימות לצוות. כל סקיל עבר בדיקה של 25 בקשות. הורדה חינם, בלי הרשמה.`,
   canonical: '/',
   body: homeBody,
 }));
