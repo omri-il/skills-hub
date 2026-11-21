@@ -33,13 +33,14 @@ MAX_H = 360          # CSS px of the crop
 LABEL = {"before": "✗ בלי הסקיל", "after": "✓ עם הסקיל"}
 
 NARROW = """<style>
-.wrap{width:auto!important;padding:14px!important}.wrap>.tag,.wrap>.meta{display:none}
+.wrap{width:auto!important;padding:14px!important;padding-inline-start:44px!important}.wrap>.tag,.wrap>.meta{display:none}
 .teacher{margin-inline-start:28px!important}.msg{font-size:15px}
 .msg table{table-layout:fixed;width:100%!important}.msg th,.msg td{overflow-wrap:anywhere;font-size:12.5px;padding:4px 5px;line-height:1.45}
 .hl{position:absolute;pointer-events:none;border-radius:3px}
 .hl-before{background:rgba(220,53,69,.16);box-shadow:inset 0 -3px 0 #c0392b}
 .hl-after{background:rgba(40,167,69,.16);box-shadow:inset 0 -3px 0 #1e7e34}
 .cap{position:absolute;z-index:5;height:40px;background:#f3f5f8;display:flex;align-items:center;padding-inline:8px;box-sizing:border-box}
+.arrow{position:absolute;z-index:6;pointer-events:none}
 .badge{font:700 15px 'Segoe UI',Arial,sans-serif;padding:4px 12px;border-radius:6px}
 .badge-before{background:#fbe3e4;color:#a12a35}.badge-after{background:#d4edda;color:#155724}
 </style>"""
@@ -56,6 +57,7 @@ LOCATE = """([anchor, label, maxH, kind, above]) => {
   range.setStart(...pos(at)); range.setEnd(...pos(at + anchor.length - 1)); range.setEnd(range.endContainer, range.endOffset + 1);
   const wrap = document.querySelector('.wrap');
   let top = 1e9, bottom = 0;
+  const first = range.getClientRects()[0];
   for (const r of range.getClientRects()) {
     const d = document.createElement('div'); d.className = 'hl hl-' + kind;
     Object.assign(d.style, { left: (r.left - 2) + 'px', top: (r.top + scrollY - 1) + 'px', width: (r.width + 4) + 'px', height: (r.height + 2) + 'px' });
@@ -74,6 +76,15 @@ LOCATE = """([anchor, label, maxH, kind, above]) => {
   cap.dir = 'rtl';
   const b = document.createElement('span'); b.className = 'badge badge-' + kind; b.textContent = label;
   cap.appendChild(b); document.body.appendChild(cap);
+  // Omri, 2026-11-21: an arrow at the mistake (red) or the fix (green), in the free start-side gutter,
+  // pointing at the first line of the mark, so it never covers text (NOTES.md item 40).
+  const color = kind === 'before' ? '#c0392b' : '#1e7e34';
+  const ax = w.right - 40, ay = first.top + scrollY + first.height / 2 - 12;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'arrow'); svg.setAttribute('width', '36'); svg.setAttribute('height', '24'); svg.setAttribute('viewBox', '0 0 36 24');
+  svg.innerHTML = `<path d="M34 12 H10" stroke="${color}" stroke-width="4.5" stroke-linecap="round"/><path d="M15 3 L3 12 L15 21" fill="none" stroke="${color}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  Object.assign(svg.style, { left: ax + 'px', top: ay + 'px' });
+  document.body.appendChild(svg);
   return { x: w.left, y, width: w.width, height: h };
 }"""
 
