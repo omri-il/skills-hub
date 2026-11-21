@@ -648,10 +648,13 @@ function bundlePage(b) {
       <p class="lead-sm">${esc(b.description)}</p>
       ${b.video ? `<p><a class="btn btn-ghost btn-video" href="${esc(b.video)}" target="_blank" rel="noopener">סרטון על הסקילים${b.video_minutes ? ` (${esc(b.video_minutes)} דקות)` : ''}</a></p>` : ''}
     </div>
-    <div class="dl-box">
-      ${dlLink(b.skills, `הורדת ${b.skills.length} הסקילים`, 'btn btn-primary btn-lg')}
-      <p class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)}</p>
-      ${dlStatus}
+    <div class="dl-col">
+      <div class="dl-box">
+        ${dlLink(b.skills, `הורדת ${b.skills.length} הסקילים`, 'btn btn-primary btn-lg')}
+        <p class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)}</p>
+        ${dlStatus}
+      </div>
+      <img class="qr-skill" src="${bundleHref(b)}qr.svg" width="110" height="110" alt="קוד QR לחבילה ${esc(b.title)} בטלפון">
     </div>
   </header>
 
@@ -682,6 +685,10 @@ function bundlePage(b) {
     canonical: bundleHref(b),
     body,
   }));
+}
+// Omri, 2026-11-21: the same small QR on every bundle page (also the workshop bundles), like the skill pages.
+for (const b of bundles) {
+  write(`bundles/${b.id}/qr.svg`, await QRCode.toString(`${SITE}${bundleHref(b)}?utm_source=qr`, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#002045', light: '#ffffff' } }));
 }
 bundles.forEach(bundlePage);
 
