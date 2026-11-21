@@ -15,11 +15,10 @@
     - red-team
 - id: elementary-math
   title: חבילה למורי מתמטיקה ביסודי
-  description: 3 סקילים לכיתות א'-ו'.
+  description: 2 סקילים לכיתות א'-ו'.
   skills:
     - create-elementary-math-practice
     - create-choice-board
-    - verify-solutions
 - id: math-worksheets
   title: חבילה למורי מתמטיקה בחטיבה ובתיכון
   description: דף תרגול עם משוואות, גרפים וציורים, ומפתח שנבדק.
