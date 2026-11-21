@@ -1,18 +1,18 @@
 {
- "model": "gemini-3.5-flash",
+ "model": "Gemini app, Hydrogen Thinking",
  "made": "2026-11-21",
  "rows": [
   {
-   "quote": "C° 120",
-   "label": "סימולציה של מודל החלקיקים שנבנתה בלי סקיל",
+   "quote": "C° 140",
+   "label": "סימולציה של מודל החלקיקים שנבנתה בלי סקיל, בטלפון: מוצק מימין, גז משמאל",
    "size": {
     "before": [
      440,
-     401
+     277
     ],
     "after": [
      440,
-     344
+     284
     ]
    },
    "before": "check-science-simulation-1-before.webp",
