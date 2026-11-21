@@ -30,6 +30,8 @@
   --ok-soft: #E7F4EA;
   --warn: #7D5700;
   --warn-soft: #FFF4DC;
+  --bad: #9B2C2C;
+  --bad-soft: #FDF0F0;
   --focus: #1A56DB;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(0, 32, 69, .06), 0 6px 18px rgba(0, 32, 69, .07);
@@ -51,6 +53,8 @@
     --ok-soft: #0F3326;
     --warn: #FFC250;
     --warn-soft: #2E2410;
+    --bad: #FFA3A3;
+    --bad-soft: #3A1620;
     --focus: #8AB4FF;
     --shadow: none;
     color-scheme: dark;
@@ -356,8 +360,22 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 /* The story behind the skill (Omri, 2026-11-19): optional `story` in meta.yaml */
 .story { border-inline-start: 4px solid var(--cta); padding-inline-start: 16px; }
 .story p { max-width: 65ch; line-height: 1.7; margin: 0 0 8px; }
-/* "איך זה עוזר?" (Omri, 2026-11-20): the mistake in plain text, the skill's fix in bold under it */
+/* "איך זה עוזר?" (Omri, 2026-11-21): a table "בלי הסקיל / עם הסקיל", Gemini's own words under each mistake */
 .fixes { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; }
-.fixes p { margin: 0 0 8px; max-width: 65ch; }
-.fixes-list { margin: 0; padding-inline-start: 20px; display: grid; gap: 10px; max-width: 65ch; line-height: 1.6; }
-.fix-with { display: block; font-weight: 600; color: var(--accent); }
+.fixes-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; line-height: 1.55; }
+.fixes-table th { text-align: start; font-size: 15px; padding: 8px 12px; }
+.fixes-table th.fix-no { background: var(--bad-soft); color: var(--bad); border-start-start-radius: 10px; }
+.fixes-table th.fix-yes { background: var(--ok-soft); color: var(--ok); border-start-end-radius: 10px; }
+.fixes-table td { vertical-align: top; padding: 12px; border-bottom: 1px solid var(--line); }
+.fixes-table tr:last-child td { border-bottom: 0; }
+.fixes-table td.fix-with { font-weight: 600; color: var(--accent); }
+.fix-quote { display: block; margin-top: 6px; font-size: 14px; color: var(--ink-2); background: var(--paper); border-inline-start: 3px solid var(--line); padding: 4px 8px; border-radius: 4px; unicode-bidi: plaintext; }
+.fixes-source { margin: 10px 0 0; font-size: 13px; color: var(--ink-2); }
+.fixes-also { margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed var(--line); max-width: 65ch; }
+.fixes-also b { color: var(--accent); }
+h2 + .fixes-also { border-top: 0; padding-top: 0; margin-top: 0; }
+@media (max-width: 560px) {
+  .fixes { padding: 14px 12px; }
+  .fixes-table th, .fixes-table td { padding: 9px 7px; font-size: 15px; }
+  .fix-quote { font-size: 13px; }
+}

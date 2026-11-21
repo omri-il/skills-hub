@@ -89,15 +89,17 @@ test('who: a value outside the list fails, and no who means everyone', () => {
   assert.deepEqual(none.skills[0].who, WHO);
 });
 
-test('fixes ("איך זה עוזר?"): intro + 1-4 lines, each with without and with', () => {
-  const good = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  intro: 'בלי הסקיל:'\n  list:\n  - without: 'טעות.'\n    with: 'תיקון.'") } }));
+test('fixes ("איך זה עוזר?"): source + 1-4 rows, each with without and with; or only also', () => {
+  const good = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  source: 'מתוך 2 בקשות.'\n  list:\n  - without: 'טעות.'\n    quote: 'ציטוט'\n    with: 'תיקון.'\n  also: 'בודק גם.'") } }));
   assert.deepEqual(good.errors, []);
-  assert.deepEqual(good.skills[0].fixes, { intro: 'בלי הסקיל:', list: [{ without: 'טעות.', with: 'תיקון.' }] });
-  const half = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  intro: 'בלי הסקיל:'\n  list:\n  - without: 'טעות.'") } }));
+  assert.deepEqual(good.skills[0].fixes, { source: 'מתוך 2 בקשות.', list: [{ without: 'טעות.', quote: 'ציטוט', with: 'תיקון.' }], also: 'בודק גם.' });
+  const half = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  source: 'x'\n  list:\n  - without: 'טעות.'") } }));
   assert.ok(half.errors.some((e) => e.includes('both "without" and "with"')));
-  const noIntro = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  list:\n  - without: 'a'\n    with: 'b'") } }));
-  assert.ok(noIntro.errors.some((e) => e.includes('fixes needs "intro"')));
-  const five = "fixes:\n  intro: 'x'\n  list:\n" + "  - without: 'a'\n    with: 'b'\n".repeat(5);
+  const noSource = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  list:\n  - without: 'a'\n    with: 'b'") } }));
+  assert.ok(noSource.errors.some((e) => e.includes('fixes needs "source"')));
+  const onlyAlso = loadSkills(fixture({ 'a-skill': { meta: META('a-skill', "fixes:\n  also: 'בודק גם.'") } }));
+  assert.deepEqual(onlyAlso.errors, []);
+  const five = "fixes:\n  source: 'x'\n  list:\n" + "  - without: 'a'\n    with: 'b'\n".repeat(5);
   assert.ok(loadSkills(fixture({ 'a-skill': { meta: META('a-skill', five) } })).errors.some((e) => e.includes('keep 1-4')));
   assert.equal(loadSkills(fixture({ 'a-skill': {} })).skills[0].fixes, null);
 });

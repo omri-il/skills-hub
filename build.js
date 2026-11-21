@@ -485,13 +485,19 @@ function skillPage(s) {
         <h2 id="h-story">הסיפור מאחורי הסקיל</h2>
         ${s.story.split(/\n\s*\n/).map((para) => `<p>${he(para.trim())}</p>`).join('')}
       </section>` : '';
-  // Omri, 2026-11-20: "why not just ask Gemini?": the mistakes Gemini makes without the skill, and the fix for each.
-  const fixesBlock = s.fixes ? `<section class="block fixes" aria-labelledby="h-fixes">
-        <h2 id="h-fixes">איך זה עוזר?</h2>
-        <p>${he(s.fixes.intro)}</p>
-        <ul class="fixes-list">${s.fixes.list.map((f) => `
-          <li><span class="fix-without">${he(f.without)}</span> <span class="fix-with">${he(f.with)}</span></li>`).join('')}
-        </ul>
+  // Omri, 2026-11-20: "why not just ask Gemini?". 2026-11-21: a table "בלי הסקיל / עם הסקיל", only mistakes a real
+  // run showed, each with Gemini's own words; rules nobody saw broken go under it as "הסקיל גם בודק".
+  const fx = s.fixes;
+  const fixesBlock = fx ? `<section class="block fixes" aria-labelledby="h-fixes">
+        <h2 id="h-fixes">איך זה עוזר?</h2>${fx.list.length ? `
+        <table class="fixes-table">
+          <thead><tr><th scope="col" class="fix-no"><span aria-hidden="true">✗</span> בלי הסקיל</th><th scope="col" class="fix-yes"><span aria-hidden="true">✓</span> עם הסקיל</th></tr></thead>
+          <tbody>${fx.list.map((f) => `
+            <tr><td>${he(f.without)}${f.quote ? `<q class="fix-quote">${he(f.quote)}</q>` : ''}</td><td class="fix-with">${he(f.with)}</td></tr>`).join('')}
+          </tbody>
+        </table>
+        <p class="fixes-source">${he(fx.source)}</p>` : ''}${fx.also ? `
+        <p class="fixes-also"><b>${fx.list.length ? 'הסקיל גם אומר ל-Gemini:' : 'מה הסקיל אומר ל-Gemini:'}</b> ${he(fx.also)}</p>` : ''}
       </section>` : '';
   const usesBlock = plain ? `<section class="block what-skill" aria-labelledby="h-what-skill">
         <h2 id="h-what-skill">מה זה סקיל?</h2>
