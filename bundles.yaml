@@ -16,9 +16,9 @@
 - id: elementary-math
   title: חבילה למורי מתמטיקה ביסודי
   description: 2 סקילים לכיתות א'-ו'.
+  # create-choice-board comes back here when create-elementary-math-practice is shown again (hidden under the bar, 2026-11-21).
   skills:
     - create-elementary-math-practice
-    - create-choice-board
 - id: math-worksheets
   title: חבילה למורי מתמטיקה בחטיבה ובתיכון
   description: דף תרגול עם משוואות, גרפים וציורים, ומפתח שנבדק.
@@ -68,7 +68,7 @@
     - apps-script-fix
 - id: school-leadership
   title: חבילה לצוות ההנהלה
-  description: לישיבות, להורים, לצפייה בשיעורים, למשימות ולהחלטות.
+  description: לישיבות, למשימות, להחלטות ולעדכונים לצוות.
   skills:
     - staff-meeting-tasks
     - parent-reply
