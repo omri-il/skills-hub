@@ -1,0 +1,38 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-19",
+ "rows": [
+  {
+   "quote": "5 מבדקים של 10 דקות, 5% כל אחד",
+   "label": "מתמטיקה ח', פונקציה קווית",
+   "before": "assessment-plan-1-before.webp",
+   "after": "assessment-plan-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     240
+    ]
+   }
+  },
+  {
+   "quote": "חובה לצרף צילום מסך של השיחה",
+   "label": "מתמטיקה ח', פונקציה קווית",
+   "before": "assessment-plan-2-before.webp",
+   "after": "assessment-plan-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}

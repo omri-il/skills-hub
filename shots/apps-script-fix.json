@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-19",
+ "rows": [
+  {
+   "quote": "New deployment",
+   "label": "דף שאלה שלא שומר תשובות",
+   "before": "apps-script-fix-1-before.webp",
+   "after": "apps-script-fix-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}

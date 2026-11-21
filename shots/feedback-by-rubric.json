@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-19",
+ "rows": [
+  {
+   "quote": "החלטה: כן, תלמיד 2 השתמש ב-AI",
+   "label": "שלוש תשובות במדעים",
+   "before": "feedback-by-rubric-1-before.webp",
+   "after": "feedback-by-rubric-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "שלום נועה יקרה",
+   "label": "פסקת טיעון לפי מחוון",
+   "before": "feedback-by-rubric-2-before.webp",
+   "after": "feedback-by-rubric-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "ציון סופי: 84",
+   "label": "פסקת טיעון לפי מחוון",
+   "before": "feedback-by-rubric-3-before.webp",
+   "after": "feedback-by-rubric-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}

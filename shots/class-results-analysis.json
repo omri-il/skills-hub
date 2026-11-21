@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-19",
+ "rows": [
+  {
+   "quote": "עומר בכלל לא ענה על ש4",
+   "label": "ניתוח בוחן משוואות בכיתה ח'",
+   "before": "class-results-analysis-1-before.webp",
+   "after": "class-results-analysis-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}

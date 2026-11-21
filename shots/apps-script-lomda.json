@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-19",
+ "rows": [
+  {
+   "quote": "הפתרון המושלם, הקל והחינמי ביותר עבורך",
+   "label": "לומדת מספרים מכוונים ששומרת ציונים",
+   "before": "apps-script-lomda-1-before.webp",
+   "after": "apps-script-lomda-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}
