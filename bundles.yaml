@@ -13,13 +13,39 @@
     - simple-language
     - ai-resistant-task
     - red-team
-- id: math-chem-worksheets
-  title: חבילת דפי עבודה במתמטיקה, בכימיה ובפיזיקה
-  description: דף עבודה עם משוואות, ניסוחים או גרפים, ומפתח שנבדק.
+- id: elementary-math
+  title: חבילה למורי מתמטיקה ביסודי
+  description: 3 סקילים לכיתות א'-ו'.
+  skills:
+    - create-elementary-math-practice
+    - create-choice-board
+    - verify-solutions
+- id: math-worksheets
+  title: חבילה למורי מתמטיקה בחטיבה ובתיכון
+  description: דף תרגול עם משוואות, גרפים וציורים, ומפתח שנבדק.
   skills:
     - create-math-practice
-    - create-chemistry-practice
+    - format-equations-for-hebrew-worksheets
+    - verify-solutions
+- id: physics-worksheets
+  title: חבילה למורי פיזיקה
+  description: דף תרגול עם גרפים ושרטוטי כוחות, ומפתח שנבדק.
+  skills:
     - create-physics-practice
+    - format-equations-for-hebrew-worksheets
+    - verify-solutions
+- id: chemistry-worksheets
+  title: חבילה למורי כימיה
+  description: דף תרגול עם ניסוחים וחצים, ומפתח שנבדק.
+  skills:
+    - create-chemistry-practice
+    - format-equations-for-hebrew-worksheets
+    - verify-solutions
+- id: biology-worksheets
+  title: חבילה למורי ביולוגיה
+  description: שאלות ניתוח ניסוי בסגנון הבגרות, עם טבלה, גרף ומפתח.
+  skills:
+    - biology-experiment-analysis
     - format-equations-for-hebrew-worksheets
     - verify-solutions
 - id: assessment-with-ai
@@ -41,10 +67,3 @@
     - apps-script-lomda
     - apps-script-dashboard
     - apps-script-fix
-- id: elementary-math
-  title: חבילה למורי מתמטיקה ביסודי
-  description: 3 סקילים לכיתות א'-ו'.
-  skills:
-    - create-elementary-math-practice
-    - create-choice-board
-    - verify-solutions
