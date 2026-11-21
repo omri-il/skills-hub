@@ -216,18 +216,20 @@ const tag = (text, cls = '') => `<span class="tag ${cls}">${esc(text)}</span>`;
 // One tag for every skill: "מתאים ל-Gemini" (Omri, 2026-11-19: two tags, "נבדק" and "מתאים", confused him).
 // What was really tested stays on the skill page, under "מה נבדק ומה עוד לא".
 function platformTags(s) {
-  return platformsOf(s).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')).join('') + (s.needs_pro ? tag('צריך Gemini Pro', 'tag-pro') : '');
+  return platformsOf(s).map((p) => tag(`מתאים ל-${p}`, 'tag-compat')).join('') + (s.needs_pro ? tag('צריך מצב Thinking', 'tag-pro') : '');
 }
 
-// Omri, 2026-11-19: a skill that works well only in Pro says it plainly, at the top of its page.
+// Omri, 2026-11-19: a skill that works well only in the strong mode says it plainly, at the top of its page.
+// Omri, 2026-11-21: the box says Thinking, not Pro. In the Gemini app "3.1 Pro" did not use the skill at all, and
+// "Hydrogen Thinking" ran it in all 5 math tests. needs_pro / prefers_pro keep their names (the API test bar).
 const proBox = (s) => (s.needs_pro ? `<aside class="pro-box" role="note">
-      <h2>לעבוד במצב Pro</h2>
-      <p>הסקיל הזה עובד טוב רק במצב <bdi dir="ltr">Pro</bdi> של ג'מיני. במצב המהיר הוא טועה יותר.</p>
-      <p>לפני שמתחילים: לבחור <bdi dir="ltr">Pro</bdi> בתפריט שבראש השיחה. בחשבון של בית הספר (<bdi dir="ltr">Education Plus</bdi>) יש לכם גישה ל-<bdi dir="ltr">Pro</bdi>.</p>
+      <h2>לעבוד במצב Thinking</h2>
+      <p>הסקיל הזה עובד טוב רק במצב <bdi dir="ltr">Thinking</bdi> של ג'מיני. במצב המהיר הוא טועה יותר.</p>
+      <p>לפני שמתחילים: לבחור <bdi dir="ltr">Thinking</bdi> בתפריט המצבים שבשורת הכתיבה. בחשבון של בית הספר (<bdi dir="ltr">Education Plus</bdi>) יש לכם גישה אליו.</p>
     </aside>` : s.prefers_pro ? `<aside class="pro-box" role="note">
-      <h2>עובד טוב יותר במצב Pro</h2>
-      <p>הסקיל עובד גם במצב המהיר של ג'מיני, אבל במצב <bdi dir="ltr">Pro</bdi> הוא טועה פחות.</p>
-      <p>כדאי לבחור <bdi dir="ltr">Pro</bdi> בתפריט שבראש השיחה. בחשבון של בית הספר (<bdi dir="ltr">Education Plus</bdi>) יש לכם גישה ל-<bdi dir="ltr">Pro</bdi>.</p>
+      <h2>עובד טוב יותר במצב Thinking</h2>
+      <p>הסקיל עובד גם במצב המהיר של ג'מיני, אבל במצב <bdi dir="ltr">Thinking</bdi> הוא טועה פחות.</p>
+      <p>כדאי לבחור <bdi dir="ltr">Thinking</bdi> בתפריט המצבים שבשורת הכתיבה. בחשבון של בית הספר (<bdi dir="ltr">Education Plus</bdi>) יש לכם גישה אליו.</p>
     </aside>` : '');
 
 // A helper skill (role: shared) does nothing alone (Omri, 2026-11-19): it is never downloaded by itself,
