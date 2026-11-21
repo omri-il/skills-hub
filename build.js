@@ -208,6 +208,10 @@ const proBox = (s) => (s.needs_pro ? `<aside class="pro-box" role="note">
       <h2>לעבוד במצב Pro</h2>
       <p>הסקיל הזה עובד טוב רק במצב <bdi dir="ltr">Pro</bdi> של ג'מיני. במצב המהיר הוא טועה יותר.</p>
       <p>לפני שמתחילים: לבחור <bdi dir="ltr">Pro</bdi> בתפריט שבראש השיחה. בחשבון של בית הספר (<bdi dir="ltr">Education Plus</bdi>) יש לכם גישה ל-<bdi dir="ltr">Pro</bdi>.</p>
+    </aside>` : s.prefers_pro ? `<aside class="pro-box" role="note">
+      <h2>עובד טוב יותר במצב Pro</h2>
+      <p>הסקיל עובד גם במצב המהיר של ג'מיני, אבל במצב <bdi dir="ltr">Pro</bdi> הוא טועה פחות.</p>
+      <p>כדאי לבחור <bdi dir="ltr">Pro</bdi> בתפריט שבראש השיחה. בחשבון של בית הספר (<bdi dir="ltr">Education Plus</bdi>) יש לכם גישה ל-<bdi dir="ltr">Pro</bdi>.</p>
     </aside>` : '');
 
 // A helper skill (role: shared) does nothing alone (Omri, 2026-11-19): it is never downloaded by itself,
