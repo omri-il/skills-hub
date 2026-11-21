@@ -394,6 +394,20 @@ const skillLink = (n) => `<a href="/skills/${n}/">${esc(byName.get(n).title)}</a
 
 function installSteps(s, d) {
   const isBundle = d.files.length > 1;
+  // A helper with several hosts: the files depend on the teacher's pick, so no list of one host's files.
+  const manyHosts = s.role === 'shared' && usedBy(s.name).filter((x) => x.role === 'main').length > 1;
+  if (manyHosts) {
+    return `<section class="block" aria-labelledby="h-install">
+  <h2 id="h-install">איך מתקינים</h2>
+  ${VIDEO ? videoSkill(VIDEO) : ''}
+  <ol class="install">
+    <li>בוחרים למעלה את הסקיל שלכם ומורידים. יורדים כמה קבצים. <b>לא פותחים אותם</b>. הדפדפן שואל? מאשרים.</li>
+    <li>בג'מיני: <b>הגדרות</b> ← <b>סקילים (כישורים)</b> ← <b>העלאת סקיל</b>. מעלים כל קובץ בנפרד.</li>
+    <li>בצ'אט חדש מבקשים כרגיל${exampleAsk(s) ? `, למשל: <q>${esc(exampleAsk(s))}</q>` : ''}.</li>
+    <li>גרסה חדשה? מורידים שוב ובוחרים <b>החלפת סקיל</b>. העדכון לא מגיע לבד.</li>
+  </ol>
+</section>`;
+  }
   return `<section class="block" aria-labelledby="h-install">
   <h2 id="h-install">איך מתקינים</h2>
   ${VIDEO ? videoSkill(VIDEO) : ''}
@@ -426,7 +440,20 @@ function skillPage(s) {
   const callers = usedBy(s.name);
   const host = hostOf(s);
   // A skill that needs helper skills, and a helper skill, download only as the whole set (Omri, 2026-11-19).
-  const dl = host
+  // Omri, 2026-11-21: a helper used by several skills (verify-solutions: math, chemistry, physics, biology)
+  // lets the teacher pick their own skill, never the first one in the list.
+  // Order: by the helper's own subjects list (math first, then chemistry...).
+  const rank = (h) => Math.min(...h.subjects.map((x) => (s.subjects.includes(x) ? s.subjects.indexOf(x) : 99)));
+  const hosts = s.role === 'shared' ? skills.filter((x) => x.role === 'main' && x.requires.includes(s.name)).sort((a, b) => rank(a) - rank(b)) : [];
+  const dl = hosts.length > 1
+    ? `<div class="dl-box">
+    <p class="dl-pick">סקיל עזר. הוא יורד יחד עם הסקיל שלכם. בוחרים אחד:</p>
+    <ul class="dl-hosts">${hosts.map((h) => `
+      <li>${dlLink(downloadFor(h).files, `הורדה עם ${esc(h.title)}`, 'btn btn-primary')}</li>`).join('')}
+    </ul>
+    ${dlStatus}
+  </div>`
+    : host
     ? `<div class="dl-box">
     ${dlLink(d.files, 'הורדה עם הסקיל שצריך אותו', 'btn btn-primary btn-lg')}
     <p class="card-note">סקיל עזר. הוא עובד רק עם ${skillLink(host.name)}, ולכן יורד איתו · ${filesCount(d.files.length)} · ${sizeOf(d.files)}</p>
