@@ -226,5 +226,112 @@
       "run": "prin3",
       "made": "2026-11-21"
     }
+  ],
+  "hebrew-gender-address": [
+    {
+      "quote": "אם אינכם/ן בטוחים/ות, אפשר להיעזר במורה.",
+      "after": "לקרוא היטב כל שאלה לפני הפתרון",
+      "case": "hebrew-gender-address-1-01",
+      "label": "דף עבודה בחוק אוהם",
+      "run": "heb3-r5",
+      "made": "2026-11-21",
+      "before_file": "heb3-noskill.json"
+    },
+    {
+      "quote": "אם תרצה, אוכל לעזור לך לאחד את זה לנוסח אחיד",
+      "after": "טבלת ממצאי הבדיקה",
+      "case": "hebrew-gender-address-2-01",
+      "label": "בדיקת מגדר בדף עבודה",
+      "run": "heb3-r5",
+      "made": "2026-11-21",
+      "before_file": "heb3-noskill.json"
+    }
+  ],
+  "report-card-comments": [
+    {
+      "quote": "ההתמדה וההשקעה שלה ראויות להערכה רבה, שימשיך כך!",
+      "after": "היא מפגינה חברות טובה ותמיד עוזרת לחברותיה",
+      "case": "report-card-comments-2-02",
+      "label": "הערכות בתנ\"ך ואזרחות",
+      "run": "heb3-pro3",
+      "made": "2026-11-21",
+      "before_file": "heb3-noskill.json",
+      "css": ".msg th:nth-child(1),.msg td:nth-child(1),.msg th:nth-child(2),.msg td:nth-child(2),.msg th:nth-child(4),.msg td:nth-child(4){width:30px}.msg td:nth-child(3){font-size:13.5px}"
+    },
+    {
+      "quote": "יוכל להפיק את המרב מיכולותיו הגבוהות",
+      "after": "מפגין מנהיגות מרשימה בדיונים בכיתה",
+      "case": "report-card-comments-2-02",
+      "label": "הערכות בתנ\"ך ואזרחות",
+      "run": "heb3-pro3",
+      "made": "2026-11-21",
+      "before_file": "heb3-noskill.json",
+      "css": ".msg th:nth-child(1),.msg td:nth-child(1),.msg th:nth-child(2),.msg td:nth-child(2),.msg th:nth-child(4),.msg td:nth-child(4){width:30px}.msg td:nth-child(3){font-size:13.5px}"
+    },
+    {
+      "quote": "[שם] יקר, ... [שם] יקרה, ... [שם] יקר,",
+      "after": "שמחתי כל כך לכתוב את התעודה שלך",
+      "case": "report-card-comments-1-01",
+      "label": "הערכות במתמטיקה",
+      "run": "heb3-pro3",
+      "made": "2026-11-21",
+      "before_file": "heb3-noskill.json",
+      "mark": "[שם] יקר, גאה לראות",
+      "css": ".msg th:nth-child(1),.msg td:nth-child(1),.msg th:nth-child(2),.msg td:nth-child(2),.msg th:nth-child(4),.msg td:nth-child(4){width:30px}.msg td:nth-child(3){font-size:13.5px}"
+    }
+  ],
+  "three-level-worksheet": [
+    {
+      "quote": "רמה א' – מונגשת מאוד (מיועדת לעולים חדשים ולתלמידים עם קשיי קריאה משמעותיים)",
+      "after": "נשימה תאית - דף עבודה",
+      "case": "three-level-worksheet-1-02",
+      "label": "דף נשימה תאית ב-3 רמות",
+      "run": "heb3-r5",
+      "made": "2026-11-21",
+      "before_file": "heb3-noskill.json"
+    },
+    {
+      "quote": "היא עברה דרך של 120 ק\"מ.",
+      "after": "מכונית נסעה 150 ק\"מ ב-2 שעות",
+      "case": "three-level-worksheet-2-01",
+      "label": "דף מהירות ב-3 רמות",
+      "run": "heb3-r5",
+      "made": "2026-11-21",
+      "before_file": "heb3-noskill.json"
+    }
+  ],
+  "sudden-change-plan": [
+    {
+      "quote": "יש לשכב על הקרקע ולהגן על הראש באמצעות הידיים",
+      "after": "יש לפעול לפי הנחיות פיקוד העורף",
+      "case": "sudden-change-plan-1-12",
+      "label": "לימודים רק ליד מרחב מוגן",
+      "run": "prin3",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "הנחיית ראש המועצה / הרשות המקומית גוברת",
+      "after": "התקבלו הנחיות שונות מהמחוז ומראש המועצה",
+      "case": "sudden-change-plan-1-15",
+      "label": "2 הנחיות סותרות",
+      "run": "prin3",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "לא ישפיע בכל דרך שהיא על לוח הבגרויות",
+      "after": "שאלות לגבי מועדי הבגרויות",
+      "case": "sudden-change-plan-1-19",
+      "label": "למידה מרחוק ובגרויות",
+      "run": "prin3",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "מיכל, יוצאת לחופשה רפואית ממושכת",
+      "after": "המורה מיכל לא תלמד בכיתה בתקופה הקרובה",
+      "case": "sudden-change-plan-1-13",
+      "label": "מורה שיוצאת לחופשה",
+      "run": "prin3",
+      "made": "2026-11-21"
+    }
   ]
 }

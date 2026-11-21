@@ -1,0 +1,70 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "יש לשכב על הקרקע ולהגן על הראש באמצעות הידיים",
+   "label": "לימודים רק ליד מרחב מוגן",
+   "before": "sudden-change-plan-1-before.webp",
+   "after": "sudden-change-plan-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "הנחיית ראש המועצה / הרשות המקומית גוברת",
+   "label": "2 הנחיות סותרות",
+   "before": "sudden-change-plan-2-before.webp",
+   "after": "sudden-change-plan-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "לא ישפיע בכל דרך שהיא על לוח הבגרויות",
+   "label": "למידה מרחוק ובגרויות",
+   "before": "sudden-change-plan-3-before.webp",
+   "after": "sudden-change-plan-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "מיכל, יוצאת לחופשה רפואית ממושכת",
+   "label": "מורה שיוצאת לחופשה",
+   "before": "sudden-change-plan-4-before.webp",
+   "after": "sudden-change-plan-4-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}

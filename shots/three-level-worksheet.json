@@ -1,0 +1,38 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "רמה א' – מונגשת מאוד (מיועדת לעולים חדשים ולתלמידים עם קשיי קריאה משמעותיים)",
+   "label": "דף נשימה תאית ב-3 רמות",
+   "before": "three-level-worksheet-1-before.webp",
+   "after": "three-level-worksheet-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     316
+    ],
+    "after": [
+     440,
+     262
+    ]
+   }
+  },
+  {
+   "quote": "היא עברה דרך של 120 ק\"מ.",
+   "label": "דף מהירות ב-3 רמות",
+   "before": "three-level-worksheet-2-before.webp",
+   "after": "three-level-worksheet-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}

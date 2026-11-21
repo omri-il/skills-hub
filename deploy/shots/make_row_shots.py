@@ -94,9 +94,9 @@ LOCATE = """([anchor, label, maxH, kind, above]) => {
 }"""
 
 
-def shoot(pg, kind, demo, name, anchor, out, above=90):
+def shoot(pg, kind, demo, name, anchor, out, above=90, css=""):
     r = {"request": demo["prompt"], "skill": name, "id": demo["label"], "model": ""}
-    html = page(kind, r, [demo["without" if kind == "before" else "with"]]).replace("</head>", NARROW + "</head>")
+    html = page(kind, r, [demo["without" if kind == "before" else "with"]]).replace("</head>", NARROW + (f"<style>{css}</style>" if css else "") + "</head>")
     pg.set_content(html)
     clip = pg.evaluate(LOCATE, [anchor, LABEL[kind], MAX_H, kind, above])
     if not clip:
@@ -109,17 +109,24 @@ def shoot(pg, kind, demo, name, anchor, out, above=90):
 def run_demo(a, name):
     """A row from a skill-tests run (Omri, 2026-11-21: every shown skill gets its pictures): anchors.json gives
     "run" (results/<run>), "case" (the case id) and "label". The 'without' answer is results/<run>/_before/<case>.json
-    (shots.py), the 'with' answer is the run's own answer; the turn is the one whose 'without' answer holds the quote."""
+    (shots.py), or "before_file" (a {case: answer} file in results/); the 'with' answer is the run's own answer.
+    The turn is the one whose 'without' answer holds the quote, or "mark" when the row's quote is a summary ("... ")."""
     res = TESTS / "results" / a["run"]
     case = a["case"]
-    before = json.loads((res / "_before" / f"{case}.json").read_text(encoding="utf-8"))
+    find = a.get("mark", a["quote"])
+    if a.get("before_file"):
+        # a separate no-skill run kept as {case: answer} (skill-tests/results/heb3-noskill.json): one turn only
+        nos = json.loads((TESTS / "results" / a["before_file"]).read_text(encoding="utf-8"))
+        before = {"answers": [nos[case]] if case in nos else []}
+    else:
+        before = json.loads((res / "_before" / f"{case}.json").read_text(encoding="utf-8"))
     after_f = next((f for f in res.rglob(f"{case}.json") if "_before" not in f.parts and "_grades" not in f.parts), None)
     if not after_f:
         return None
     after = json.loads(after_f.read_text(encoding="utf-8"))
     for t, w in enumerate(before["answers"]):
-        if a["quote"] in w and t < len(after["answers"]):
-            req = before["request"] if t == 0 else (before.get("followup") or before["request"])
+        if find in w and t < len(after["answers"]):
+            req = before.get("request", after["request"]) if t == 0 else (before.get("followup") or before["request"])
             return {"label": a["label"], "prompt": req, "without": w, "with": after["answers"][t],
                     "model": after.get("model"), "made": a.get("made")}
     return None
@@ -153,9 +160,9 @@ def main():
                     continue
                 n = len(out_rows) + 1
                 files = {k: f"{name}-{n}-{k}.webp" for k in ("before", "after")}
-                ok_b = shoot(pg, "before", demo, name, a["quote"], ROOT / "assets" / "shots" / files["before"])
+                ok_b = shoot(pg, "before", demo, name, a.get("mark", a["quote"]), ROOT / "assets" / "shots" / files["before"])
                 ok_a = shoot(pg, "after", demo, name, a["after"], ROOT / "assets" / "shots" / files["after"],
-                             a.get("above", 90))
+                             a.get("above", 90), a.get("css", ""))
                 if not (ok_b and ok_a):
                     problems.append(f"{name}: text not found on the rendered page ({'before' if not ok_b else 'after'})")
                     continue
