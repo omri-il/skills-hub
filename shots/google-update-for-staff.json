@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "כלי ליצירת סרטוני וידאו לימודיים מבוססי AI בקלות",
+   "label": "קישור לעדכון ב-Classroom",
+   "before": "google-update-for-staff-1-before.webp",
+   "after": "google-update-for-staff-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     240
+    ]
+   }
+  },
+  {
+   "quote": "העדכון יגיע לחשבונות של כולנו בהדרגה במהלך השבועות הקרובים",
+   "label": "Gem במטלה ב-Classroom",
+   "before": "google-update-for-staff-2-before.webp",
+   "after": "google-update-for-staff-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "כלי חדש ומתקדם שנכנס לשימוש אצלנו בסביבת הלמידה",
+   "label": "ציוץ על Gem בקלאסרום",
+   "before": "google-update-for-staff-3-before.webp",
+   "after": "google-update-for-staff-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}

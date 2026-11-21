@@ -333,5 +333,465 @@
       "run": "prin3",
       "made": "2026-11-21"
     }
+  ],
+  "google-update-for-staff": [
+    {
+      "quote": "כלי ליצירת סרטוני וידאו לימודיים מבוססי AI בקלות",
+      "after": "לא הצלחתי לפתוח את הקישור ששלחת.",
+      "case": "google-update-for-staff-1-04",
+      "label": "קישור לעדכון ב-Classroom",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "העדכון יגיע לחשבונות של כולנו בהדרגה במהלך השבועות הקרובים",
+      "after": "לפי המקור, רק ב-Google Workspace for Education Plus",
+      "case": "google-update-for-staff-2-04",
+      "label": "Gem במטלה ב-Classroom",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "כלי חדש ומתקדם שנכנס לשימוש אצלנו בסביבת הלמידה",
+      "after": "לפי פוסט של משתמש, אפשר ליצור Gem בתוך Google Classroom",
+      "case": "google-update-for-staff-4-04",
+      "label": "ציוץ על Gem בקלאסרום",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    }
+  ],
+  "student-exam-practice": [
+    {
+      "quote": "להעתיק את הטקסט שבתוך התיבה למטה ולהדביק אותו בצ'אט חדש עם ג'מיני",
+      "after": "לחזור ל-Classroom ולפרסם. ה-Gem משותף עם התלמידים מעצמו",
+      "case": "student-exam-practice-2-04",
+      "label": "סימולציית מבחן בפייתון",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "התאמות הלמידה המיוחדות עבור דנה (דיסלקציה ו-ADHD)",
+      "after": "לא הכנסתי ל-Gem שמות, ציונים או פרטים אישיים",
+      "case": "exam-practice-1-09",
+      "label": "תלמידה עם דיסלקציה בביולוגיה",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "העלה את הקובץ עם המבחן והפתרונות שלך",
+      "after": "לא הכנסתי להוראות את המבחן והפתרונות",
+      "case": "exam-practice-1-11",
+      "label": "מבחן בשברים עם פתרונות",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    }
+  ],
+  "sheet-per-teacher": [
+    {
+      "quote": "עכשיו כל הטבלה שלך תופיע בקובץ של מרים.",
+      "after": "העמודות ת\"ז, אבחון והערה אישית נשארות רק אצלכם.",
+      "case": "sheet-per-teacher-4-04",
+      "label": "תלמידי שילוב לפי מחנך",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "מורה א' יכול להיכנס ללשונית של מורה ב'",
+      "after": "לכן, הפתרון היחיד הוא קובץ נפרד לכל מורה.",
+      "case": "sheet-per-teacher-1-06",
+      "label": "14 לשוניות בלי קוד",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "חזרי על הפעולה בקבצים של יוסי ומירב.",
+      "after": "כל מורה מקבל קובץ משלו.",
+      "case": "sheet-per-teacher-1-01",
+      "label": "ציוני היסטוריה לפי מורה",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "את יכולה להעתיק כל טבלה ישירות למייל או לוואטסאפ של המחנך הרלוונטי",
+      "after": "העמודות ת\"ז ואבחון נשארות רק אצלכם.",
+      "case": "sheet-per-teacher-2-04",
+      "label": "ציוני מתמטיקה לפי מחנך",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    }
+  ],
+  "misconceptions-from-answers": [
+    {
+      "quote": "בוודאות כמעט מוחלטת (99%) בינה מלאכותית",
+      "after": "אי אפשר לדעת בוודאות מטקסט אם הוא נכתב באמצעות בינה מלאכותית",
+      "case": "misconceptions-2-11",
+      "label": "סיבות מלחמת העולם הראשונה",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "מתן (ASD), נטע (ASD), אלמוג (ASD)",
+      "after": "מתן, נטע, אלמוג",
+      "case": "misconceptions-1-10",
+      "label": "הנמלה והצרצר בחינוך מיוחד",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "יונה ברח כי הוא פחד מאנשי נינווה",
+      "after": "אפשר פשוט להעתיק ולהדביק, תשובה אחת בכל שורה",
+      "case": "misconceptions-2-06",
+      "label": "כרטיסי יציאה על ספר יונה",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "להסביר מדויק מדוע הבריטים בחרו בניסוח המעורפל",
+      "after": "הסבר מדוע קביעה זו שגויה, וציין שני הבדלים מרכזיים",
+      "case": "misconceptions-1-04",
+      "label": "הצהרת בלפור בהיסטוריה",
+      "run": "fix11-chat",
+      "made": "2026-11-21"
+    }
+  ],
+  "create-reading-comprehension": [
+    {
+      "quote": "אינני יכול לשלוח קובץ Word ישירות להורדה",
+      "after": "",
+      "case": "reading-comprehension-1-07",
+      "label": "דף על הירח לכיתה ו'",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "after_img": {
+        "png": "fix11-files/shots/reading-comprehension-1-07-after.png",
+        "box": [
+          0,
+          120,
+          935,
+          420
+        ],
+        "point": [
+          700,
+          160
+        ]
+      }
+    },
+    {
+      "quote": "רמה 1: מתקשים (טקסט מנוקד, משפטים קצרים וברורים)",
+      "after": "",
+      "case": "reading-comprehension-3-02",
+      "label": "דף על הירח ב-3 רמות",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "after_img": {
+        "png": "fix11-files/shots/reading-comprehension-3-02-after.png",
+        "box": [
+          0,
+          120,
+          935,
+          420
+        ],
+        "point": [
+          425,
+          163
+        ]
+      }
+    },
+    {
+      "quote": "הטקסט מותאם פחות או יותר לכיתות ג'-ד'",
+      "after": "לאיזו כיתה (א'-ו') הדף מיועד?",
+      "case": "reading-comprehension-2-04",
+      "label": "דף על חברות",
+      "run": "fix11-files",
+      "made": "2026-11-21"
+    }
+  ],
+  "create-physics-practice": [
+    {
+      "quote": "הנה קובץ הבוחן המסודר שתוכל להדפיס או להעתיק לוורד",
+      "after": "",
+      "case": "physics-3-02",
+      "label": "סידור בוחן בעבודה ואנרגיה",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "after_img": {
+        "png": "fix11-files/shots/physics-3-02-after.png",
+        "box": [
+          100,
+          100,
+          935,
+          260
+        ],
+        "point": [
+          800,
+          158
+        ]
+      }
+    },
+    {
+      "quote": "יש לשרטט על הלוח או בדף הבוחן את הגרף הבא",
+      "after": "",
+      "case": "physics-1-03",
+      "label": "בוחן על גרפים של מהירות-זמן",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "before_img": {
+        "png": "fix11-files/shots/physics-1-03-before.png",
+        "box": [
+          40,
+          720,
+          1290,
+          1110
+        ],
+        "point": [
+          1190,
+          787
+        ]
+      },
+      "after_img": {
+        "png": "fix11-files/shots/physics-1-03-after.png",
+        "box": [
+          150,
+          130,
+          935,
+          560
+        ],
+        "point": [
+          370,
+          400
+        ]
+      }
+    }
+  ],
+  "create-elementary-math-practice": [
+    {
+      "quote": "בעיצוב נקי ומסודר שנוח להעתיק ל-Word ולהדפיס",
+      "after": "הכנתי עבורך דף עבודה מוכן להדפסה ב-Word",
+      "case": "elem-math-1-03",
+      "label": "דף בחיבור וחיסור שברים",
+      "run": "fix11-files",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "במלבן הבא נתון השטח. מצאו את אורך הצלע החסרה ואת ההיקף",
+      "after": "",
+      "case": "elem-math-4-01",
+      "label": "דף בשטח והיקף",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "before_img": {
+        "png": "fix11-files/shots/elem-math-4-01-before.png",
+        "box": [
+          0,
+          1890,
+          1302,
+          2200
+        ],
+        "point": [
+          340,
+          2012
+        ]
+      },
+      "after_img": {
+        "png": "fix11-files/shots/elem-math-4-01-after.png",
+        "box": [
+          0,
+          300,
+          935,
+          620
+        ],
+        "point": [
+          467,
+          425
+        ]
+      }
+    },
+    {
+      "quote": "עיגול מחולק ל-4 חלקים שווים, 3 חלקים צבועים",
+      "after": "",
+      "case": "elem-math-1-04",
+      "label": "דף בזיהוי שברים מציור",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "after_img": {
+        "png": "fix11-files/shots/elem-math-1-04-after.png",
+        "box": [
+          0,
+          300,
+          935,
+          720
+        ],
+        "point": [
+          505,
+          400
+        ]
+      }
+    }
+  ],
+  "create-choice-board": [
+    {
+      "quote": "אני ממליץ בחום לקחת את הטקסט הזה, להיכנס ל-",
+      "after": "",
+      "case": "choice-board-1-06",
+      "label": "לוח בחירה ב-Past Simple",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "after_img": {
+        "png": "fix11-files/shots/choice-board-1-06-after.png",
+        "box": [
+          0,
+          0,
+          1287,
+          600
+        ],
+        "point": [
+          655,
+          230
+        ]
+      }
+    },
+    {
+      "quote": "אני לא יכול לייצר קובץ תמונה (כמו JPG) להורדה ישירה",
+      "after": "",
+      "case": "choice-board-1-07",
+      "label": "לוח בחירה במילות שאלה בערבית",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "before_img": {
+        "png": "fix11-files/shots/choice-board-1-07-before.png",
+        "box": [
+          60,
+          890,
+          1260,
+          1560
+        ],
+        "point": [
+          624,
+          1014
+        ]
+      },
+      "after_img": {
+        "png": "fix11-files/shots/choice-board-1-07-after.png",
+        "box": [
+          40,
+          40,
+          1260,
+          600
+        ],
+        "point": [
+          985,
+          237
+        ]
+      }
+    },
+    {
+      "quote": "שמתאים לתלמידי חטיבת ביניים או תיכון",
+      "after": "לפני שאני בונה את הלוח, כמה שאלות קצרות",
+      "case": "choice-board-4-04",
+      "label": "לוח בחירה על שינויי אקלים",
+      "run": "fix11-files",
+      "made": "2026-11-21"
+    }
+  ],
+  "hebrew-docs-rtl": [
+    {
+      "quote": "הנה נוסח מכתב מעוצב, ברור ומאורגן שתוכלי להעתיק ישירות ל-Google Docs ולשלוח להורים",
+      "after": "הכנתי עבורך קובץ Word מעוצב ומותאם במיוחד לעברית",
+      "case": "rtl-4-01",
+      "label": "מכתב להורים על סיור",
+      "run": "fix11-files",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "3 ליטר מים לפחות (חובה - לא ניתן יהיה לצאת למסלול",
+      "after": "",
+      "case": "hebrew-docs-rtl-3-01",
+      "label": "מכתב להורים על סיור",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "before_img": {
+        "png": "fix11-files/shots/hebrew-docs-rtl-3-01-before.png",
+        "box": [
+          0,
+          540,
+          935,
+          800
+        ],
+        "point": [
+          305,
+          607
+        ]
+      },
+      "after_img": {
+        "png": "fix11-files/shots/hebrew-docs-rtl-3-01-after.png",
+        "box": [
+          0,
+          690,
+          935,
+          900
+        ],
+        "point": [
+          633,
+          743
+        ]
+      }
+    },
+    {
+      "quote": "דיסלקציה התפתחותית (אבחון דידקטי משנת 2024). מטופל בריטלין 20 מ״ג",
+      "after": "הסרתי מהמסמך את מספר תעודת הזהות, פירוט האבחונים הרפואיים והמינון התרופתי",
+      "case": "hebrew-docs-rtl-3-05",
+      "label": "פרוטוקול ישיבת צוות",
+      "run": "fix11-files",
+      "made": "2026-11-21"
+    }
+  ],
+  "format-equations-for-hebrew-worksheets": [
+    {
+      "quote": "הנה הדף המסודר, המחולק לטופס לתלמיד ולמפתח תשובות למורה",
+      "after": "",
+      "case": "physics-1-01",
+      "label": "בוחן בקינמטיקה לכיתה י'",
+      "run": "fix11-files",
+      "made": "2026-11-21",
+      "after_img": {
+        "png": "fix11-files/shots/physics-1-01-after.png",
+        "box": [
+          0,
+          120,
+          935,
+          560
+        ],
+        "point": [
+          455,
+          226
+        ]
+      }
+    }
+  ],
+  "verify-solutions": [
+    {
+      "quote": "נקודות החיתוך עם ציר x צריכות להיות",
+      "after": "אני זקוק לטקסט או למשוואות של השאלות עצמן מהבוחן",
+      "case": "verify-4-03",
+      "label": "בדיקת בוחן בלי השאלות",
+      "run": "verify-v12",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "לא צירפת את הטבלה, אך הניסוח והפורמט תקינים.",
+      "after": "מתייחסת לטבלה שלא צורפה בהודעה.",
+      "case": "verify-1-04",
+      "label": "בדיקת מפתח עם טבלה",
+      "run": "verify-v12",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "הנה סקירה קצרה שמאשרת את כל הסעיפים:",
+      "after": "דרך ב' (פתיחת סוגריים)",
+      "case": "verify-2-03",
+      "label": "בדיקת מפתח בנגזרות",
+      "run": "verify-v12",
+      "made": "2026-11-21"
+    }
   ]
 }

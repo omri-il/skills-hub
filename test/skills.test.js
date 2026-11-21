@@ -110,6 +110,21 @@ test('every shown skill has a "איך זה עוזר?" block', () => {
   assert.deepEqual(missing, []);
 });
 
+// Omri, 2026-11-21: "אני לא רואה שבכל הדפים של הסקילים יש את הטבלאות של לפני ואחרי". A shown skill needs at least
+// one real row (from a no-skill run) and a before/after picture pair for every row.
+test('every shown skill has table rows, and every row has its before/after pictures', () => {
+  const { skills } = loadSkills(ROOT);
+  const problems = [];
+  for (const s of skills) {
+    const rows = s.fixes?.list || [];
+    if (!rows.length) { problems.push(`${s.name}: no fixes rows (run skill-tests/shots.py and write rows from the 'before' answers)`); continue; }
+    const f = path.join(ROOT, 'shots', `${s.name}.json`);
+    const pics = new Set(fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')).rows.map((r) => r.quote) : []);
+    for (const r of rows) if (!pics.has(r.quote)) problems.push(`${s.name}: no pictures for the row "${r.quote}" (deploy/shots/make_row_shots.py)`);
+  }
+  assert.deepEqual(problems, []);
+});
+
 test('table pictures (shots/<name>.json): each pair belongs to a real fixes row and both files exist', () => {
   const { skills, hidden } = loadSkills(ROOT);
   const all = new Map([...skills, ...hidden].map((s) => [s.name, s]));

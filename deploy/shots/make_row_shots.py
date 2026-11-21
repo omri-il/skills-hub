@@ -106,6 +106,49 @@ def shoot(pg, kind, demo, name, anchor, out, above=90, css=""):
     return True
 
 
+def shoot_img(kind, spec, out):
+    """A Word-file skill (2026-11-21): the mistake or the fix is on the Word page, not in the chat text.
+    spec = {"png": "<run>/shots/<case>-before.png" (under skill-tests/results), "box": [x0, y0, x1, y1] (PNG px),
+    "point": [x, y] (PNG px, what the arrow points at)}. Crops the page image, scales it to the same width as the
+    text pictures, puts the same badge on top and the same arrow in the right margin."""
+    from PIL import ImageDraw, ImageFont
+    src = Image.open(TESTS / "results" / spec["png"]).convert("RGB")
+    x0, y0, x1, y1 = spec["box"]
+    crop = src.crop((x0, y0, x1, y1))
+    margin, cap, left = 44 * SCALE, 40 * SCALE, 10 * SCALE
+    inner = WIDTH * SCALE - margin - left
+    f = inner / crop.width
+    crop = crop.resize((inner, max(1, round(crop.height * f))), Image.LANCZOS)
+    im = Image.new("RGB", (WIDTH * SCALE, crop.height + cap + 12 * SCALE), "#f3f5f8")
+    im.paste(crop, (left, cap))
+    d = ImageDraw.Draw(im)
+    color = "#d62828" if kind == "before" else "#1e8e3e"
+    bg, fg = ("#fbe3e4", "#a12a35") if kind == "before" else ("#d4edda", "#155724")
+    try:
+        font = ImageFont.truetype("C:/Windows/Fonts/segoeuib.ttf", 15 * SCALE)
+        sym = ImageFont.truetype("C:/Windows/Fonts/seguisym.ttf", 15 * SCALE)
+    except OSError:
+        font = sym = ImageFont.load_default()
+    from bidi.algorithm import get_display
+    mark, words = LABEL[kind].split(" ", 1)          # "✗ בלי הסקיל": the mark sits at the right (RTL start)
+    text = get_display(words)
+    tw, mw, gap = d.textlength(text, font=font), d.textlength(mark, font=sym), 6 * SCALE
+    bx1 = WIDTH * SCALE - 8 * SCALE
+    d.rounded_rectangle((bx1 - tw - mw - gap - 24 * SCALE, 6 * SCALE, bx1, 34 * SCALE), 6 * SCALE, fill=bg)
+    d.text((bx1 - 12 * SCALE - mw, 9 * SCALE), mark, fill=fg, font=sym)
+    d.text((bx1 - 12 * SCALE - mw - gap - tw, 9 * SCALE), text, fill=fg, font=font)
+    # Same as the text pictures: a ring at the spot, and the arrow in the right margin only, never over the page.
+    px, py = spec["point"]
+    ax, ay = left + round((px - x0) * f), cap + round((py - y0) * f)
+    r = 20 * SCALE
+    d.ellipse((ax - r, ay - r, ax + r, ay + r), outline=color, width=3 * SCALE)
+    tip, tail = left + inner + 2 * SCALE, WIDTH * SCALE - 3 * SCALE
+    d.line((tail, ay, tip + 12 * SCALE, ay), fill=color, width=6 * SCALE)
+    d.polygon([(tip, ay), (tip + 16 * SCALE, ay - 11 * SCALE), (tip + 16 * SCALE, ay + 11 * SCALE)], fill=color)
+    im.save(out, "WEBP", quality=82, method=6)
+    return True
+
+
 def run_demo(a, name):
     """A row from a skill-tests run (Omri, 2026-11-21: every shown skill gets its pictures): anchors.json gives
     "run" (results/<run>), "case" (the case id) and "label". The 'without' answer is results/<run>/_before/<case>.json
@@ -153,16 +196,17 @@ def main():
                 if not any(f.get("quote") == a["quote"] for f in fx_rows):
                     problems.append(f"{name}: no fixes row with quote {a['quote']!r}")
                     continue
-                demo = run_demo(a, name) if a.get("run") else next(
+                both_img = a.get("before_img") and a.get("after_img")
+                demo = {"label": a["label"]} if both_img else run_demo(a, name) if a.get("run") else next(
                     (d for d in data["demos"] if a["quote"] in d["without"]), None)
                 if not demo:
                     problems.append(f"{name}: quote not in any 'without' answer: {a['quote']!r}")
                     continue
                 n = len(out_rows) + 1
                 files = {k: f"{name}-{n}-{k}.webp" for k in ("before", "after")}
-                ok_b = shoot(pg, "before", demo, name, a.get("mark", a["quote"]), ROOT / "assets" / "shots" / files["before"])
-                ok_a = shoot(pg, "after", demo, name, a["after"], ROOT / "assets" / "shots" / files["after"],
-                             a.get("above", 90), a.get("css", ""))
+                out_b, out_a = ROOT / "assets" / "shots" / files["before"], ROOT / "assets" / "shots" / files["after"]
+                ok_b = shoot_img("before", a["before_img"], out_b) if a.get("before_img") else                     shoot(pg, "before", demo, name, a.get("mark", a["quote"]), out_b)
+                ok_a = shoot_img("after", a["after_img"], out_a) if a.get("after_img") else                     shoot(pg, "after", demo, name, a["after"], out_a, a.get("above", 90), a.get("css", ""))
                 if not (ok_b and ok_a):
                     problems.append(f"{name}: text not found on the rendered page ({'before' if not ok_b else 'after'})")
                     continue

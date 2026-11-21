@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "בעיצוב נקי ומסודר שנוח להעתיק ל-Word ולהדפיס",
+   "label": "דף בחיבור וחיסור שברים",
+   "before": "create-elementary-math-practice-1-before.webp",
+   "after": "create-elementary-math-practice-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     240
+    ]
+   }
+  },
+  {
+   "quote": "במלבן הבא נתון השטח. מצאו את אורך הצלע החסרה ואת ההיקף",
+   "label": "דף בשטח והיקף",
+   "before": "create-elementary-math-practice-2-before.webp",
+   "after": "create-elementary-math-practice-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     144
+    ],
+    "after": [
+     440,
+     184
+    ]
+   }
+  },
+  {
+   "quote": "עיגול מחולק ל-4 חלקים שווים, 3 חלקים צבועים",
+   "label": "דף בזיהוי שברים מציור",
+   "before": "create-elementary-math-practice-3-before.webp",
+   "after": "create-elementary-math-practice-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     225
+    ]
+   }
+  }
+ ]
+}
