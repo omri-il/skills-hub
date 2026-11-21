@@ -793,5 +793,57 @@
       "run": "verify-v12",
       "made": "2026-11-21"
     }
+  ],
+  "create-math-practice": [
+    {
+      "quote": "$5x - 3 = 2x + 9$",
+      "after": "",
+      "case": "create-math-practice-1-01",
+      "label": "דף במשוואות לכיתה ח'",
+      "after_img": {
+        "png": "math-pro2/shots/create-math-practice-1-01-after.png",
+        "box": [
+          0,
+          230,
+          935,
+          620
+        ],
+        "point": [
+          467,
+          333
+        ]
+      },
+      "run": "math-pro2",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "(ASCII Art)",
+      "after": "",
+      "case": "create-math-practice-1-03",
+      "label": "דף בגאומטריה על משולשים שווי שוקיים",
+      "after_img": {
+        "png": "math-pro2/shots/create-math-practice-1-03-after.png",
+        "box": [
+          0,
+          380,
+          935,
+          930
+        ],
+        "point": [
+          467,
+          740
+        ]
+      },
+      "run": "math-pro2",
+      "made": "2026-11-21"
+    },
+    {
+      "quote": "(מומלצת לדנה כהן)",
+      "after": "שמותיהם והרקע המאובחן שלהם לא נכנסו לקובץ",
+      "case": "math-2-09",
+      "label": "דף במשוואות עם שמות תלמידים",
+      "run": "math-pro2",
+      "made": "2026-11-21"
+    }
   ]
 }
