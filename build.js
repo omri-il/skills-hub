@@ -84,25 +84,20 @@ const workshopBox = (cls = '') => (WORKSHOP ? `<aside class="workshop ${cls}" da
   <a class="btn btn-ghost" href="${esc(WORKSHOP.url)}">לפרטים ולהרשמה</a>
 </aside>` : '');
 
-// ---------- "without the skill / with the skill" (compare/<name>.json + assets/compare/<name>.png, deploy/compare/make_compare.py) ----------
-const compareOf = (name) => {
-  const f = path.join(ROOT, 'compare', `${name}.json`);
-  return fs.existsSync(f) && fs.existsSync(path.join(ROOT, 'assets', 'compare', `${name}.png`))
-    ? JSON.parse(fs.readFileSync(f, 'utf8')) : null;
+// ---------- pictures inside the "איך זה עוזר?" table (Omri, 2026-11-21: "בתוך הטבלה") ----------
+// shots/<name>.json + assets/shots/<name>-<n>-before|after.webp, made by deploy/shots/make_row_shots.py from the same
+// Gemini answers the row's quote was copied from. A row gets its pair by its quote; a picture whose file is missing is left out.
+const shotsOf = (name) => {
+  const f = path.join(ROOT, 'shots', `${name}.json`);
+  if (!fs.existsSync(f)) return new Map();
+  const rows = JSON.parse(fs.readFileSync(f, 'utf8')).rows || [];
+  return new Map(rows.filter((r) => ['before', 'after'].every((k) => fs.existsSync(path.join(ROOT, 'assets', 'shots', r[k]))))
+    .map((r) => [r.quote, r]));
 };
-const compareBlock = (s) => {
-  const c = compareOf(s.name);
-  if (!c) return '';
-  // the PNG's own size, read from its header, so the page keeps the right space before it loads
-  const head = fs.readFileSync(path.join(ROOT, 'assets', 'compare', `${s.name}.png`)).subarray(16, 24);
-  const [w, h] = [head.readUInt32BE(0), head.readUInt32BE(4)];
-  return `<section class="block compare" aria-labelledby="h-compare">
-        <h2 id="h-compare">אותה בקשה, בלי הסקיל ועם הסקיל</h2>
-        <a class="compare-img" href="/assets/compare/${s.name}.png" target="_blank" rel="noopener"><img src="/assets/compare/${s.name}.png" alt="תשובה של ג'מיני לבקשה ${esc(c.label)}: מימין בלי הסקיל, משמאל עם הסקיל" loading="lazy" width="${w}" height="${h}"></a>
-        <h3>מה ההבדל</h3>
-        <ul>${c.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
-        <p class="muted small">תשובות אמיתיות של Gemini מ-${fmtDate(c.made)}. לחיצה מגדילה את התמונה.</p>
-      </section>`;
+const shotPic = (r, kind) => {
+  const [w, h] = r.size?.[kind] || [440, 260];
+  const who = kind === 'before' ? 'בלי הסקיל' : 'עם הסקיל';
+  return `<a class="fix-pic fix-pic-${kind}" href="/assets/shots/${esc(r[kind])}" target="_blank" rel="noopener"><img src="/assets/shots/${esc(r[kind])}" alt="התשובה של Gemini ${who}, לבקשה: ${esc(r.label)}" loading="lazy" width="${w}" height="${h}"></a>`;
 };
 
 // The site shows Gemini only for now (Omri, 2026-11-11). meta.yaml keeps the other platforms; add them back here to show them.
@@ -488,15 +483,22 @@ function skillPage(s) {
   // Omri, 2026-11-20: "why not just ask Gemini?". 2026-11-21: a table "בלי הסקיל / עם הסקיל", only mistakes a real
   // run showed, each with Gemini's own words; rules nobody saw broken go under it as "הסקיל גם בודק".
   const fx = s.fixes;
+  // 2026-11-21: under each row, the two real answers it comes from (before on the "בלי" side), cropped to that spot.
+  const shots = fx ? shotsOf(s.name) : new Map();
+  const anyShot = fx?.list.some((f) => shots.has(f.quote));
   const fixesBlock = fx ? `<section class="block fixes" aria-labelledby="h-fixes">
         <h2 id="h-fixes">איך זה עוזר?</h2>${fx.list.length ? `
         <table class="fixes-table">
           <thead><tr><th scope="col" class="fix-no"><span aria-hidden="true">✗</span> בלי הסקיל</th><th scope="col" class="fix-yes"><span aria-hidden="true">✓</span> עם הסקיל</th></tr></thead>
-          <tbody>${fx.list.map((f) => `
-            <tr><td>${he(f.without)}${f.quote ? `<q class="fix-quote">${he(f.quote)}</q>` : ''}</td><td class="fix-with">${he(f.with)}</td></tr>`).join('')}
+          <tbody>${fx.list.map((f) => {
+            const r = shots.get(f.quote);
+            return `
+            <tr${r ? ' class="has-shots"' : ''}><td>${he(f.without)}${f.quote ? `<q class="fix-quote">${he(f.quote)}</q>` : ''}</td><td class="fix-with">${he(f.with)}</td></tr>${r ? `
+            <tr class="fix-shots"><td colspan="2"><div class="fix-pics">${shotPic(r, 'before')}${shotPic(r, 'after')}</div></td></tr>` : ''}`;
+          }).join('')}
           </tbody>
         </table>
-        <p class="fixes-source">${he(fx.source)}</p>` : ''}${fx.also ? `
+        <p class="fixes-source">${he(fx.source)}${anyShot ? ' לחיצה על תמונה מגדילה אותה.' : ''}</p>` : ''}${fx.also ? `
         <p class="fixes-also"><b>${fx.list.length ? 'הסקיל גם אומר ל-Gemini:' : 'מה הסקיל אומר ל-Gemini:'}</b> ${he(fx.also)}</p>` : ''}
       </section>` : '';
   const usesBlock = plain ? `<section class="block what-skill" aria-labelledby="h-what-skill">
@@ -560,8 +562,6 @@ function skillPage(s) {
       ${plain ? usesBlock : factsBlocks}
 
       ${storyBlock}
-
-      ${compareBlock(s)}
 
       <section class="block trust" aria-labelledby="h-trust">
         <h2 id="h-trust">מה נבדק ומה עוד לא</h2>

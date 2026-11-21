@@ -110,6 +110,20 @@ test('every shown skill has a "איך זה עוזר?" block', () => {
   assert.deepEqual(missing, []);
 });
 
+test('table pictures (shots/<name>.json): each pair belongs to a real fixes row and both files exist', () => {
+  const { skills, hidden } = loadSkills(ROOT);
+  const all = new Map([...skills, ...hidden].map((s) => [s.name, s]));
+  const dir = path.join(ROOT, 'shots');
+  for (const f of fs.existsSync(dir) ? fs.readdirSync(dir).filter((x) => x.endsWith('.json')) : []) {
+    const name = f.replace(/\.json$/, '');
+    const quotes = new Set((all.get(name)?.fixes?.list || []).map((r) => r.quote));
+    for (const r of JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')).rows) {
+      assert.ok(quotes.has(r.quote), `${f}: no fixes row in ${name}/meta.yaml with quote "${r.quote}" (run deploy/shots/make_row_shots.py again)`);
+      for (const k of ['before', 'after']) assert.ok(fs.existsSync(path.join(ROOT, 'assets', 'shots', r[k])), `${f}: assets/shots/${r[k]} is missing`);
+    }
+  }
+});
+
 test('subject groups: a subject in no group fails, fits adds a group, own groups come from subjects', () => {
   assert.ok(loadSkills(fixture({ 'a-skill': { meta: META('a-skill').replace('[מתמטיקה]', '[אומנות]') } }))
     .errors.some((e) => e.includes('subject "אומנות" is in no group')));

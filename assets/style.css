@@ -186,12 +186,6 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .workshop p { margin: 0; max-width: 60ch; }
 @media (max-width: 559px) { .workshop .btn { flex: 1 1 100%; } }
 
-/* without the skill / with the skill */
-.compare-img { display: block; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 6px 0 16px; }
-.compare-img img { display: block; width: 100%; height: auto; }
-.compare h3 { font-size: 1.05rem; margin: 0 0 6px; }
-.compare ul { margin: 0 0 10px; padding-inline-start: 1.2em; max-width: 70ch; }
-.compare li + li { margin-top: 6px; }
 
 .btn-ghost { background: transparent; color: var(--accent); border-color: var(--line); }
 .btn-ghost:hover { border-color: var(--accent); }
@@ -374,8 +368,18 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .fixes-also { margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed var(--line); max-width: 65ch; }
 .fixes-also b { color: var(--accent); }
 h2 + .fixes-also { border-top: 0; padding-top: 0; margin-top: 0; }
+/* the two real answers under a row: "before" on the "בלי" side (start), "after" under "עם" */
+.fixes-table tr.has-shots td { border-bottom: 0; padding-bottom: 6px; }
+.fixes-table tr.fix-shots td { padding-top: 0; }
+.fix-pics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fix-pic { display: block; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #f3f5f8; }
+.fix-pic-before { border-color: var(--bad-soft); }
+.fix-pic-after { border-color: var(--ok-soft); }
+.fix-pic img { display: block; width: 100%; height: auto; }
+.fix-pic:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 @media (max-width: 560px) {
   .fixes { padding: 14px 12px; }
   .fixes-table th, .fixes-table td { padding: 9px 7px; font-size: 15px; }
   .fix-quote { font-size: 13px; }
+  .fix-pics { grid-template-columns: 1fr; gap: 8px; }
 }

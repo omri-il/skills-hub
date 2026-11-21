@@ -1,0 +1,38 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-19",
+ "rows": [
+  {
+   "quote": "הנה שתי אפשרויות לבחירתך",
+   "label": "מכתב סיור להורים עולים",
+   "before": "simple-language-1-before.webp",
+   "after": "simple-language-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     240
+    ]
+   }
+  },
+  {
+   "quote": "אוכל לכל היום",
+   "label": "מכתב סיור להורים עולים",
+   "before": "simple-language-2-before.webp",
+   "after": "simple-language-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}

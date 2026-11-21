@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-19",
+ "rows": [
+  {
+   "quote": "const name = row[1];",
+   "label": "סיכום לומדה באנגלית",
+   "before": "apps-script-dashboard-1-before.webp",
+   "after": "apps-script-dashboard-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     255
+    ],
+    "after": [
+     440,
+     255
+    ]
+   }
+  }
+ ]
+}

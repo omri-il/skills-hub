@@ -1,0 +1,39 @@
+{
+  "_note": "Per skill, per fixes row: quote = the row's quote in meta.yaml (found in the 'without' answer); after = a short exact text from the 'with' answer of the same request that shows the fix. Claude picked them (2026-11-21).",
+  "apps-script-dashboard": [
+    {"quote": "const name = row[1];", "after": "// שמות הכותרות בדיוק כפי שהם מופיעים בשורה 1"}
+  ],
+  "apps-script-fix": [
+    {"quote": "New deployment", "after": "ניהול פריסות (Manage deployments)"}
+  ],
+  "apps-script-lomda": [
+    {"quote": "הפתרון המושלם, הקל והחינמי ביותר עבורך", "after": "כל הגשה נרשמת בשורה נפרדת"}
+  ],
+  "assessment-plan": [
+    {"quote": "5 מבדקים של 10 דקות, 5% כל אחד", "after": "איך נבדק הציון ביחידה?", "above": 12},
+    {"quote": "חובה לצרף צילום מסך של השיחה", "after": "100% נבדקים בכיתה או בשיחה"}
+  ],
+  "class-results-analysis": [
+    {"quote": "עומר בכלל לא ענה על ש4", "after": "השאלה לא נכללה במונה ובמכנה"}
+  ],
+  "create-rubric": [
+    {"quote": "הסבר נכון (אך קצת שטחי)", "after": "אתם מסבירים לפחות 2 דרכים"},
+    {"quote": "עבודה שתיכתב כולה על ידי AI תקבל ציון נכשל", "after": "צירפתי בסוף העבודה נספח"}
+  ],
+  "feedback-by-rubric": [
+    {"quote": "החלטה: כן, תלמיד 2 השתמש ב-AI", "after": "אי אפשר לדעת מתוך הטקסט אם התלמיד נעזר ב-AI"},
+    {"quote": "שלום נועה יקרה", "after": "הצגת את עמדתך באופן ברור מאוד"},
+    {"quote": "ציון סופי: 84", "after": "זו הצעה. הציון שלך."}
+  ],
+  "oral-check": [
+    {"quote": "החשד שלך לגמרי מוצדק", "after": "אי אפשר לדעת מטקסט אם הוא נכתב ב-AI"},
+    {"quote": "נעזרת ב-AI (כמו ChatGPT) כדי לכתוב את החיבור הזה?", "after": "קראתי את החיבור שלך ויש בו נקודות מעניינות"}
+  ],
+  "simple-language": [
+    {"quote": "הנה שתי אפשרויות לבחירתך", "after": "זהירות: תלמיד בלי אישור חתום"},
+    {"quote": "אוכל לכל היום", "after": "מה שיניתי:"}
+  ],
+  "weekly-digest": [
+    {"quote": "עודכנו הנחיות לגבי הערכות חלופיות", "after": "כדי שאוכל לסכם, צריך לחבר את Gmail"}
+  ]
+}
