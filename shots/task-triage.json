@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "מעבירים לשרון היועצת + הרכזת החברתית.",
+   "label": "רשימת משימות של מנהלת",
+   "before": "task-triage-1-before.webp",
+   "after": "task-triage-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "תעבירי כבר עכשיו הודעה קצרה בוואטסאפ לאורית, דנה ושמעון",
+   "label": "8 משימות לשבוע",
+   "before": "task-triage-2-before.webp",
+   "after": "task-triage-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     277
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "לנשום עמוק, זה יום עמוס אבל לחלוטין פתיר.",
+   "label": "בוקר עמוס עם גדר פרוצה",
+   "before": "task-triage-3-before.webp",
+   "after": "task-triage-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     249
+    ],
+    "after": [
+     440,
+     240
+    ]
+   }
+  }
+ ]
+}

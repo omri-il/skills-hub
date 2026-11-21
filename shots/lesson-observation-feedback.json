@@ -1,0 +1,70 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "ריכזתי עבורך את הנקודות שחשוב לעבוד עליהן ולשפר לפעמים הבאות",
+   "label": "צפייה בשיעור גיאוגרפיה",
+   "before": "lesson-observation-feedback-1-before.webp",
+   "after": "lesson-observation-feedback-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "יצרת אווירה נעימה ובטוחה בכיתה",
+   "label": "משוב בלי נקודות מהצפייה",
+   "before": "lesson-observation-feedback-2-before.webp",
+   "after": "lesson-observation-feedback-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     168
+    ]
+   }
+  },
+  {
+   "quote": "ציון מוצע לפי מחוון הערכת עובדי הוראה: 4 מתוך 5",
+   "label": "בקשה לציון למורה",
+   "before": "lesson-observation-feedback-3-before.webp",
+   "after": "lesson-observation-feedback-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     262
+    ],
+    "after": [
+     440,
+     240
+    ]
+   }
+  },
+  {
+   "quote": "נועה שטרן ודניאל כהן לא עבדו בחלקו הראשון של השיעור",
+   "label": "שיעור עברית בכיתה ד׳",
+   "before": "lesson-observation-feedback-4-before.webp",
+   "after": "lesson-observation-feedback-4-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}

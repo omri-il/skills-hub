@@ -106,6 +106,25 @@ def shoot(pg, kind, demo, name, anchor, out, above=90):
     return True
 
 
+def run_demo(a, name):
+    """A row from a skill-tests run (Omri, 2026-11-21: every shown skill gets its pictures): anchors.json gives
+    "run" (results/<run>), "case" (the case id) and "label". The 'without' answer is results/<run>/_before/<case>.json
+    (shots.py), the 'with' answer is the run's own answer; the turn is the one whose 'without' answer holds the quote."""
+    res = TESTS / "results" / a["run"]
+    case = a["case"]
+    before = json.loads((res / "_before" / f"{case}.json").read_text(encoding="utf-8"))
+    after_f = next((f for f in res.rglob(f"{case}.json") if "_before" not in f.parts and "_grades" not in f.parts), None)
+    if not after_f:
+        return None
+    after = json.loads(after_f.read_text(encoding="utf-8"))
+    for t, w in enumerate(before["answers"]):
+        if a["quote"] in w and t < len(after["answers"]):
+            req = before["request"] if t == 0 else (before.get("followup") or before["request"])
+            return {"label": a["label"], "prompt": req, "without": w, "with": after["answers"][t],
+                    "model": after.get("model"), "made": a.get("made")}
+    return None
+
+
 def main():
     anchors = json.loads((ROOT / "deploy" / "shots" / "anchors.json").read_text(encoding="utf-8"))
     (ROOT / "assets" / "shots").mkdir(parents=True, exist_ok=True)
@@ -119,14 +138,16 @@ def main():
             if name.startswith("_") or (ONLY and name not in ONLY):
                 continue
             meta = yaml.safe_load((ROOT / "skills" / name / "meta.yaml").read_text(encoding="utf-8"))
-            data = json.loads((ROOT / "video-help" / "data" / f"{name}.json").read_text(encoding="utf-8"))
+            vh = ROOT / "video-help" / "data" / f"{name}.json"
+            data = json.loads(vh.read_text(encoding="utf-8")) if vh.exists() else {"demos": []}
             fx_rows = (meta.get("fixes") or {}).get("list") or []
             out_rows = []
             for a in rows:
                 if not any(f.get("quote") == a["quote"] for f in fx_rows):
                     problems.append(f"{name}: no fixes row with quote {a['quote']!r}")
                     continue
-                demo = next((d for d in data["demos"] if a["quote"] in d["without"]), None)
+                demo = run_demo(a, name) if a.get("run") else next(
+                    (d for d in data["demos"] if a["quote"] in d["without"]), None)
                 if not demo:
                     problems.append(f"{name}: quote not in any 'without' answer: {a['quote']!r}")
                     continue
@@ -143,6 +164,8 @@ def main():
                     with Image.open(ROOT / "assets" / "shots" / f) as im:
                         sizes[k] = [im.width // SCALE, im.height // SCALE]
                 out_rows.append({"quote": a["quote"], "label": demo["label"], **files, "size": sizes})
+                if demo.get("model"):
+                    data.setdefault("model", demo["model"]); data.setdefault("made", demo["made"])
                 print(f"{name} row {n}: ok", flush=True)
             (ROOT / "shots" / f"{name}.json").write_text(json.dumps(
                 {"model": data.get("model"), "made": data.get("made"), "rows": out_rows}, ensure_ascii=False, indent=1) + "\n",

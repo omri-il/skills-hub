@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "דחוף (לסגור עד 27.11)",
+   "label": "ישיבה על תרגיל פינוי",
+   "before": "staff-meeting-tasks-1-before.webp",
+   "after": "staff-meeting-tasks-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     274
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "נועה עוברת תקופה לא פשוטה בבית (גירושים)",
+   "label": "ישיבת מחנכות שכבה ו׳",
+   "before": "staff-meeting-tasks-2-before.webp",
+   "after": "staff-meeting-tasks-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     238
+    ]
+   }
+  },
+  {
+   "quote": "רונית תבחן רעיונות ונושאים אפשריים ליום עיון",
+   "label": "סיעור מוחות על חזון בית הספר",
+   "before": "staff-meeting-tasks-3-before.webp",
+   "after": "staff-meeting-tasks-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}
