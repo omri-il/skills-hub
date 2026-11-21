@@ -546,11 +546,12 @@ function skillPage(s) {
 
   <div class="skill-grid">
     <div class="skill-main">
+      ${/* Omri, 2026-11-21: "איך זה עוזר?" opens the page; the ways to use it come under it. */ ''}
+      ${fixesBlock}
+
       ${proBox(s)}
 
       ${plain ? usesBlock : factsBlocks}
-
-      ${fixesBlock}
 
       ${storyBlock}
 
