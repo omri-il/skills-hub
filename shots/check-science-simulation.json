@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "C° 120",
+   "label": "סימולציה של מודל החלקיקים שנבנתה בלי סקיל",
+   "size": {
+    "before": [
+     440,
+     401
+    ],
+    "after": [
+     440,
+     344
+    ]
+   },
+   "before": "check-science-simulation-1-before.webp",
+   "after": "check-science-simulation-1-after.webp"
+  }
+ ]
+}
