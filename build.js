@@ -604,7 +604,7 @@ function bundleSkill(n) {
   <p class="card-note">מפעילים עם <code dir="ltr">@${esc(n)}</code></p>
   <div class="card-actions">
     <a class="btn btn-ghost btn-sm" href="/skills/${n}/">פרטים</a>
-    ${s.role === 'shared' || s.requires.length ? '' : `<a class="btn btn-ghost btn-sm" href="${zipHref(n)}" download aria-label="הורדת ${esc(s.title)} בלבד">רק הסקיל הזה</a>`}
+    ${s.role === 'shared' || s.requires.length ? '' : `<a class="btn btn-ghost btn-sm" href="${zipHref(n)}" download data-skill="${n}" aria-label="הורדת ${esc(s.title)} בלבד">רק הסקיל הזה</a>`}
   </div>
 </li>`;
 }
@@ -642,7 +642,7 @@ function bundlePage(b) {
       <li>מורידים את ${filesCount(b.skills.length)}. <b>לא פותחים אותם</b>. הדפדפן שואל? מאשרים.</li>
       <li>בג'מיני: <b>הגדרות</b> ← <b>סקילים (כישורים)</b> ← <b>העלאת סקיל</b>. מעלים כל קובץ בנפרד.</li>
       <li>בצ'אט חדש כותבים <code dir="ltr">@</code> ואת שם הסקיל, למשל <code dir="ltr">@${esc(first)}</code>, ובוחרים מהרשימה.</li>
-      <li>חסר קובץ? ${b.skills.map((n) => `<a href="${zipHref(n)}" download>${esc(byName.get(n).title)}</a>`).join(', ')}.</li>
+      <li>חסר קובץ? ${b.skills.map((n) => `<a href="${zipHref(n)}" download data-skill="${n}">${esc(byName.get(n).title)}</a>`).join(', ')}.</li>
     </ol>
   </section>
 
