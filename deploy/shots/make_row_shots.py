@@ -57,7 +57,6 @@ LOCATE = """([anchor, label, maxH, kind, above]) => {
   range.setStart(...pos(at)); range.setEnd(...pos(at + anchor.length - 1)); range.setEnd(range.endContainer, range.endOffset + 1);
   const wrap = document.querySelector('.wrap');
   let top = 1e9, bottom = 0;
-  const first = range.getClientRects()[0];
   for (const r of range.getClientRects()) {
     const d = document.createElement('div'); d.className = 'hl hl-' + kind;
     Object.assign(d.style, { left: (r.left - 2) + 'px', top: (r.top + scrollY - 1) + 'px', width: (r.width + 4) + 'px', height: (r.height + 2) + 'px' });
@@ -76,15 +75,21 @@ LOCATE = """([anchor, label, maxH, kind, above]) => {
   cap.dir = 'rtl';
   const b = document.createElement('span'); b.className = 'badge badge-' + kind; b.textContent = label;
   cap.appendChild(b); document.body.appendChild(cap);
-  // Omri, 2026-11-21: an arrow at the mistake (red) or the fix (green), in the free start-side gutter,
-  // pointing at the first line of the mark, so it never covers text (NOTES.md item 40).
-  const color = kind === 'before' ? '#c0392b' : '#1e7e34';
-  const ax = w.right - 40, ay = first.top + scrollY + first.height / 2 - 12;
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('class', 'arrow'); svg.setAttribute('width', '36'); svg.setAttribute('height', '24'); svg.setAttribute('viewBox', '0 0 36 24');
-  svg.innerHTML = `<path d="M34 12 H10" stroke="${color}" stroke-width="4.5" stroke-linecap="round"/><path d="M15 3 L3 12 L15 21" fill="none" stroke="${color}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-  Object.assign(svg.style, { left: ax + 'px', top: ay + 'px' });
-  document.body.appendChild(svg);
+  // Omri, 2026-11-21 (NOTES.md item 40): an arrow in the right margin, from the wrap's edge to the answer box,
+  // pointing at the middle of the mark's first line. All mark fragments on that line count (bidi splits a mark).
+  {
+    const rs = [...document.querySelectorAll('.hl-' + kind)].map(e => e.getBoundingClientRect());
+    const top0 = Math.min(...rs.map(r => r.top));
+    const line = rs.filter(r => r.top < top0 + 8);
+    const cy = (Math.min(...line.map(r => r.top)) + Math.max(...line.map(r => r.bottom))) / 2 + scrollY;
+    const color = kind === 'before' ? '#d62828' : '#1e8e3e';
+    const tip = g.right - 4, tail = w.right - 1, wd = tail - tip + 4;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', wd); svg.setAttribute('height', 30);
+    Object.assign(svg.style, { position: 'absolute', left: (tip - 2) + 'px', top: (cy - 15) + 'px', zIndex: 6, overflow: 'visible' });
+    svg.innerHTML = `<line x1="${wd - 3}" y1="15" x2="14" y2="15" stroke="${color}" stroke-width="6" stroke-linecap="round"/><polygon points="2,15 18,4 18,26" fill="${color}"/>`;
+    document.body.appendChild(svg);
+  }
   return { x: w.left, y, width: w.width, height: h };
 }"""
 
