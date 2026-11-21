@@ -1,0 +1,38 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "אם אינכם/ן בטוחים/ות, אפשר להיעזר במורה.",
+   "label": "דף עבודה בחוק אוהם",
+   "before": "hebrew-gender-address-1-before.webp",
+   "after": "hebrew-gender-address-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "אם תרצה, אוכל לעזור לך לאחד את זה לנוסח אחיד",
+   "label": "בדיקת מגדר בדף עבודה",
+   "before": "hebrew-gender-address-2-before.webp",
+   "after": "hebrew-gender-address-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     238
+    ],
+    "after": [
+     440,
+     262
+    ]
+   }
+  }
+ ]
+}
