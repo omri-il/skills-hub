@@ -1,0 +1,22 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "C° 120",
+   "label": "מודל החלקיקים, כיתה ז', בטלפון",
+   "size": {
+    "before": [
+     440,
+     401
+    ],
+    "after": [
+     440,
+     340
+    ]
+   },
+   "before": "create-science-simulation-1-before.webp",
+   "after": "create-science-simulation-1-after.webp"
+  }
+ ]
+}
