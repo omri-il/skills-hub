@@ -43,9 +43,8 @@
     - apps-script-fix
 - id: elementary-math
   title: חבילה למורי מתמטיקה ביסודי
-  description: 4 סקילים לכיתות א'-ו'.
+  description: 3 סקילים לכיתות א'-ו'.
   skills:
     - create-elementary-math-practice
     - create-choice-board
-    - misconceptions-from-answers
     - simple-language
