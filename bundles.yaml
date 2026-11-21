@@ -67,3 +67,14 @@
     - apps-script-lomda
     - apps-script-dashboard
     - apps-script-fix
+- id: school-leadership
+  title: חבילה לצוות ההנהלה
+  description: לישיבות, להורים, לצפייה בשיעורים, למשימות, לשינויים ולהחלטות.
+  skills:
+    - staff-meeting-tasks
+    - parent-reply
+    - lesson-observation-feedback
+    - task-triage
+    - sudden-change-plan
+    - hard-decision
+    - google-update-for-staff
