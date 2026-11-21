@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "הנחיתי את צוות השכבה והמורים התורנים לקיים השגחה מקורבת בהפסקות",
+   "label": "אמא מאיימת לפנות לתקשורת",
+   "before": "parent-reply-1-before.webp",
+   "after": "parent-reply-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     308
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "ננקטו צעדים משמעתיים חריפים מול התלמיד הפוגע",
+   "label": "ילד נדחף והמשקפיים נשברו",
+   "before": "parent-reply-2-before.webp",
+   "after": "parent-reply-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "חשוב לי להבהיר שההסעות הן באחריות המועצה ולא של בית הספר",
+   "label": "הסעה שאיחרה בגשם",
+   "before": "parent-reply-3-before.webp",
+   "after": "parent-reply-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     262
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}

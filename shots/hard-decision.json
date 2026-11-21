@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "משרד החינוך אוסר באופן גורף על מימון פרטי של הורים",
+   "label": "סדנה בתשלום הורים לכיתה אחת",
+   "before": "hard-decision-1-before.webp",
+   "after": "hard-decision-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     308
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "ההמלצה החד-משמעית היא לדחות את הטיול לאפריל",
+   "label": "טיול שנתי בקור של 3 מעלות",
+   "before": "hard-decision-2-before.webp",
+   "after": "hard-decision-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     273
+    ],
+    "after": [
+     440,
+     268
+    ]
+   }
+  },
+  {
+   "quote": "הטיעונים שאת מעלה לגמרי מוצדקים",
+   "label": "ביטול מסיבת חנוכה משותפת",
+   "before": "hard-decision-3-before.webp",
+   "after": "hard-decision-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}
