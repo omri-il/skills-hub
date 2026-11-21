@@ -186,6 +186,7 @@ function page({ title, description, body, canonical }) {
 <meta property="og:image:alt" content="סקילים חינמיים לג'מיני למורים, מאת עומרי אירם">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="עומרי אירם (Omri Iram)">
+<meta name="google-site-verification" content="eJ_WgrBepNaW75hrB1soLqa_bpc2dnLi6IH2fLbvFow">
 ${canonical === '/' ? `<script type="application/ld+json">${LD_HOME}</script>\n` : ''}
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/Rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin>
