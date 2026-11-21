@@ -369,7 +369,7 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .fixes-table td { vertical-align: top; padding: 12px; border-bottom: 1px solid var(--line); }
 .fixes-table tr:last-child td { border-bottom: 0; }
 .fixes-table td.fix-with { font-weight: 600; color: var(--accent); }
-.fix-quote { display: block; margin-top: 6px; font-size: 14px; color: var(--ink-2); background: var(--paper); border-inline-start: 3px solid var(--line); padding: 4px 8px; border-radius: 4px; unicode-bidi: plaintext; }
+.fix-quote { display: block; margin-top: 6px; font-size: 14px; color: var(--ink-2); background: var(--paper); padding: 4px 8px; border-radius: 4px; unicode-bidi: plaintext; }
 .fixes-source { margin: 10px 0 0; font-size: 13px; color: var(--ink-2); }
 .fixes-also { margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed var(--line); max-width: 65ch; }
 .fixes-also b { color: var(--accent); }
