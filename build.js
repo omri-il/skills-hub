@@ -661,7 +661,7 @@ function bundlePage(b) {
     </div>
     <div class="dl-col">
       <div class="dl-box">
-        ${dlLink(b.skills, `הורדת ${b.skills.length} הסקילים`, 'btn btn-primary btn-lg')}
+        ${dlLink(b.skills, b.skills.length === 1 ? 'הורדת הסקיל' : `הורדת ${b.skills.length} הסקילים`, 'btn btn-primary btn-lg')}
         <p class="card-note">${filesCount(b.skills.length)} · ${sizeOf(b.skills)}</p>
         ${dlStatus}
       </div>
