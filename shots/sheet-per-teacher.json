@@ -1,0 +1,70 @@
+{
+ "model": "gemini-3.1-pro-preview",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "עכשיו כל הטבלה שלך תופיע בקובץ של מרים.",
+   "label": "תלמידי שילוב לפי מחנך",
+   "before": "sheet-per-teacher-1-before.webp",
+   "after": "sheet-per-teacher-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "מורה א' יכול להיכנס ללשונית של מורה ב'",
+   "label": "14 לשוניות בלי קוד",
+   "before": "sheet-per-teacher-2-before.webp",
+   "after": "sheet-per-teacher-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     273
+    ]
+   }
+  },
+  {
+   "quote": "חזרי על הפעולה בקבצים של יוסי ומירב.",
+   "label": "ציוני היסטוריה לפי מורה",
+   "before": "sheet-per-teacher-3-before.webp",
+   "after": "sheet-per-teacher-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  },
+  {
+   "quote": "את יכולה להעתיק כל טבלה ישירות למייל או לוואטסאפ של המחנך הרלוונטי",
+   "label": "ציוני מתמטיקה לפי מחנך",
+   "before": "sheet-per-teacher-4-before.webp",
+   "after": "sheet-per-teacher-4-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     260
+    ]
+   }
+  }
+ ]
+}

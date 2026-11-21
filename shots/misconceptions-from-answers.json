@@ -1,0 +1,70 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "בוודאות כמעט מוחלטת (99%) בינה מלאכותית",
+   "label": "סיבות מלחמת העולם הראשונה",
+   "before": "misconceptions-from-answers-1-before.webp",
+   "after": "misconceptions-from-answers-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     308
+    ]
+   }
+  },
+  {
+   "quote": "מתן (ASD), נטע (ASD), אלמוג (ASD)",
+   "label": "הנמלה והצרצר בחינוך מיוחד",
+   "before": "misconceptions-from-answers-2-before.webp",
+   "after": "misconceptions-from-answers-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     274
+    ]
+   }
+  },
+  {
+   "quote": "יונה ברח כי הוא פחד מאנשי נינווה",
+   "label": "כרטיסי יציאה על ספר יונה",
+   "before": "misconceptions-from-answers-3-before.webp",
+   "after": "misconceptions-from-answers-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "להסביר מדויק מדוע הבריטים בחרו בניסוח המעורפל",
+   "label": "הצהרת בלפור בהיסטוריה",
+   "before": "misconceptions-from-answers-4-before.webp",
+   "after": "misconceptions-from-answers-4-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     238
+    ]
+   }
+  }
+ ]
+}

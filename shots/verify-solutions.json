@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "נקודות החיתוך עם ציר x צריכות להיות",
+   "label": "בדיקת בוחן בלי השאלות",
+   "before": "verify-solutions-1-before.webp",
+   "after": "verify-solutions-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     273
+    ]
+   }
+  },
+  {
+   "quote": "לא צירפת את הטבלה, אך הניסוח והפורמט תקינים.",
+   "label": "בדיקת מפתח עם טבלה",
+   "before": "verify-solutions-2-before.webp",
+   "after": "verify-solutions-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     292
+    ]
+   }
+  },
+  {
+   "quote": "הנה סקירה קצרה שמאשרת את כל הסעיפים:",
+   "label": "בדיקת מפתח בנגזרות",
+   "before": "verify-solutions-3-before.webp",
+   "after": "verify-solutions-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}

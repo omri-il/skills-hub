@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "הנה נוסח מכתב מעוצב, ברור ומאורגן שתוכלי להעתיק ישירות ל-Google Docs ולשלוח להורים",
+   "label": "מכתב להורים על סיור",
+   "before": "hebrew-docs-rtl-1-before.webp",
+   "after": "hebrew-docs-rtl-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     249
+    ]
+   }
+  },
+  {
+   "quote": "3 ליטר מים לפחות (חובה - לא ניתן יהיה לצאת למסלול",
+   "label": "מכתב להורים על סיור",
+   "before": "hebrew-docs-rtl-2-before.webp",
+   "after": "hebrew-docs-rtl-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     159
+    ],
+    "after": [
+     440,
+     138
+    ]
+   }
+  },
+  {
+   "quote": "דיסלקציה התפתחותית (אבחון דידקטי משנת 2024). מטופל בריטלין 20 מ״ג",
+   "label": "פרוטוקול ישיבת צוות",
+   "before": "hebrew-docs-rtl-3-before.webp",
+   "after": "hebrew-docs-rtl-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     308
+    ],
+    "after": [
+     440,
+     249
+    ]
+   }
+  }
+ ]
+}

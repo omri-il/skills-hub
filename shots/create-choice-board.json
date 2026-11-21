@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.1-pro-preview",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "אני ממליץ בחום לקחת את הטקסט הזה, להיכנס ל-",
+   "label": "לוח בחירה ב-Past Simple",
+   "before": "create-choice-board-1-before.webp",
+   "after": "create-choice-board-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     232
+    ]
+   }
+  },
+  {
+   "quote": "אני לא יכול לייצר קובץ תמונה (כמו JPG) להורדה ישירה",
+   "label": "לוח בחירה במילות שאלה בערבית",
+   "before": "create-choice-board-2-before.webp",
+   "after": "create-choice-board-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     267
+    ],
+    "after": [
+     440,
+     229
+    ]
+   }
+  },
+  {
+   "quote": "שמתאים לתלמידי חטיבת ביניים או תיכון",
+   "label": "לוח בחירה על שינויי אקלים",
+   "before": "create-choice-board-3-before.webp",
+   "after": "create-choice-board-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     240
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.1-pro-preview",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "אינני יכול לשלוח קובץ Word ישירות להורדה",
+   "label": "דף על הירח לכיתה ו'",
+   "before": "create-reading-comprehension-1-before.webp",
+   "after": "create-reading-comprehension-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     273
+    ],
+    "after": [
+     440,
+     176
+    ]
+   }
+  },
+  {
+   "quote": "רמה 1: מתקשים (טקסט מנוקד, משפטים קצרים וברורים)",
+   "label": "דף על הירח ב-3 רמות",
+   "before": "create-reading-comprehension-2-before.webp",
+   "after": "create-reading-comprehension-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     289
+    ],
+    "after": [
+     440,
+     176
+    ]
+   }
+  },
+  {
+   "quote": "הטקסט מותאם פחות או יותר לכיתות ג'-ד'",
+   "label": "דף על חברות",
+   "before": "create-reading-comprehension-3-before.webp",
+   "after": "create-reading-comprehension-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     273
+    ],
+    "after": [
+     440,
+     218
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-21",
+ "rows": [
+  {
+   "quote": "להעתיק את הטקסט שבתוך התיבה למטה ולהדביק אותו בצ'אט חדש עם ג'מיני",
+   "label": "סימולציית מבחן בפייתון",
+   "before": "student-exam-practice-1-before.webp",
+   "after": "student-exam-practice-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     308
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "התאמות הלמידה המיוחדות עבור דנה (דיסלקציה ו-ADHD)",
+   "label": "תלמידה עם דיסלקציה בביולוגיה",
+   "before": "student-exam-practice-2-before.webp",
+   "after": "student-exam-practice-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     255
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  },
+  {
+   "quote": "העלה את הקובץ עם המבחן והפתרונות שלך",
+   "label": "מבחן בשברים עם פתרונות",
+   "before": "student-exam-practice-3-before.webp",
+   "after": "student-exam-practice-3-after.webp",
+   "size": {
+    "before": [
+     440,
+     262
+    ],
+    "after": [
+     440,
+     284
+    ]
+   }
+  }
+ ]
+}
