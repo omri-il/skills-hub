@@ -64,7 +64,6 @@ const videoSkill = (v) => `<details class="video-fold">
 // Proof on the home page (Omri, 2026-11-19). Measured: 177 different addresses downloaded a skill zip
 // 8.11-19.11.2026 (nginx log on the VPS, bots left out; Omri's own tests are in it, so the line says "more than 150").
 // The number only grows, so the line stays true. Raise it by hand after a new count.
-const PROOF_LINE = 'יותר מ-150 מורים כבר הורידו סקילים מהאתר.';
 
 // ---------- the next workshop (workshop.yaml): the next step after a download (Omri, 2026-11-19) ----------
 const WORKSHOP = (() => {
@@ -342,7 +341,6 @@ const homeBody = `
   <div class="hero-text">
     <h1>חוסכים שעות עבודה בכל שבוע,<br class="br-wide"> עם Gemini Skills.</h1>
     <p class="lead">לוח בחירה לתלמידים, וסיכום ומשימות לצוות, מוכנים מג'מיני תוך דקה. חינם, בלי הרשמה.</p>
-    <p class="proof">${PROOF_LINE}</p>
     <ol class="steps">
       <li><span><b>מורידים</b> חבילה או סקיל</span></li>
       <li><span><b>מעלים</b> לג'מיני, פעם אחת</span></li>
