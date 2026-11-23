@@ -381,3 +381,4 @@ h2 + .fixes-also { border-top: 0; padding-top: 0; margin-top: 0; }
   .fix-quote { font-size: 13px; }
   .fix-pics { grid-template-columns: 1fr; gap: 8px; }
 }
+.beta-page .beta-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; }

@@ -14,7 +14,7 @@ const SITE = 'https://skills.omri-iram.co.il';
 // Fixed time inside every zip, so the same skill always gives the same bytes.
 const ZIP_TIME = new Date('2026-01-01T00:00:00Z');
 
-const { skills, byName, bundles, autoBundles, errors } = loadSkills(ROOT);
+const { skills, byName, bundles, autoBundles, errors, hidden: hiddenSkills } = loadSkills(ROOT);
 if (errors.length) {
   console.error(`\nBuild stopped: ${errors.length} problem(s) to fix.\n`);
   for (const e of errors) console.error(`  - ${e}`);
@@ -736,6 +736,69 @@ write('bundles/index.html', page({
   ${workshopBundles.length ? `<section class="block" id="workshops" aria-labelledby="h-ws"><h2 id="h-ws">מהסדנאות</h2><p class="muted">החדשה ראשונה.</p><ul class="bundle-rows">${workshopBundles.map(bundleRow).join('')}</ul></section>` : ''}
 </div>`,
 }));
+
+// ---------- beta pages (Omri, 2026-11-23) ----------
+// A hidden skill with `beta_form` gets /beta/<name>/: what it does, what should come out, 3 requests
+// to try, the zip, and the button to the results form. The tester does not remember the skill from
+// the email alone ("הוא לא זוכר את זה. צריך לתת לו מידע"). Not linked from the site, not in the sitemap,
+// noindex. The zip is /beta/<name>/<name>.zip, never /downloads/, so the download counts stay clean.
+for (const s of hiddenSkills.filter((x) => x.beta_form)) {
+  const tree = {
+    [`${s.name}/`]: [new Uint8Array(0), { mtime: ZIP_TIME }],
+    [`${s.name}/SKILL.md`]: [strToU8(s.packaged), { mtime: ZIP_TIME, level: 9 }],
+  };
+  write(`beta/${s.name}/${s.name}.zip`, zipSync(tree));
+  const form = `https://events.omri-iram.co.il/p/${encodeURIComponent(s.beta_form)}`;
+  const uses = s.uses.map((u, i) => `
+      <li class="use">
+        <h3><span class="use-n" aria-hidden="true">${i + 1}</span><span>${esc(u.when)}</span></h3>
+        <p class="use-label">כותבים לג'מיני:</p>
+        <blockquote class="use-ask" id="ask-${s.name}-${i}">${esc(u.ask)}</blockquote>
+        <div class="use-bar"><button type="button" class="btn btn-ghost btn-sm" data-copy="ask-${s.name}-${i}">העתקה</button><span class="copy-status" role="status" aria-live="polite"></span></div>
+        <p class="use-label">אמור לצאת:</p>
+        <p class="use-get">${esc(u.get)}</p>
+      </li>`).join('');
+  const body = `<div class="wrap section beta-page">
+  <p class="eyebrow">בדיקת בטא · עוד לא באתר</p>
+  <h1>${esc(s.title)}</h1>
+  <p class="lead">${esc(s.simple || s.benefit)}</p>
+  <section class="block" aria-labelledby="h-steps">
+    <h2 id="h-steps">מה עושים</h2>
+    <ol class="install">
+      <li>מורידים את הסקיל. <b>לא פותחים את הקובץ</b>.</li>
+      <li>בג'מיני, בפאנל הימני מעל ההיסטוריה: <b>התאמה אישית</b> ← הטאב <b>סקילים</b> ← <b>יצירה והעלאה</b>, ובוחרים את הקובץ.</li>
+      <li>עושים 3 בדיקות על דברים אמיתיים מהשבוע שלכם. אפשר להתחיל מהבקשות כאן למטה.</li>
+      <li>אחרי כל בדיקה רושמים בטופס מה ביקשתם ומה יצא. בלי שמות של תלמידים.</li>
+    </ol>
+    <p class="beta-actions">
+      <a class="btn btn-primary btn-lg" href="/beta/${s.name}/${s.name}.zip" download>הורדת הסקיל</a>
+      <a class="btn btn-ghost btn-lg" href="${esc(form)}">לרשום את התוצאות</a>
+    </p>
+  </section>
+  <section class="block" aria-labelledby="h-does">
+    <h2 id="h-does">מה הסקיל עושה</h2>
+    <p>${esc(s.what_it_does)}</p>
+    ${s.output ? `<p><b>מה אמור לצאת:</b> ${esc(s.output)}.</p>` : ''}
+  </section>
+  ${uses ? `<section class="block uses" aria-labelledby="h-uses">
+    <h2 id="h-uses">בקשות לנסות</h2>
+    <ol class="uses-list">${uses}
+    </ol>
+  </section>` : ''}
+  ${s.limitations.length ? `<section class="block" aria-labelledby="h-lim">
+    <h2 id="h-lim">מה כבר ידוע שלא מושלם</h2>
+    <ul>${s.limitations.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>
+    <p>ראיתם עוד משהו? זה בדיוק מה שאני מחפש. רושמים בטופס.</p>
+  </section>` : ''}
+  <p class="beta-actions"><a class="btn btn-primary btn-lg" href="${esc(form)}">לרשום את התוצאות</a></p>
+</div>`;
+  write(`beta/${s.name}/index.html`, page({
+    title: `בדיקת בטא: ${s.title}`,
+    description: firstSentence(s.problem || s.benefit),
+    canonical: `/beta/${s.name}/`,
+    body,
+  }).replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="robots" content="noindex">'));
+}
 
 // ---------- 404, robots, sitemap ----------
 write('404.html', page({
