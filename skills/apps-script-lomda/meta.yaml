@@ -1,7 +1,7 @@
 name: apps-script-lomda
 title: לומדה ששומרת כל תשובה בגיליון (Apps Script)
-version: 1.0.1
-updated: 2026-11-19
+version: 1.0.2
+updated: 2026-11-26
 subjects:
 - כל המקצועות
 platforms:
@@ -50,3 +50,4 @@ fixes:
     with: 'בונה לומדה. התשובות של כל תלמיד נשמרות בגיליון שלכם, עמודה לכל שאלה.'
   also: 'להשאיר את התשובות הנכונות בשרת, כדי שתלמיד לא יראה אותן בדף.'
 hidden: true
+beta_form: afrye

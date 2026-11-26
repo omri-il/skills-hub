@@ -1,7 +1,7 @@
 name: apps-script-fix
 title: תיקון ושינוי של קוד Apps Script
-version: 1.0.1
-updated: 2026-11-19
+version: 1.0.2
+updated: 2026-11-26
 subjects:
 - כל המקצועות
 platforms:
@@ -49,3 +49,4 @@ fixes:
     with: 'שולח לעדכן גרסה באותה פריסה. הקישור לא משתנה.'
   also: 'לבקש את הודעת השגיאה המלאה לפני שמתקנים, ולומר כשהקוד תקין והבעיה היא הרשאה.'
 hidden: true
+beta_form: kbgtu
