@@ -36,3 +36,13 @@ Read this file at the start of every session on this task.
 ## Log
 
 - 2026-11-26: step 0. Permission step "Select all" in fix 1.0.2, lomda 1.0.2, escape-room 1.0.1, dashboard 1.0.3, sheet-per-teacher 1.3.1. Beta results forms in Event Engine (business): fix `kbgtu`, lomda `afrye`, copied from the oral-check form with 2 more questions (which account, did the code run). DB backup before: `data/events.before-apps-script-beta-20261126.db`.
+- 2026-11-26: step 1 draft, `apps-script-fix` 1.1.0 (worktree `apps-script-fix-big`, not pushed, waits for Omri's OK). A table at the top picks the mode: error (any size) or a change in 1-2 files = the old "fix at once"; a change in 3+ files or a pasted `Card.gs` = big-project mode. Choices made in the draft, and why:
+  - The card counts "עדכון מס' N", not "גרסה": Google's deployment versions have their own numbers, and the go-back step says "the previous version".
+  - "Long HTML" = more than 200 lines. A guess, not measured: change it after a real run cuts a file.
+  - A split, and any answer with more than one long file, sends one file per message and waits for "הבא". The split itself returns all the code again, so without this it would be cut too.
+  - `include(name)` and `createTemplateFromFile('Index').evaluate()` are named in words and inline code only, no code block: the upload scan.
+  - A menu/trigger tool: no "גרסה חדשה"; save when nobody works in the sheet; go back = paste the old code from the start of the chat.
+  - The "Test deployments" menu name in the Hebrew editor ("בדיקת פריסות") is not checked.
+  - meta.yaml: the `uses` item "הכלי מבקש הרשאה" was replaced by "כלי גדול עם הרבה קבצים" (3 uses only; the permission case stays in the skill's table).
+  - 5 test requests: `docs/apps-script-plan/fix-1.1.0-tests.md` (Claude wrote the test code; test 4 has a 250-line Index.html).
+- 2026-11-26: fix 1.1.0 tested by Claude in the Gemini app (built-in browser, school account 1002216675@taded.org.il, default mode "Hydrogen"; Omri's choice). Tests 1, 2, 3 passed on the first run. Test 4 failed once: the split rule sat only under big-project mode, so a 2-file project with a 255-line Index.html got the whole file back (complete, not cut). Fixed: a table row and "בכל גודל של פרויקט"; second run split correctly, one file per message, `doGet` right. Test 5: the go-back section copied the web-app line for a menu tool; fixed with one line per tool type; second run right. 1.1.0 was also uploaded to hello@ (Chrome, before Omri asked for the built-in browser); both accounts passed the upload scan. Not tested: the code in a real Apps Script editor; an error request (unchanged part).
