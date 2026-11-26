@@ -1,7 +1,7 @@
 name: sheet-per-teacher
 title: גיליון אחד, וכל מורה רואה רק את הנתונים שלו (Apps Script)
-version: 1.3.0
-updated: 2026-11-20
+version: 1.3.1
+updated: 2026-11-26
 subjects:
 - ניהול וארגון
 platforms:
