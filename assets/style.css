@@ -177,6 +177,7 @@ code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-siz
 .btn-cta, .dl-box .btn-primary { background: var(--cta); color: var(--cta-ink); }
 .btn-cta:hover, .dl-box .btn-primary:hover { filter: brightness(1.05); text-decoration: none; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 0; }
+.pdf-line { margin: 14px 0 0; color: var(--ink-2); }
 
 /* the next workshop (workshop.yaml) */
 .workshop { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; background: var(--accent-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 34px; }
