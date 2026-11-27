@@ -119,8 +119,8 @@ description: בונה ב-Canvas יישומון שיעור, דף שיעור אי�
   .steps { margin: 10px 0 0; padding-inline-start: 22px; } .steps li { margin: 4px 0; }
   #exit li { margin: 10px 0; } #exit textarea { display: block; width: 100%; min-height: 64px; margin-top: 6px; font: inherit; border: 1px solid #b8c2d6; border-radius: 10px; padding: 8px; }
   .teacher { border: 2px dashed #b8c2d6; }
-  bdi { display: inline-block; } td { unicode-bidi: plaintext; } #teacher { overflow-x: auto; }
-  @media (max-width: 520px) { .qa { flex-direction: column; } .fig { width: 100%; max-width: 200px; align-self: center; } nav { gap: 3px; } nav button { flex: 1 1 0; min-width: 0; font-size: .78em; padding: 4px 2px; } nav button small { display: none; } }
+  bdi { display: inline-block; white-space: normal; } .nw { white-space: nowrap; } td { unicode-bidi: plaintext; } #teacher { overflow-x: auto; }
+  @media (max-width: 520px) { .wide tr:first-child { display: none; } .wide tr { display: grid; grid-template-columns: 1fr 1fr; } .wide tr + tr { border-top: 3px solid #b8c2d6; } .wide td { display: flex; justify-content: space-between; gap: 6px; unicode-bidi: normal; direction: rtl; } .wide td::before { content: attr(data-h); font-weight: 600; } .wide td:last-child { grid-column: span 2; } .qa { flex-direction: column; } .fig { width: 100%; max-width: 200px; align-self: center; } nav { gap: 3px; } nav button { flex: 1 1 0; min-width: 0; font-size: .78em; padding: 4px 2px; } nav button small { display: none; } }
 </style>
 </head>
 <body>
@@ -370,7 +370,11 @@ function render() {
 // טקסט עברי עם נוסחה: כל קטע של נוסחה או מספר נשאר משמאל לימין
 const LTR = /(?:[A-Za-z0-9α-ω√π]|\((?=[A-Za-z0-9α-ω√π]))(?:[A-Za-z0-9α-ω√π²³·=+\-*/()≈°ₐ' ]|\.(?=[0-9])|,(?= [A-Za-zα-ω]ₐ? ?=))*[A-Za-z0-9α-ω²³)°πₐ]|[A-Za-z0-9α-ωπ]/g;
 function mixed(node, s) { node.replaceChildren(); let i = 0;
-  for (const m of s.matchAll(LTR)) { node.append(s.slice(i, m.index)); const b = document.createElement('bdi'); b.dir = 'ltr'; b.textContent = m[0]; node.append(b); i = m.index + m[0].length; }
+  for (const m of s.matchAll(LTR)) { const a = m.index, z = a + m[0].length;
+    // ו-, ב-, ל-, כש-, מ- לפני הנוסחה, ופסיק או נקודה אחריה, נשארים איתה באותה שורה
+    const pre = (s.slice(i, a).match(/(?:^|\s)([א-ת]{1,3}-)$/) || ['', ''])[1], post = (s.slice(z).match(/^[%.,:;!?]+/) || [''])[0];
+    node.append(s.slice(i, a - pre.length)); const b = document.createElement('bdi'); b.dir = 'ltr'; b.textContent = m[0];
+    const w = document.createElement('span'); w.className = 'nw'; w.append(pre, b, post); node.append(w); i = z + post.length; }
   node.append(s.slice(i)); return node; }
 // מספר מהתלמיד: 37.7, 37,7 או 12π
 function readNum(s) { s = String(s).trim().replace(/,/g, '.').replace(/\s+/g, '').replace(/pi/i, 'π');
@@ -421,10 +425,10 @@ function teacherTable() {
   out.push(t1, m0);
   if (APPLET) {
     const sets = [Object.fromEntries(SLIDERS.map(s => [s.id, s.min])), Object.fromEntries(SLIDERS.map(s => [s.id, s.value])), Object.fromEntries(SLIDERS.map(s => [s.id, s.max]))];
-    const tb = document.createElement('table'); let allOk = true;
+    const tb = document.createElement('table'); tb.className = 'wide'; let allOk = true;
     [['r', 'h', `S נוסחה`, `S מהפאות`, `S מהפריסה`, `V נוסחה`, `V מפרוסות`], ...sets.map(p => { const c = checks(p); const ok = near(c.m.area, c.solid) && near(c.m.area, c.net) && near(c.m.volume, c.slices); allOk = allOk && ok;
       return [fmt(p.r), fmt(p.h), fmt(c.m.area), fmt(c.solid), fmt(c.net), fmt(c.m.volume), fmt(c.slices)]; })]
-      .forEach((r, i) => { const tr = tb.insertRow(); r.forEach(v => { const c = document.createElement(i ? 'td' : 'th'); c.textContent = v; tr.appendChild(c); }); });
+      .forEach((r, i, all) => { const tr = tb.insertRow(); r.forEach((v, j) => { const c = document.createElement(i ? 'td' : 'th'); c.textContent = v; if (i) c.dataset.h = all[0][j]; tr.appendChild(c); }); });
     const msg = document.createElement('p'); msg.className = allOk ? 'ok' : 'bad';
     msg.textContent = allOk ? `✓ הנוסחאות של החרוט מתאימות לציור (הפרש קטן מ-1%).` : `✗ יש הפרש של יותר מ-1% בין הנוסחה לציור. לא להשתמש לפני תיקון.`;
     out.push(tb, msg);
