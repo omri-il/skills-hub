@@ -108,7 +108,7 @@ const sizeOf = (ids) => {
   const bytes = [ids].flat().reduce((sum, id) => sum + fs.statSync(path.join(DIST, 'downloads', `${id}.zip`)).size, 0);
   return `${Math.max(1, Math.round(bytes / 1024))}KB`;
 };
-const filesCount = (n) => `${n} קבצים`;
+const filesCount = (n) => (n === 1 ? 'קובץ אחד' : `${n} קבצים`);
 // With several files, app.js downloads them one after the other (data-files).
 // Without JavaScript the link gets the first file, and each page also lists a link per file.
 function dlLink(files, label, cls, attrs = '') {
@@ -701,10 +701,10 @@ function bundlePage(b) {
     <h2 id="h-install">איך מתקינים</h2>
     ${VIDEO ? videoSkill(VIDEO) : ''}
     <ol class="install">
-      <li>מורידים את ${filesCount(b.skills.length)}. <b>לא פותחים אותם</b>. הדפדפן שואל? מאשרים.</li>
-      <li>בג'מיני, בפאנל הימני מעל ההיסטוריה: <b>התאמה אישית</b> ← הטאב <b>סקילים</b> ← <b>יצירה והעלאה</b>. מעלים כל קובץ בנפרד.</li>
+      <li>מורידים את ${b.skills.length === 1 ? 'הקובץ. <b>לא פותחים אותו</b>' : `${filesCount(b.skills.length)}. <b>לא פותחים אותם</b>`}. הדפדפן שואל? מאשרים.</li>
+      <li>בג'מיני, בפאנל הימני מעל ההיסטוריה: <b>התאמה אישית</b> ← הטאב <b>סקילים</b> ← <b>יצירה והעלאה</b>. ${b.skills.length === 1 ? 'מעלים את הקובץ כמו שהוא.' : 'מעלים כל קובץ בנפרד.'}</li>
       <li>בצ'אט חדש כותבים <code dir="ltr">@</code> ואת שם הסקיל, למשל <code dir="ltr">@${esc(first)}</code>, ובוחרים מהרשימה.</li>
-      <li>חסר קובץ? ${b.skills.map((n) => `<a href="${zipHref(n)}" download data-skill="${n}">${esc(byName.get(n).title)}</a>`).join(', ')}.</li>
+      ${b.skills.length === 1 ? '' : `<li>חסר קובץ? ${b.skills.map((n) => `<a href="${zipHref(n)}" download data-skill="${n}">${esc(byName.get(n).title)}</a>`).join(', ')}.</li>`}
     </ol>
   </section>
 
