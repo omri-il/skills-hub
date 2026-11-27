@@ -351,6 +351,7 @@ const homeBody = `
       <a class="btn btn-ghost btn-lg" href="#skills">לסקיל בודד</a>` : '<a class="btn btn-cta btn-lg" href="#skills">לבחירת סקיל</a>'}
       ${VIDEO ? `<a class="btn btn-ghost btn-video" href="#video">סרטון התקנה (${esc(VIDEO.minutes)} דקות)</a>` : ''}
     </p>
+    ${fs.existsSync(path.join(ROOT, 'assets', 'skills-examples.pdf')) ? `<p class="pdf-line">רוצים לראות מה זה משנה? <a href="/assets/skills-examples.pdf?utm_source=site" target="_blank" rel="noopener">דוגמאות לפני ואחרי, קובץ PDF של 8 עמודים</a></p>` : ''}
   </div>
   <figure class="qr">
     <img src="/assets/qr.svg" width="140" height="140" alt="קוד QR לכתובת skills.omri-iram.co.il">
