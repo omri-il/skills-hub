@@ -1,0 +1,38 @@
+{
+ "model": "gemini-3.5-flash",
+ "made": "2026-11-27",
+ "rows": [
+  {
+   "quote": "ניתן לבנות תרגול זה ב-Quizizz / Kahoot / Google Forms / Geogebra",
+   "label": "שיעור חרוט עם יישומון",
+   "before": "create-integrated-lesson-1-before.webp",
+   "after": "create-integrated-lesson-1-after.webp",
+   "size": {
+    "before": [
+     440,
+     284
+    ],
+    "after": [
+     440,
+     330
+    ]
+   }
+  },
+  {
+   "quote": "תשובה לבדיקה עצמית: ג' - 400 סמ\"ק",
+   "label": "שיעור חרוט עם יישומון",
+   "before": "create-integrated-lesson-2-before.webp",
+   "after": "create-integrated-lesson-2-after.webp",
+   "size": {
+    "before": [
+     440,
+     260
+    ],
+    "after": [
+     440,
+     338
+    ]
+   }
+  }
+ ]
+}
