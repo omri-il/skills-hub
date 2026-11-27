@@ -845,5 +845,40 @@
       "run": "math-pro2",
       "made": "2026-11-21"
     }
+  ],
+  "create-integrated-lesson": [
+    {
+      "quote": "ניתן לבנות תרגול זה ב-Quizizz / Kahoot / Google Forms / Geogebra",
+      "after_img": {
+        "png": "vh-integrated-lesson/shots/il-0-practice.png",
+        "box": [
+          0,
+          4378,
+          880,
+          5012
+        ],
+        "point": [
+          878,
+          4909
+        ]
+      },
+      "note": "after = the Canvas page from the 'with' answer, rendered by deploy/shots/integrated_lesson_page.py"
+    },
+    {
+      "quote": "תשובה לבדיקה עצמית: ג' - 400 סמ\"ק",
+      "after_img": {
+        "png": "vh-integrated-lesson/shots/il-0-teacher.png",
+        "box": [
+          0,
+          6796,
+          880,
+          7449
+        ],
+        "point": [
+          878,
+          7374
+        ]
+      }
+    }
   ]
 }
